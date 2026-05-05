@@ -1973,6 +1973,7 @@ dependencies = [
 name = "moa"
 version = "0.1.0"
 dependencies = [
+ "serde",
  "specta",
  "specta-typescript",
  "sqlx",

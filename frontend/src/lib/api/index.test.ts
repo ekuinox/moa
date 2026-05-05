@@ -6,6 +6,10 @@ import { detectApiRuntime } from "./runtime";
 vi.mock("./bindings.generated", () => ({
   commands: {
     backendHealth: vi.fn(async () => true),
+    createPartner: vi.fn(async (input) => ({ id: "tauri-partner", ...input })),
+    deletePartner: vi.fn(async () => undefined),
+    listPartners: vi.fn(async () => []),
+    updatePartner: vi.fn(async (input) => input),
   },
 }));
 
@@ -24,11 +28,19 @@ describe("createApiClient", () => {
     const client = createApiClient({ runtime: "mock" });
 
     await expect(client.health()).resolves.toEqual({ ok: true });
+    await expect(client.partners.list()).resolves.toHaveLength(2);
   });
 
   it("creates a Tauri binding client for Tauri runtime", async () => {
     const client = createApiClient({ runtime: "tauri" });
 
     await expect(client.health()).resolves.toEqual({ ok: true });
+    await expect(client.partners.create({ name: "取引先", kana: "とりひきさき" })).resolves.toEqual(
+      {
+        id: "tauri-partner",
+        name: "取引先",
+        kana: "とりひきさき",
+      },
+    );
   });
 });
