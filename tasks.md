@@ -16,6 +16,7 @@
     - [x] `just build`
     - [x] `just fmt`
     - [x] `just lint`
+    - [x] `just deny`
     - [x] `just typecheck`
     - [x] `just test`
     - [x] `just storybook`

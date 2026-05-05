@@ -24,6 +24,10 @@ lint:
     pnpm --dir frontend lint
     cargo clippy --manifest-path backend/Cargo.toml --all-targets --all-features -- -D warnings
 
+[working-directory: 'backend']
+deny:
+    cargo deny check
+
 typecheck:
     pnpm --dir frontend typecheck
 
@@ -43,6 +47,6 @@ test-e2e:
 tauri-info:
     pnpm --dir frontend tauri info
 
-validate: fmt lint typecheck test
+validate: fmt lint deny typecheck test
 
-ci: refresh validate build
+ci: refresh validate deny build

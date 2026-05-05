@@ -65,6 +65,7 @@ just frontend-dev
 ```bash
 just validate       # format, lint, typecheck, test
 just ci             # refresh, validate, build
+just deny           # Rust dependencies license/advisory check
 just test-e2e       # Playwright E2E
 just storybook      # Storybook 起動
 just build          # Tauri build

@@ -15,6 +15,7 @@
 just refresh
 just fmt
 just lint
+just deny
 just typecheck
 just test
 cargo fmt --check
