@@ -47,8 +47,10 @@
 
 ## Commits
 
-- Always include this trailer in commit messages:
+- Always include a `Co-authored-by` trailer in commit messages.
+- Set the value to match the coding agent you are using.
 
 ```text
 Co-authored-by: Codex <codex@openai.com>
+Co-authored-by: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
 ```

@@ -24,9 +24,11 @@ cargo test
 ```
 
 コミットメッセージには必ず `Co-authored-by` trailer を付けてください。
+使用しているコーディングエージェントに合わせて値を変えてください。
 
 ```text
 Co-authored-by: Codex <codex@openai.com>
+Co-authored-by: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
 ```
 
 プロジェクト整備後は、まとめて実行できるタスクを用意します。

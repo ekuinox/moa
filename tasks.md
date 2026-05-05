@@ -58,11 +58,11 @@
   - [x] TypeScript binding 生成を設定する
   - [x] 小さい command で疎通確認する
 
-- [ ] Vite dev 単体モードを整備する
-  - [ ] API クライアント層を作る
-  - [ ] Tauri binding 実装を作る
-  - [ ] mock / in-memory 実装を作る
-  - [ ] Vite dev で mock 実装に差し替える
+- [x] Vite dev 単体モードを整備する
+  - [x] API クライアント層を作る
+  - [x] Tauri binding 実装を作る
+  - [x] mock / in-memory 実装を作る
+  - [x] Vite dev で mock 実装に差し替える
 
 - [ ] 取引先マスタを実装する
   - [ ] domain model を作る
