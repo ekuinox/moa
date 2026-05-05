@@ -3,8 +3,8 @@ name = "moa"
 version = "0.1.0"
 description = "Desktop bookkeeping application"
 authors = ["ekuinox"]
-edition = "2021"
-rust-version = "1.92.0"
+edition = "2024"
+rust-version = "1.95.0"
 
 [lib]
 name = "moa_lib"
@@ -19,4 +19,3 @@ tauri-build = { version = "2", features = [] }
 
 [dependencies]
 tauri = { version = "2", features = [] }
-
