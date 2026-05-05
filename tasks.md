@@ -6,26 +6,30 @@
 
 ## タスク
 
-- [ ] プロジェクト土台を作る
-  - [ ] Tauri + React + Vite + TypeScript の構成を作る
-  - [ ] Rust 側ディレクトリ名を `backend` にする
-  - [ ] `mise.toml` を追加する
-  - [ ] `mise.toml` に標準タスクを設定する
-    - [ ] `mise run dev`
-    - [ ] `mise run build`
-    - [ ] `mise run fmt`
-    - [ ] `mise run lint`
-    - [ ] `mise run typecheck`
-    - [ ] `mise run test`
-    - [ ] `mise run storybook`
-    - [ ] `mise run test:e2e`
-    - [ ] `mise run validate`
-  - [ ] `rust-toolchain.toml` を追加する
-  - [ ] pnpm を使う
-  - [ ] Biome を導入する
-  - [ ] Vitest + React Testing Library を導入する
-  - [ ] Storybook を導入する
-  - [ ] Playwright を導入する
+- [x] プロジェクト土台を作る
+  - [x] Tauri + React + Vite + TypeScript の構成を作る
+  - [x] Rust 側ディレクトリ名を `backend` にする
+  - [x] `mise.toml` を追加する
+  - [x] mise で just を管理する
+  - [x] `Justfile` に標準タスクを設定する
+    - [x] `just dev`
+    - [x] `just build`
+    - [x] `just fmt`
+    - [x] `just lint`
+    - [x] `just deny`
+    - [x] `just typecheck`
+    - [x] `just test`
+    - [x] `just storybook`
+    - [x] `just test-e2e`
+    - [x] `just validate`
+    - [x] `just refresh`
+    - [x] `just ci`
+  - [x] `rust-toolchain.toml` を追加する
+  - [x] pnpm を使う
+  - [x] Biome を導入する
+  - [x] Vitest + React Testing Library を導入する
+  - [x] Storybook を導入する
+  - [x] Playwright を導入する
 
 - [ ] アーキテクチャ骨格を作る
   - [ ] `backend/src/domain` を作る

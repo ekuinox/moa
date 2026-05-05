@@ -144,20 +144,21 @@ backend/src/
 ### フロントエンド側の想定構成
 
 ```text
-src/
-  app/
-  features/
-    partners/
-    categories/
-    account-entries/
-    fiscal-years/
-  lib/
-    api/
-    mock-api/
-    formatters/
-  components/
-    ui/
-    layout/
+frontend/
+  src/
+    app/
+    features/
+      partners/
+      categories/
+      account-entries/
+      fiscal-years/
+    lib/
+      api/
+      mock-api/
+      formatters/
+    components/
+      ui/
+      layout/
 ```
 
 ### データ取得・キャッシュ
@@ -220,17 +221,18 @@ src/
 ### mise
 
 - `mise.toml` をリポジトリルートに置く。
-- Node.js と pnpm のバージョンを mise で固定する。
-- mise task でフロントエンドの主要コマンドを実行できるようにする。
+- Node.js、pnpm、just のバージョンを mise で固定する。
+- フロントエンドプロジェクトは `frontend` ディレクトリに置く。
+- 標準タスクは Justfile に定義する。
 - 想定タスク:
-  - `mise run dev`
-  - `mise run build`
-  - `mise run lint`
-  - `mise run fmt`
-  - `mise run typecheck`
-  - `mise run test`
-  - `mise run storybook`
-  - `mise run test:e2e`
+  - `just dev`
+  - `just build`
+  - `just lint`
+  - `just fmt`
+  - `just typecheck`
+  - `just test`
+  - `just storybook`
+  - `just test-e2e`
 
 ### データベース
 
