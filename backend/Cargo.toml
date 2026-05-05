@@ -6,6 +6,7 @@ authors = ["ekuinox"]
 license = "MIT"
 edition = "2024"
 rust-version = "1.95.0"
+default-run = "moa"
 
 [lib]
 name = "moa_lib"
@@ -13,7 +14,7 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 
 [[bin]]
 name = "moa"
-path = "src/main.rs"
+path = "src/bin/moa.rs"
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
