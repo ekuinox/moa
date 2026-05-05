@@ -40,17 +40,17 @@
   - [x] React 側の `lib/api` を作る
   - [x] React 側の `lib/mock-api` を作る
 
-- [ ] DB とマイグレーションを整備する
-  - [ ] `sqlx` を導入する
-  - [ ] SQLite 接続を実装する
-  - [ ] `backend/migrations` を作る
-  - [ ] アプリ起動時にマイグレーションを実行する
-  - [ ] 初期テーブルを作る
-    - [ ] `partners`
-    - [ ] `categories`
-    - [ ] `account_entries`
-    - [ ] `fiscal_year_settings`
-    - [ ] `fiscal_years`
+- [x] DB とマイグレーションを整備する
+  - [x] `sqlx` を導入する
+  - [x] SQLite 接続を実装する
+  - [x] `backend/migrations` を作る
+  - [x] アプリ起動時にマイグレーションを実行する
+  - [x] 初期テーブルを作る
+    - [x] `partners`
+    - [x] `categories`
+    - [x] `account_entries`
+    - [x] `fiscal_year_settings`
+    - [x] `fiscal_years`
 
 - [ ] 型安全な Tauri 連携を整備する
   - [ ] `specta` を導入する
