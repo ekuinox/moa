@@ -11,11 +11,11 @@ vi.mock("./bindings.generated", () => ({
 
 describe("detectApiRuntime", () => {
   it("uses mock mode when Tauri environment variables are absent", () => {
-    expect(detectApiRuntime({ DEV: true })).toBe("mock");
+    expect(detectApiRuntime({})).toBe("mock");
   });
 
   it("uses Tauri mode when Tauri environment variables are present", () => {
-    expect(detectApiRuntime({ DEV: true, TAURI_ENV_PLATFORM: "windows" })).toBe("tauri");
+    expect(detectApiRuntime({ TAURI_ENV_PLATFORM: "windows" })).toBe("tauri");
   });
 });
 
