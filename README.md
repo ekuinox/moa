@@ -69,11 +69,3 @@ just test-e2e       # Playwright E2E
 just storybook      # Storybook 起動
 just build          # Tauri build
 ```
-
-## コミット
-
-コミットメッセージには必ず次の trailer を付けます。
-
-```text
-Co-authored-by: Codex <codex@openai.com>
-```
