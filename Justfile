@@ -4,9 +4,15 @@ default:
     just --list
 
 dev:
-    pnpm --dir frontend dev
+    pnpm --dir frontend tauri dev
 
 build:
+    pnpm --dir frontend tauri build
+
+frontend-dev:
+    pnpm --dir frontend dev
+
+frontend-build:
     pnpm --dir frontend build
 
 fmt:
