@@ -24,9 +24,9 @@ lint:
     pnpm --dir frontend lint
     cargo clippy --manifest-path backend/Cargo.toml --all-targets --all-features -- -D warnings
 
-[working-directory: 'backend']
 deny:
-    cargo deny check
+    pnpm --dir frontend audit
+    cargo deny --manifest-path backend/Cargo.toml check
 
 typecheck:
     pnpm --dir frontend typecheck
