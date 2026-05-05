@@ -52,11 +52,11 @@
     - [x] `fiscal_year_settings`
     - [x] `fiscal_years`
 
-- [ ] 型安全な Tauri 連携を整備する
-  - [ ] `specta` を導入する
-  - [ ] `tauri-specta` を導入する
-  - [ ] TypeScript binding 生成を設定する
-  - [ ] 小さい command で疎通確認する
+- [x] 型安全な Tauri 連携を整備する
+  - [x] `specta` を導入する
+  - [x] `tauri-specta` を導入する
+  - [x] TypeScript binding 生成を設定する
+  - [x] 小さい command で疎通確認する
 
 - [ ] Vite dev 単体モードを整備する
   - [ ] API クライアント層を作る

@@ -1,4 +1,5 @@
 import { createMockApiClient } from "../mock-api";
+import { createTauriApiClient } from "./tauri";
 
 export type ApiClient = {
   readonly health: () => Promise<HealthStatus>;
@@ -13,5 +14,5 @@ export function createApiClient(): ApiClient {
     return createMockApiClient();
   }
 
-  return createMockApiClient();
+  return createTauriApiClient();
 }
