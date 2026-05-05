@@ -31,14 +31,14 @@
   - [x] Storybook を導入する
   - [x] Playwright を導入する
 
-- [ ] アーキテクチャ骨格を作る
-  - [ ] `backend/src/domain` を作る
-  - [ ] `backend/src/application` を作る
-  - [ ] `backend/src/infrastructure` を作る
-  - [ ] `backend/src/interface` を作る
-  - [ ] React 側の `features` を作る
-  - [ ] React 側の `lib/api` を作る
-  - [ ] React 側の `lib/mock-api` を作る
+- [x] アーキテクチャ骨格を作る
+  - [x] `backend/src/domain` を作る
+  - [x] `backend/src/application` を作る
+  - [x] `backend/src/infrastructure` を作る
+  - [x] `backend/src/interface` を作る
+  - [x] React 側の `features` を作る
+  - [x] React 側の `lib/api` を作る
+  - [x] React 側の `lib/mock-api` を作る
 
 - [ ] DB とマイグレーションを整備する
   - [ ] `sqlx` を導入する
