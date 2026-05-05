@@ -197,6 +197,7 @@ mod tests {
 - SQLite を使う。
 - DB アクセスは Rust の `infrastructure` 層に閉じ込める。
 - マイグレーション SQL は `backend/migrations` に置く。
+- マイグレーション SQL に書くコメントは、日本語で記述する。
 - アプリ起動時に `sqlx::migrate!` でマイグレーションを適用する。
 - テーブルや制約を変更した場合は `requirements.md` の DB 設計も更新する。
 
