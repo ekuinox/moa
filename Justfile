@@ -2,7 +2,7 @@ set shell := ["powershell.exe", "-NoProfile", "-Command"]
 
 APP_DATA := env_var('APPDATA')
 DB_PATH := join(APP_DATA, 'dev.ekuinox.moa', 'moa.sqlite3')
-DB_URL := 'sqlite:///' + replace(DB_PATH, '\', '/')
+DB_URL := 'sqlite://' + replace(DB_PATH, '\', '/')
 
 default:
     just --list
