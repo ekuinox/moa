@@ -16,7 +16,14 @@ pub fn builder() -> Builder<tauri::Wry> {
             super::commands::list_categories,
             super::commands::create_category,
             super::commands::update_category,
-            super::commands::delete_category
+            super::commands::delete_category,
+            super::commands::get_fiscal_year_setting,
+            super::commands::save_fiscal_year_setting,
+            super::commands::list_fiscal_years,
+            super::commands::create_fiscal_year,
+            super::commands::update_fiscal_year,
+            super::commands::delete_fiscal_year,
+            super::commands::generate_fiscal_year
         ])
         .error_handling(ErrorHandlingMode::Throw)
 }

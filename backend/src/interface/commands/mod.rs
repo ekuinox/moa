@@ -8,11 +8,16 @@ use crate::{
         db::AppDatabase,
         repositories::{
             category_repository::SqliteCategoryRepository,
+            fiscal_year_repository::SqliteFiscalYearRepository,
             partner_repository::SqlitePartnerRepository,
         },
     },
     interface::dto::{
         category::{CategoryDto, CreateCategoryDto, UpdateCategoryDto},
+        fiscal_year::{
+            CreateFiscalYearDto, FiscalYearDto, FiscalYearSettingDto, GenerateFiscalYearDto,
+            SaveFiscalYearSettingDto, UpdateFiscalYearDto,
+        },
         partner::{CreatePartnerDto, PartnerDto, UpdatePartnerDto},
     },
 };
@@ -103,6 +108,91 @@ pub async fn delete_category(database: State<'_, AppDatabase>, id: String) -> Re
     let repository = SqliteCategoryRepository::new(database.pool());
 
     use_cases::categories::delete_category(&repository, &id).await
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_fiscal_year_setting(
+    database: State<'_, AppDatabase>,
+) -> Result<FiscalYearSettingDto, String> {
+    let repository = SqliteFiscalYearRepository::new(database.pool());
+    let setting = use_cases::fiscal_years::get_fiscal_year_setting(&repository).await?;
+
+    Ok(setting.into())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn save_fiscal_year_setting(
+    database: State<'_, AppDatabase>,
+    input: SaveFiscalYearSettingDto,
+) -> Result<FiscalYearSettingDto, String> {
+    let repository = SqliteFiscalYearRepository::new(database.pool());
+    let setting =
+        use_cases::fiscal_years::save_fiscal_year_setting(&repository, input.into()).await?;
+
+    Ok(setting.into())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn list_fiscal_years(
+    database: State<'_, AppDatabase>,
+) -> Result<Vec<FiscalYearDto>, String> {
+    let repository = SqliteFiscalYearRepository::new(database.pool());
+    let fiscal_years = use_cases::fiscal_years::list_fiscal_years(&repository).await?;
+
+    Ok(fiscal_years.into_iter().map(FiscalYearDto::from).collect())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn create_fiscal_year(
+    database: State<'_, AppDatabase>,
+    input: CreateFiscalYearDto,
+) -> Result<FiscalYearDto, String> {
+    let repository = SqliteFiscalYearRepository::new(database.pool());
+    let fiscal_year =
+        use_cases::fiscal_years::create_fiscal_year(&repository, input.into()).await?;
+
+    Ok(fiscal_year.into())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn update_fiscal_year(
+    database: State<'_, AppDatabase>,
+    input: UpdateFiscalYearDto,
+) -> Result<FiscalYearDto, String> {
+    let repository = SqliteFiscalYearRepository::new(database.pool());
+    let fiscal_year =
+        use_cases::fiscal_years::update_fiscal_year(&repository, input.into()).await?;
+
+    Ok(fiscal_year.into())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn delete_fiscal_year(
+    database: State<'_, AppDatabase>,
+    id: String,
+) -> Result<(), String> {
+    let repository = SqliteFiscalYearRepository::new(database.pool());
+
+    use_cases::fiscal_years::delete_fiscal_year(&repository, &id).await
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn generate_fiscal_year(
+    database: State<'_, AppDatabase>,
+    input: GenerateFiscalYearDto,
+) -> Result<FiscalYearDto, String> {
+    let repository = SqliteFiscalYearRepository::new(database.pool());
+    let fiscal_year =
+        use_cases::fiscal_years::generate_fiscal_year(&repository, input.into()).await?;
+
+    Ok(fiscal_year.into())
 }
 
 #[cfg(test)]
