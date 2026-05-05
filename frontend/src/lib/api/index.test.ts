@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { createApiClient } from ".";
 import { detectApiRuntime } from "./runtime";
@@ -14,12 +14,28 @@ vi.mock("./bindings.generated", () => ({
 }));
 
 describe("detectApiRuntime", () => {
+  const originalTauriInternals = Reflect.get(window, "__TAURI_INTERNALS__");
+
+  afterEach(() => {
+    if (originalTauriInternals) {
+      Reflect.set(window, "__TAURI_INTERNALS__", originalTauriInternals);
+    } else {
+      Reflect.deleteProperty(window, "__TAURI_INTERNALS__");
+    }
+  });
+
   it("uses mock mode when Tauri environment variables are absent", () => {
     expect(detectApiRuntime({})).toBe("mock");
   });
 
   it("uses Tauri mode when Tauri environment variables are present", () => {
     expect(detectApiRuntime({ TAURI_ENV_PLATFORM: "windows" })).toBe("tauri");
+  });
+
+  it("uses Tauri mode when Tauri runtime globals are present", () => {
+    Reflect.set(window, "__TAURI_INTERNALS__", {});
+
+    expect(detectApiRuntime({})).toBe("tauri");
   });
 });
 
