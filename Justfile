@@ -1,5 +1,9 @@
 set shell := ["powershell.exe", "-NoProfile", "-Command"]
 
+APP_DATA := env_var('APPDATA')
+DB_PATH := join(APP_DATA, 'dev.ekuinox.moa', 'moa.sqlite3')
+DB_URL := 'sqlite://' + replace(DB_PATH, '\', '/')
+
 default:
     just --list
 
@@ -47,6 +51,9 @@ test-e2e:
 
 tauri-info:
     pnpm --dir frontend tauri info
+
+db-drop:
+    sqlx database drop -y --database-url "{{DB_URL}}"
 
 validate: fmt lint deny typecheck test
 

@@ -26,34 +26,75 @@ select {
 }
 
 .app-shell {
-  display: grid;
+  display: block;
   min-height: 100vh;
-  place-items: center;
-  padding: 32px;
+  padding: 32px 24px;
 }
 
-.welcome-panel {
-  display: flex;
-  width: min(100%, 560px);
-  gap: 16px;
-  align-items: flex-start;
-  padding: 24px;
+.app-layout {
+  width: min(100%, 1120px);
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  margin: 0;
+  color: #172026;
+  font-size: 1.8rem;
+  line-height: 1.25;
+}
+
+.partner-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.app-card {
+  overflow: hidden;
   border: 1px solid #d6dde3;
   border-radius: 8px;
   background: #ffffff;
   box-shadow: 0 12px 32px rgb(23 32 38 / 8%);
 }
 
-.welcome-icon {
-  display: grid;
+.app-card__header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border-bottom: 1px solid #e4e9ee;
+}
+
+.app-card__title {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.app-card__description {
+  margin: 4px 0 0;
+  color: #5f6f7a;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.app-card__actions {
   flex: 0 0 auto;
-  width: 48px;
-  height: 48px;
-  place-items: center;
-  border: 1px solid #c9d3dc;
-  border-radius: 8px;
-  color: #245f73;
-  background: #eef6f8;
+}
+
+.app-card__body {
+  padding: 20px;
+}
+
+.partner-form {
+  display: grid;
+  gap: 16px;
 }
 
 .eyebrow {
@@ -63,14 +104,138 @@ select {
   font-weight: 600;
 }
 
-h1 {
-  margin: 0;
-  font-size: 1.75rem;
-  line-height: 1.25;
+.field {
+  display: grid;
+  gap: 6px;
 }
 
-.description {
-  margin: 8px 0 0;
+.field__label {
   color: #4d5d66;
-  line-height: 1.7;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.field input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #c9d3dc;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #172026;
+}
+
+.field input:focus {
+  border-color: #2d6f86;
+  outline: 3px solid #d9edf2;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.primary-button,
+.secondary-button,
+.icon-button {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.primary-button,
+.secondary-button {
+  min-height: 38px;
+  padding: 8px 12px;
+  font-weight: 600;
+}
+
+.primary-button {
+  color: #ffffff;
+  background: #245f73;
+}
+
+.secondary-button {
+  border-color: #c9d3dc;
+  color: #172026;
+  background: #ffffff;
+}
+
+.icon-button {
+  width: 34px;
+  height: 34px;
+  border-color: #c9d3dc;
+  color: #245f73;
+  background: #ffffff;
+}
+
+.icon-button--danger {
+  color: #9a3412;
+}
+
+.form-error {
+  margin: 0;
+  color: #b42318;
+  line-height: 1.6;
+}
+
+.muted-text {
+  margin: 0;
+  color: #5f6f7a;
+  line-height: 1.6;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 11px 10px;
+  border-bottom: 1px solid #e4e9ee;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.data-table th {
+  color: #4d5d66;
+  font-weight: 700;
+}
+
+.data-table th:last-child,
+.data-table td:last-child {
+  width: 92px;
+  text-align: right;
+}
+
+.table-actions {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 760px) {
+  .app-shell {
+    padding: 20px 14px;
+  }
+
+  .partner-grid {
+    grid-template-columns: 1fr;
+  }
 }

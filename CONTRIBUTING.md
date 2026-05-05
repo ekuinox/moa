@@ -193,6 +193,11 @@ mod tests {
 - 業務ロジックを React component に閉じ込めない。
 - 日付、金額、CSV 変換、フィルタ条件などはテストしやすい純粋関数に寄せる。
 - Vite dev 単体で確認できる状態を保つ。
+- React コンポーネントは `function` 宣言で書く。
+- TypeScript の型定義は原則 `interface` で書く。
+- 外部からアクセスしうる関数、型、コンポーネントは named export する。
+- コンポーネントを切り出すときは `components/Foo/Foo.tsx` のように、コンポーネント名のディレクトリを作る。
+- 共通化できる UI コンポーネントには、原則として `components/Foo/Foo.stories.tsx` も追加する。
 
 ## DB とマイグレーション
 
@@ -200,6 +205,7 @@ mod tests {
 - DB アクセスは Rust の `infrastructure` 層に閉じ込める。
 - マイグレーション SQL は `backend/migrations` に置く。
 - マイグレーション SQL に書くコメントは、日本語で記述する。
+- 適用済みのマイグレーション SQL はコメントだけの変更でも checksum が変わるため編集しない。
 - アプリ起動時に `sqlx::migrate!` でマイグレーションを適用する。
 - テーブルや制約を変更した場合は `requirements.md` の DB 設計も更新する。
 
