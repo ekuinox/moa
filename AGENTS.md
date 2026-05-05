@@ -27,7 +27,7 @@
 - Use React + TypeScript + Vite.
 - Use shadcn/ui + Tailwind CSS for UI.
 - Use SWR for server state.
-- Route data access through `src/lib/api` or equivalent.
+- Route data access through `frontend/src/lib/api` or equivalent.
 - Do not call generated Tauri bindings directly from React components.
 - Keep Storybook, Vitest, and Playwright able to run against the Vite dev experience where practical.
 
@@ -41,7 +41,7 @@
 
 ## Checks
 
-- Use mise tasks once they are available.
+- Use Justfile tasks once they are available.
 - Before committing, run the relevant checks for touched code.
 - For documentation-only changes, review the rendered Markdown mentally and keep links accurate.
 
@@ -52,4 +52,3 @@
 ```text
 Co-authored-by: Codex <codex@openai.com>
 ```
-

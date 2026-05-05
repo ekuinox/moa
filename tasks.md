@@ -10,16 +10,17 @@
   - [x] Tauri + React + Vite + TypeScript の構成を作る
   - [x] Rust 側ディレクトリ名を `backend` にする
   - [x] `mise.toml` を追加する
-  - [x] `mise.toml` に標準タスクを設定する
-    - [x] `mise run dev`
-    - [x] `mise run build`
-    - [x] `mise run fmt`
-    - [x] `mise run lint`
-    - [x] `mise run typecheck`
-    - [x] `mise run test`
-    - [x] `mise run storybook`
-    - [x] `mise run test:e2e`
-    - [x] `mise run validate`
+  - [x] mise で just を管理する
+  - [x] `Justfile` に標準タスクを設定する
+    - [x] `just dev`
+    - [x] `just build`
+    - [x] `just fmt`
+    - [x] `just lint`
+    - [x] `just typecheck`
+    - [x] `just test`
+    - [x] `just storybook`
+    - [x] `just test-e2e`
+    - [x] `just validate`
   - [x] `rust-toolchain.toml` を追加する
   - [x] pnpm を使う
   - [x] Biome を導入する

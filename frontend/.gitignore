@@ -1,26 +1,14 @@
 # Dependencies
 node_modules/
 
-# Frontend build output
+# Build output
 dist/
 storybook-static/
-
-# Rust build output
-target/
-backend/target/
-
-# Tauri generated files
-backend/gen/
 
 # Test output
 coverage/
 test-results/
 playwright-report/
-
-# Local environment
-.env
-.env.local
-*.local
 
 # Logs
 *.log
@@ -28,3 +16,4 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+

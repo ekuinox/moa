@@ -12,10 +12,10 @@
 コミットを作成する前に、できるだけ以下を実行してください。
 
 ```bash
-mise run fmt
-mise run lint
-mise run typecheck
-mise run test
+just fmt
+just lint
+just typecheck
+just test
 cargo fmt --check
 cargo clippy
 cargo test
@@ -30,10 +30,10 @@ Co-authored-by: Codex <codex@openai.com>
 プロジェクト整備後は、まとめて実行できるタスクを用意します。
 
 ```bash
-mise run validate
+just validate
 ```
 
-`mise run validate` には以下を含める想定です。
+`just validate` には以下を含める想定です。
 
 - フロントエンドの format チェック
 - フロントエンドの lint
@@ -48,18 +48,19 @@ mise run validate
 プッシュ前には、通常のチェックに加えて E2E も実行してください。
 
 ```bash
-mise run test:e2e
+just test-e2e
 ```
 
 Storybook を触った場合は、Storybook の起動確認も行ってください。
 
 ```bash
-mise run storybook
+just storybook
 ```
 
 ## ツール管理
 
 - フロントエンド側のツールは `mise.toml` で管理する。
+- 標準タスクは `Justfile` で管理する。
 - Rust toolchain は `rust-toolchain.toml` で固定する。
 - パッケージマネージャーは pnpm を使う。
 - Node.js / pnpm のバージョンを変更した場合は `requirements.md` も確認する。
@@ -69,6 +70,7 @@ mise run storybook
 - 新しい依存を追加する際は、できるだけ最新の安定版を確認する。
 - 依存を追加する理由が薄い場合は、既存の標準ライブラリや導入済みの依存で足りないか確認する。
 - フロントエンドの依存は pnpm で追加する。
+- フロントエンドの依存やコマンドは `frontend/` を対象にする。
 - Rust の依存は `backend/Cargo.toml` に追加する。
 - DB アクセスは原則 `sqlx` を使う。
 - React から SQLite や Tauri SQL plugin を直接使わない。
@@ -97,11 +99,12 @@ backend/src/
 React 側は Tauri command を component から直接呼ばず、API クライアント層を経由します。
 
 ```text
-src/
-  features/
-  lib/api/
-  lib/mock-api/
-  components/
+frontend/
+  src/
+    features/
+    lib/api/
+    lib/mock-api/
+    components/
 ```
 
 - Tauri 起動時は generated binding を呼ぶ。

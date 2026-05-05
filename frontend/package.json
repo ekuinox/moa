@@ -17,9 +17,9 @@
     "test:e2e": "playwright test",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "tauri": "cross-env TAURI_APP_PATH=backend TAURI_FRONTEND_PATH=. tauri",
-    "tauri:dev": "cross-env TAURI_APP_PATH=backend TAURI_FRONTEND_PATH=. tauri dev",
-    "tauri:build": "cross-env TAURI_APP_PATH=backend TAURI_FRONTEND_PATH=. tauri build"
+    "tauri": "cross-env TAURI_APP_PATH=../backend TAURI_FRONTEND_PATH=. tauri",
+    "tauri:dev": "cross-env TAURI_APP_PATH=../backend TAURI_FRONTEND_PATH=. tauri dev",
+    "tauri:build": "cross-env TAURI_APP_PATH=../backend TAURI_FRONTEND_PATH=. tauri build"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.11.0",
