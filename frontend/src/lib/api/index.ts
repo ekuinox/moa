@@ -1,4 +1,5 @@
 import { createMockApiClient } from "../mock-api";
+import { type ApiRuntime, detectApiRuntime } from "./runtime";
 import { createTauriApiClient } from "./tauri";
 
 export type ApiClient = {
@@ -9,10 +10,18 @@ export type HealthStatus = {
   readonly ok: boolean;
 };
 
-export function createApiClient(): ApiClient {
-  if (import.meta.env.DEV) {
-    return createMockApiClient();
+export type CreateApiClientOptions = {
+  readonly runtime?: ApiRuntime;
+};
+
+export function createApiClient(options: CreateApiClientOptions = {}): ApiClient {
+  const runtime = options.runtime ?? detectApiRuntime();
+
+  if (runtime === "tauri") {
+    return createTauriApiClient();
   }
 
-  return createTauriApiClient();
+  return createMockApiClient();
 }
+
+export const apiClient = createApiClient();
