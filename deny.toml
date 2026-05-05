@@ -11,12 +11,15 @@ ignore = [
   "RUSTSEC-2025-0080",
   "RUSTSEC-2025-0100",
   "RUSTSEC-2025-0098",
+  # specta v2.0.0-rc.24 が現時点で間接依存している。
+  "RUSTSEC-2024-0436",
 ]
 
 [licenses]
 version = 2
 allow = [
   "Apache-2.0",
+  "BSD-2-Clause",
   "BSD-3-Clause",
   "CC0-1.0",
   "MIT",
