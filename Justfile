@@ -18,11 +18,11 @@ frontend-dev:
     pnpm --dir frontend dev
 
 fmt:
-    pnpm --dir frontend fmt
+    biome format --write frontend
     cargo fmt --manifest-path backend/Cargo.toml
 
 lint:
-    pnpm --dir frontend lint
+    biome check frontend
     cargo clippy --manifest-path backend/Cargo.toml --all-targets --all-features -- -D warnings
 
 deny:
