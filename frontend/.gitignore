@@ -5,6 +5,9 @@ node_modules/
 dist/
 storybook-static/
 
+# Generated files
+src/lib/api/bindings.ts
+
 # Test output
 coverage/
 test-results/
