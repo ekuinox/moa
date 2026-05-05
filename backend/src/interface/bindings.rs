@@ -12,7 +12,11 @@ pub fn builder() -> Builder<tauri::Wry> {
             super::commands::list_partners,
             super::commands::create_partner,
             super::commands::update_partner,
-            super::commands::delete_partner
+            super::commands::delete_partner,
+            super::commands::list_categories,
+            super::commands::create_category,
+            super::commands::update_category,
+            super::commands::delete_category
         ])
         .error_handling(ErrorHandlingMode::Throw)
 }

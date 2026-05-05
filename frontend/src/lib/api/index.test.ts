@@ -6,9 +6,13 @@ import { detectApiRuntime } from "./runtime";
 vi.mock("./bindings.generated", () => ({
   commands: {
     backendHealth: vi.fn(async () => true),
+    createCategory: vi.fn(async (input) => ({ id: "tauri-category", ...input })),
     createPartner: vi.fn(async (input) => ({ id: "tauri-partner", ...input })),
+    deleteCategory: vi.fn(async () => undefined),
     deletePartner: vi.fn(async () => undefined),
+    listCategories: vi.fn(async () => []),
     listPartners: vi.fn(async () => []),
+    updateCategory: vi.fn(async (input) => input),
     updatePartner: vi.fn(async (input) => input),
   },
 }));
@@ -58,5 +62,9 @@ describe("createApiClient", () => {
         kana: "とりひきさき",
       },
     );
+    await expect(client.categories.create({ name: "材料費" })).resolves.toEqual({
+      id: "tauri-category",
+      name: "材料費",
+    });
   });
 });

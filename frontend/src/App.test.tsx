@@ -32,4 +32,17 @@ describe("App", () => {
     expect(confirm).toHaveBeenCalledWith("青木商店を削除しますか？");
     expect(within(table).getByText("青木商店")).toBeInTheDocument();
   });
+
+  it("renders the category master screen", async () => {
+    const user = userEvent.setup();
+
+    render(<App />);
+    await user.click(screen.getByRole("button", { name: "種別" }));
+
+    expect(screen.getByRole("heading", { name: "種別マスタ" })).toBeInTheDocument();
+
+    const table = await screen.findByRole("table");
+
+    expect(within(table).getByText("材料費")).toBeInTheDocument();
+  });
 });
