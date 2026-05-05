@@ -68,8 +68,6 @@ just ci             # refresh, validate, build
 just test-e2e       # Playwright E2E
 just storybook      # Storybook 起動
 just build          # Tauri build
-just frontend-build # frontend build
-just tauri-build    # Tauri build --no-bundle
 ```
 
 ## コミット

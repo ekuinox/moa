@@ -16,9 +16,6 @@ build:
 frontend-dev:
     pnpm --dir frontend dev
 
-frontend-build:
-    pnpm --dir frontend build
-
 fmt:
     pnpm --dir frontend fmt
     cargo fmt --manifest-path backend/Cargo.toml
@@ -45,9 +42,6 @@ test-e2e:
 
 tauri-info:
     pnpm --dir frontend tauri info
-
-tauri-build:
-    pnpm --dir frontend tauri build --no-bundle
 
 validate: fmt lint typecheck test
 
