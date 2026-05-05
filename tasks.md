@@ -21,6 +21,8 @@
     - [x] `just storybook`
     - [x] `just test-e2e`
     - [x] `just validate`
+    - [x] `just refresh`
+    - [x] `just ci`
   - [x] `rust-toolchain.toml` を追加する
   - [x] pnpm を使う
   - [x] Biome を導入する

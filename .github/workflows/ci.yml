@@ -27,12 +27,5 @@ jobs:
           install: true
           cache: true
 
-      - name: Install frontend dependencies
-        run: pnpm --dir frontend install --frozen-lockfile
-
-      - name: Validate
-        run: just validate
-
-      - name: Build Tauri application
-        run: just tauri-build
-
+      - name: CI
+        run: just ci

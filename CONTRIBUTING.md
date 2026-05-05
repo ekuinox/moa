@@ -12,6 +12,7 @@
 コミットを作成する前に、できるだけ以下を実行してください。
 
 ```bash
+just refresh
 just fmt
 just lint
 just typecheck
@@ -42,6 +43,12 @@ just validate
 - Rust format チェック
 - Rust clippy
 - Rust test
+
+CI と同じ確認を行う場合は以下を実行してください。
+
+```bash
+just ci
+```
 
 ## プッシュ前のチェック
 

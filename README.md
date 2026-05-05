@@ -34,10 +34,10 @@ mise を有効にして、必要なツールをインストールします。
 mise install
 ```
 
-フロントエンド依存をインストールします。
+依存関係を解決します。
 
 ```bash
-pnpm --dir frontend install
+just refresh
 ```
 
 Playwright のブラウザをインストールします。
@@ -64,6 +64,7 @@ just frontend-dev
 
 ```bash
 just validate       # format, lint, typecheck, test
+just ci             # refresh, validate, build
 just test-e2e       # Playwright E2E
 just storybook      # Storybook 起動
 just build          # Tauri build
@@ -78,4 +79,3 @@ just tauri-build    # Tauri build --no-bundle
 ```text
 Co-authored-by: Codex <codex@openai.com>
 ```
-

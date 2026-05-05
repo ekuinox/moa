@@ -3,6 +3,10 @@ set shell := ["powershell.exe", "-NoProfile", "-Command"]
 default:
     just --list
 
+refresh:
+    pnpm --dir frontend install --frozen-lockfile
+    cargo fetch --manifest-path backend/Cargo.toml
+
 dev:
     pnpm --dir frontend tauri dev
 
@@ -46,3 +50,5 @@ tauri-build:
     pnpm --dir frontend tauri build --no-bundle
 
 validate: fmt lint typecheck test
+
+ci: refresh validate build
