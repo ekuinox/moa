@@ -4,8 +4,17 @@ use tauri::State;
 
 use crate::{
     application::use_cases,
-    infrastructure::{db::AppDatabase, repositories::partner_repository::SqlitePartnerRepository},
-    interface::dto::partner::{CreatePartnerDto, PartnerDto, UpdatePartnerDto},
+    infrastructure::{
+        db::AppDatabase,
+        repositories::{
+            category_repository::SqliteCategoryRepository,
+            partner_repository::SqlitePartnerRepository,
+        },
+    },
+    interface::dto::{
+        category::{CategoryDto, CreateCategoryDto, UpdateCategoryDto},
+        partner::{CreatePartnerDto, PartnerDto, UpdatePartnerDto},
+    },
 };
 
 #[tauri::command]
@@ -53,6 +62,47 @@ pub async fn delete_partner(database: State<'_, AppDatabase>, id: String) -> Res
     let repository = SqlitePartnerRepository::new(database.pool());
 
     use_cases::partners::delete_partner(&repository, &id).await
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn list_categories(database: State<'_, AppDatabase>) -> Result<Vec<CategoryDto>, String> {
+    let repository = SqliteCategoryRepository::new(database.pool());
+    let categories = use_cases::categories::list_categories(&repository).await?;
+
+    Ok(categories.into_iter().map(CategoryDto::from).collect())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn create_category(
+    database: State<'_, AppDatabase>,
+    input: CreateCategoryDto,
+) -> Result<CategoryDto, String> {
+    let repository = SqliteCategoryRepository::new(database.pool());
+    let category = use_cases::categories::create_category(&repository, input.into()).await?;
+
+    Ok(category.into())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn update_category(
+    database: State<'_, AppDatabase>,
+    input: UpdateCategoryDto,
+) -> Result<CategoryDto, String> {
+    let repository = SqliteCategoryRepository::new(database.pool());
+    let category = use_cases::categories::update_category(&repository, input.into()).await?;
+
+    Ok(category.into())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn delete_category(database: State<'_, AppDatabase>, id: String) -> Result<(), String> {
+    let repository = SqliteCategoryRepository::new(database.pool());
+
+    use_cases::categories::delete_category(&repository, &id).await
 }
 
 #[cfg(test)]

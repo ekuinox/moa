@@ -3,32 +3,29 @@ import { type FormEvent, useState } from "react";
 import useSWR from "swr";
 
 import { AppCard } from "../../components";
-import { apiClient, type Partner } from "../../lib/api";
+import { apiClient, type Category } from "../../lib/api";
 
-/** 取引先追加・編集フォームの入力状態。 */
-interface PartnerFormState {
-  /** 編集中の取引先 ID。未指定の場合は新規追加。 */
+/** 種別追加・編集フォームの入力状態。 */
+interface CategoryFormState {
+  /** 編集中の種別 ID。未指定の場合は新規追加。 */
   readonly id?: string;
-  /** フォームに入力された取引先名。 */
+  /** フォームに入力された種別名。 */
   readonly name: string;
-  /** フォームに入力された読み仮名。 */
-  readonly kana: string;
 }
 
-const emptyForm: PartnerFormState = {
+const emptyForm: CategoryFormState = {
   name: "",
-  kana: "",
 };
 
-export function PartnerMaster() {
-  const [form, setForm] = useState<PartnerFormState>(emptyForm);
+export function CategoryMaster() {
+  const [form, setForm] = useState<CategoryFormState>(emptyForm);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const {
-    data: partners = [],
+    data: categories = [],
     error,
     isLoading,
     mutate,
-  } = useSWR("partners", () => apiClient.partners.list());
+  } = useSWR("categories", () => apiClient.categories.list());
 
   const isEditing = Boolean(form.id);
 
@@ -37,60 +34,49 @@ export function PartnerMaster() {
     setErrorMessage(undefined);
 
     try {
-      const partnerId = form.id;
+      const categoryId = form.id;
 
-      if (partnerId) {
-        await apiClient.partners.update({ ...form, id: partnerId });
+      if (categoryId) {
+        await apiClient.categories.update({ ...form, id: categoryId });
       } else {
-        await apiClient.partners.create(form);
+        await apiClient.categories.create(form);
       }
 
       setForm(emptyForm);
       await mutate();
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "取引先の保存に失敗しました。");
+      setErrorMessage(error instanceof Error ? error.message : "種別の保存に失敗しました。");
     }
   }
 
-  async function handleDelete(partner: Partner) {
+  async function handleDelete(category: Category) {
     setErrorMessage(undefined);
 
-    const confirmed = window.confirm(`${partner.name}を削除しますか？`);
+    const confirmed = window.confirm(`${category.name}を削除しますか？`);
     if (!confirmed) {
       return;
     }
 
     try {
-      await apiClient.partners.delete(partner.id);
-      if (form.id === partner.id) {
+      await apiClient.categories.delete(category.id);
+      if (form.id === category.id) {
         setForm(emptyForm);
       }
       await mutate();
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "取引先の削除に失敗しました。");
+      setErrorMessage(error instanceof Error ? error.message : "種別の削除に失敗しました。");
     }
   }
 
   return (
-    <div className="partner-grid">
-      <AppCard
-        title={isEditing ? "取引先を編集" : "取引先を追加"}
-        description="名称と読み仮名を登録します。"
-      >
-        <form className="partner-form" onSubmit={handleSubmit}>
+    <div className="category-grid">
+      <AppCard title={isEditing ? "種別を編集" : "種別を追加"}>
+        <form className="category-form" onSubmit={handleSubmit}>
           <label className="field">
             <span className="field__label">名称</span>
             <input
               value={form.name}
               onChange={(event) => setForm({ ...form, name: event.target.value })}
-              required
-            />
-          </label>
-          <label className="field">
-            <span className="field__label">読み仮名</span>
-            <input
-              value={form.kana}
-              onChange={(event) => setForm({ ...form, kana: event.target.value })}
               required
             />
           </label>
@@ -110,35 +96,33 @@ export function PartnerMaster() {
         </form>
       </AppCard>
 
-      <AppCard title="取引先一覧" description="読み仮名順で表示します。">
+      <AppCard title="種別一覧">
         {isLoading ? <p className="muted-text">読み込み中です。</p> : null}
-        {error ? <p className="form-error">取引先の読み込みに失敗しました。</p> : null}
-        {!isLoading && partners.length === 0 ? (
-          <p className="muted-text">取引先はまだ登録されていません。</p>
+        {error ? <p className="form-error">種別の読み込みに失敗しました。</p> : null}
+        {!isLoading && categories.length === 0 ? (
+          <p className="muted-text">種別はまだ登録されていません。</p>
         ) : null}
-        {partners.length > 0 ? (
+        {categories.length > 0 ? (
           <table className="data-table">
             <thead>
               <tr>
                 <th>名称</th>
-                <th>読み仮名</th>
                 <th>
                   <span className="visually-hidden">操作</span>
                 </th>
               </tr>
             </thead>
             <tbody>
-              {partners.map((partner) => (
-                <tr key={partner.id}>
-                  <td>{partner.name}</td>
-                  <td>{partner.kana}</td>
+              {categories.map((category) => (
+                <tr key={category.id}>
+                  <td>{category.name}</td>
                   <td>
                     <div className="table-actions">
                       <button
                         className="icon-button"
                         type="button"
-                        aria-label={`${partner.name}を編集`}
-                        onClick={() => setForm(partner)}
+                        aria-label={`${category.name}を編集`}
+                        onClick={() => setForm(category)}
                         title="編集"
                       >
                         <Pencil size={16} aria-hidden="true" />
@@ -146,8 +130,8 @@ export function PartnerMaster() {
                       <button
                         className="icon-button icon-button--danger"
                         type="button"
-                        aria-label={`${partner.name}を削除`}
-                        onClick={() => void handleDelete(partner)}
+                        aria-label={`${category.name}を削除`}
+                        onClick={() => void handleDelete(category)}
                         title="削除"
                       >
                         <Trash2 size={16} aria-hidden="true" />

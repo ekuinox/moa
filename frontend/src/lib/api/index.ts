@@ -8,6 +8,8 @@ export interface ApiClient {
   readonly health: () => Promise<HealthStatus>;
   /** 取引先マスタを操作する API。 */
   readonly partners: PartnerApiClient;
+  /** 種別マスタを操作する API。 */
+  readonly categories: CategoryApiClient;
 }
 
 /** バックエンド疎通確認の結果。 */
@@ -53,6 +55,40 @@ export interface PartnerApiClient {
   /** 既存の取引先を更新する。 */
   readonly update: (input: UpdatePartnerInput) => Promise<Partner>;
   /** 指定した ID の取引先を削除する。 */
+  readonly delete: (id: string) => Promise<void>;
+}
+
+/** 買掛・売掛明細に付与する種別。 */
+export interface Category {
+  /** 種別を識別する ID。 */
+  readonly id: string;
+  /** 種別の表示名。 */
+  readonly name: string;
+}
+
+/** 種別を新規作成するときの入力値。 */
+export interface CreateCategoryInput {
+  /** 種別の表示名。 */
+  readonly name: string;
+}
+
+/** 種別を更新するときの入力値。 */
+export interface UpdateCategoryInput {
+  /** 更新対象の種別 ID。 */
+  readonly id: string;
+  /** 更新後の種別の表示名。 */
+  readonly name: string;
+}
+
+/** 種別マスタ操作の API。 */
+export interface CategoryApiClient {
+  /** 種別を名称順で一覧取得する。 */
+  readonly list: () => Promise<Category[]>;
+  /** 種別を作成する。 */
+  readonly create: (input: CreateCategoryInput) => Promise<Category>;
+  /** 既存の種別を更新する。 */
+  readonly update: (input: UpdateCategoryInput) => Promise<Category>;
+  /** 指定した ID の種別を削除する。 */
   readonly delete: (id: string) => Promise<void>;
 }
 

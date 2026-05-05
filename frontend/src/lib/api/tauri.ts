@@ -20,5 +20,19 @@ export function createTauriApiClient(): ApiClient {
         await commands.deletePartner(id);
       },
     },
+    categories: {
+      list() {
+        return commands.listCategories();
+      },
+      create(input) {
+        return commands.createCategory(input);
+      },
+      update(input) {
+        return commands.updateCategory(input);
+      },
+      async delete(id) {
+        await commands.deleteCategory(id);
+      },
+    },
   };
 }
