@@ -3,6 +3,7 @@ name = "moa"
 version = "0.1.0"
 description = "Desktop bookkeeping application"
 authors = ["ekuinox"]
+license = "MIT"
 edition = "2024"
 rust-version = "1.95.0"
 
