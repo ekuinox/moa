@@ -6,7 +6,7 @@ default:
 refresh:
     pnpm --dir frontend install --frozen-lockfile
     cargo fetch --manifest-path backend/Cargo.toml
-    cargo run --manifest-path backend/Cargo.toml --bin export_bindings
+    cargo run --manifest-path backend/Cargo.toml --bin export_bindings -- frontend/src/lib/api/bindings.generated.ts
 
 dev:
     pnpm --dir frontend tauri dev

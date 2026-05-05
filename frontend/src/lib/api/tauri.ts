@@ -1,5 +1,5 @@
 import type { ApiClient } from ".";
-import { commands } from "./bindings";
+import { commands } from "./bindings.generated";
 
 export function createTauriApiClient(): ApiClient {
   return {
