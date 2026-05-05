@@ -1,5 +1,9 @@
 set shell := ["powershell.exe", "-NoProfile", "-Command"]
 
+APP_DATA := env_var('APPDATA')
+DB_PATH := join(APP_DATA, 'dev.ekuinox.moa', 'moa.sqlite3')
+DB_URL := 'sqlite:///' + replace(DB_PATH, '\', '/')
+
 default:
     just --list
 
@@ -49,12 +53,7 @@ tauri-info:
     pnpm --dir frontend tauri info
 
 db-drop:
-    $db = Join-Path $env:APPDATA "dev.ekuinox.moa\moa.sqlite3"; `
-    if (Test-Path $db) { `
-    sqlx database drop -y --database-url "sqlite:///$($db.Replace('\', '/'))"; `
-    } else { `
-    Write-Output "Database not found: $db"; `
-    }
+    sqlx database drop -y --database-url "{{DB_URL}}"
 
 validate: fmt lint deny typecheck test
 
