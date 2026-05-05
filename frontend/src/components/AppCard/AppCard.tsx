@@ -1,9 +1,14 @@
 import type { ReactNode } from "react";
 
+/** 業務画面で使う標準カードの表示内容。 */
 export interface AppCardProps {
+  /** カード見出し。 */
   readonly title: string;
+  /** 見出し下に表示する補足説明。 */
   readonly description?: string;
+  /** 見出し右側に表示する操作要素。 */
   readonly actions?: ReactNode;
+  /** カード本文。 */
   readonly children: ReactNode;
 }
 

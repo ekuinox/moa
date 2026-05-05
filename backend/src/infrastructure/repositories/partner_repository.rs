@@ -7,6 +7,7 @@ use crate::{
     domain::models::partner::{NewPartner, Partner, UpdatePartner},
 };
 
+/// SQLite に保存された取引先マスタを操作する repository。
 pub struct SqlitePartnerRepository<'pool> {
     pool: &'pool SqlitePool,
 }
@@ -101,6 +102,7 @@ impl PartnerRepository for SqlitePartnerRepository<'_> {
     }
 }
 
+/// `partners` テーブルから取得した 1 行。
 #[derive(FromRow)]
 struct PartnerRow {
     id: String,

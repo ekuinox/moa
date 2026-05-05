@@ -1,3 +1,4 @@
+/** API クライアントが接続する実行環境。 */
 export type ApiRuntime = "mock" | "tauri";
 
 export function detectApiRuntime(

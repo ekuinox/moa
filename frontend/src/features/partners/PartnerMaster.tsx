@@ -5,9 +5,13 @@ import useSWR from "swr";
 import { AppCard } from "../../components";
 import { apiClient, type Partner } from "../../lib/api";
 
+/** 取引先追加・編集フォームの入力状態。 */
 interface PartnerFormState {
+  /** 編集中の取引先 ID。未指定の場合は新規追加。 */
   readonly id?: string;
+  /** フォームに入力された取引先名。 */
   readonly name: string;
+  /** フォームに入力された読み仮名。 */
   readonly kana: string;
 }
 
