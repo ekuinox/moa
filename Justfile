@@ -49,7 +49,12 @@ tauri-info:
     pnpm --dir frontend tauri info
 
 db-drop:
-    $db = Join-Path $env:APPDATA "dev.ekuinox.moa\moa.sqlite3"; if (Test-Path $db) { sqlx database drop -y --database-url "sqlite:///$($db.Replace('\', '/'))" } else { Write-Output "Database not found: $db" }
+    $db = Join-Path $env:APPDATA "dev.ekuinox.moa\moa.sqlite3"; `
+    if (Test-Path $db) { `
+    sqlx database drop -y --database-url "sqlite:///$($db.Replace('\', '/'))"; `
+    } else { `
+    Write-Output "Database not found: $db"; `
+    }
 
 validate: fmt lint deny typecheck test
 
