@@ -51,6 +51,11 @@ export function PartnerMaster() {
   async function handleDelete(partner: Partner) {
     setErrorMessage(undefined);
 
+    const confirmed = window.confirm(`${partner.name}を削除しますか？`);
+    if (!confirmed) {
+      return;
+    }
+
     try {
       await apiClient.partners.delete(partner.id);
       if (form.id === partner.id) {
