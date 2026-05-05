@@ -34,5 +34,28 @@ export function createTauriApiClient(): ApiClient {
         await commands.deleteCategory(id);
       },
     },
+    fiscalYears: {
+      getSetting() {
+        return commands.getFiscalYearSetting();
+      },
+      saveSetting(input) {
+        return commands.saveFiscalYearSetting(input);
+      },
+      list() {
+        return commands.listFiscalYears();
+      },
+      create(input) {
+        return commands.createFiscalYear(input);
+      },
+      update(input) {
+        return commands.updateFiscalYear(input);
+      },
+      async delete(id) {
+        await commands.deleteFiscalYear(id);
+      },
+      generate(input) {
+        return commands.generateFiscalYear(input);
+      },
+    },
   };
 }

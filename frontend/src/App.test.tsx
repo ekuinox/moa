@@ -45,4 +45,17 @@ describe("App", () => {
 
     expect(within(table).getByText("材料費")).toBeInTheDocument();
   });
+
+  it("renders the fiscal year settings screen", async () => {
+    const user = userEvent.setup();
+
+    render(<App />);
+    await user.click(screen.getByRole("button", { name: "事業年度" }));
+
+    expect(screen.getByRole("heading", { name: "事業年度設定" })).toBeInTheDocument();
+
+    const table = await screen.findByRole("table");
+
+    expect(within(table).getByText("2026年度")).toBeInTheDocument();
+  });
 });
