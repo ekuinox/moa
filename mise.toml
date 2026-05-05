@@ -1,0 +1,39 @@
+[tools]
+node = "20.19.0"
+"npm:pnpm" = "10.32.1"
+
+[tasks.dev]
+run = "pnpm.cmd dev"
+
+[tasks.build]
+run = "pnpm.cmd build"
+
+[tasks.fmt]
+run = [
+  "pnpm.cmd fmt",
+  "cargo fmt --manifest-path backend/Cargo.toml",
+]
+
+[tasks.lint]
+run = [
+  "pnpm.cmd lint",
+  "cargo clippy --manifest-path backend/Cargo.toml --all-targets --all-features -- -D warnings",
+]
+
+[tasks.typecheck]
+run = "pnpm.cmd typecheck"
+
+[tasks.test]
+run = [
+  "pnpm.cmd test",
+  "cargo test --manifest-path backend/Cargo.toml",
+]
+
+[tasks.storybook]
+run = "pnpm.cmd storybook"
+
+[tasks."test:e2e"]
+run = "pnpm.cmd test:e2e"
+
+[tasks.validate]
+depends = ["fmt", "lint", "typecheck", "test"]
