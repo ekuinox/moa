@@ -3,37 +3,37 @@ node = "20.19.0"
 "npm:pnpm" = "10.32.1"
 
 [tasks.dev]
-run = "pnpm.cmd dev"
+run = "pnpm dev"
 
 [tasks.build]
-run = "pnpm.cmd build"
+run = "pnpm build"
 
 [tasks.fmt]
 run = [
-  "pnpm.cmd fmt",
+  "pnpm fmt",
   "cargo fmt --manifest-path backend/Cargo.toml",
 ]
 
 [tasks.lint]
 run = [
-  "pnpm.cmd lint",
+  "pnpm lint",
   "cargo clippy --manifest-path backend/Cargo.toml --all-targets --all-features -- -D warnings",
 ]
 
 [tasks.typecheck]
-run = "pnpm.cmd typecheck"
+run = "pnpm typecheck"
 
 [tasks.test]
 run = [
-  "pnpm.cmd test",
+  "pnpm test",
   "cargo test --manifest-path backend/Cargo.toml",
 ]
 
 [tasks.storybook]
-run = "pnpm.cmd storybook"
+run = "pnpm storybook"
 
 [tasks."test:e2e"]
-run = "pnpm.cmd test:e2e"
+run = "pnpm test:e2e"
 
 [tasks.validate]
 depends = ["fmt", "lint", "typecheck", "test"]
