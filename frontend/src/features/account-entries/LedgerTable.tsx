@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+
 import type { AccountEntry, Category } from "../../lib/api";
 import { EditableNewRow, LedgerRow, LedgerTotalRow } from "./LedgerRows";
 import styles from "./LedgerTable.module.css";
@@ -41,8 +43,35 @@ export function LedgerTable({
   onStartEditing,
   onUpdateRow,
 }: LedgerTableProps) {
+  const tableWrapRef = useRef<HTMLDivElement>(null);
+  const visibleEntryCount = visibleEntries.length;
+
+  useEffect(() => {
+    if (!highlightedEntryId || visibleEntryCount === 0) {
+      return;
+    }
+
+    const tableWrap = tableWrapRef.current;
+    if (!tableWrap) {
+      return;
+    }
+
+    const highlightedRow = Array.from(
+      tableWrap.querySelectorAll<HTMLTableRowElement>("[data-ledger-row-key]"),
+    ).find((row) => row.dataset.ledgerRowKey === highlightedEntryId);
+
+    if (!highlightedRow) {
+      return;
+    }
+
+    const headerHeight = tableWrap.querySelector("thead")?.getBoundingClientRect().height ?? 0;
+    const scrollTop = Math.max(highlightedRow.offsetTop - headerHeight, 0);
+
+    tableWrap.scrollTo({ top: scrollTop, behavior: "smooth" });
+  }, [highlightedEntryId, visibleEntryCount]);
+
   return (
-    <div className={styles.tableWrap}>
+    <div className={styles.tableWrap} ref={tableWrapRef}>
       <table className={styles.table}>
         <colgroup>
           <col className={styles.dateCol} />
