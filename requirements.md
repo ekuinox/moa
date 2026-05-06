@@ -252,21 +252,19 @@ frontend/
 - アプリ起動時にマイグレーションを実行する。
 - ORM 候補として Toasty も検討したが、初期実装では採用しない方針にする。
 - Toasty は Preview 段階で API が安定していないため、業務アプリの初期DB層としては `sqlx` のほうを優先する。
-- 事業年度は設定データとして SQLite に永続化する。
-- 事業年度の基本ルールは `fiscal_year_settings` に保存する。
-- 事業年度は開始年月と終了年月を持つ年度定義として管理する。
-- 買掛・売掛明細には事業年度 ID を直接持たせず、発生日と年度定義の期間から対象年度を判定する。
-- 年度定義の変更により、既存明細の表示年度が変わる可能性を許容する。
+- アプリ全体の設定は単一行の `settings` テーブルに保存する。
+- 事業年度の開始月は `settings.fiscal_year_start_month` で管理する。
+- 事業年度は開始月から12ヶ月単位で論理的に区切る (専用テーブルは持たない)。
+- 買掛・売掛明細には事業年度 ID を直接持たせず、発生日と開始月から対象年度を判定する。
+- 開始月の変更により、既存明細の表示年度が変わる可能性を許容する。
 
 ### 初期データモデル案
 
 - `partners`: 取引先。
 - `categories`: 買掛・売掛の種別。
 - `account_entries`: 買掛・売掛明細。
-- `fiscal_year_settings`: 事業年度の基本ルール。
-- `fiscal_years`: 事業年度定義。
+- `settings`: アプリ全体の設定 (単一行)。
 - `account_entries` には `kind` を持たせ、買掛と売掛を区別する。
-- `fiscal_years` には名称、開始年月、終了年月を持たせる。
 
 ### 初期テーブル案
 
@@ -309,29 +307,14 @@ frontend/
 | `created_at` | TEXT | Yes | 作成日時 |
 | `updated_at` | TEXT | Yes | 更新日時 |
 
-#### `fiscal_year_settings`
+#### `settings`
 
-事業年度の自動生成ルールを管理する。
-
-| カラム | 型 | 必須 | 説明 |
-| --- | --- | --- | --- |
-| `id` | TEXT | Yes | 固定 ID。初期実装では1レコードのみ |
-| `start_month` | INTEGER | Yes | 事業年度の開始月。1-12 |
-| `duration_months` | INTEGER | Yes | 期間月数。通常は12 |
-| `naming_rule` | TEXT | Yes | 年度名の付け方。例: `start_year` |
-| `created_at` | TEXT | Yes | 作成日時 |
-| `updated_at` | TEXT | Yes | 更新日時 |
-
-#### `fiscal_years`
-
-実際の事業年度定義を管理する。
+アプリ全体に対する設定を 1 行だけ保持する。
 
 | カラム | 型 | 必須 | 説明 |
 | --- | --- | --- | --- |
-| `id` | TEXT | Yes | UUID |
-| `name` | TEXT | Yes | 事業年度名 |
-| `start_month` | TEXT | Yes | 開始年月。`YYYY-MM` |
-| `end_month` | TEXT | Yes | 終了年月。`YYYY-MM` |
+| `id` | TEXT | Yes | 固定値 `default`。シングルトン制約 |
+| `fiscal_year_start_month` | INTEGER | Yes | 事業年度の開始月。1-12 |
 | `created_at` | TEXT | Yes | 作成日時 |
 | `updated_at` | TEXT | Yes | 更新日時 |
 

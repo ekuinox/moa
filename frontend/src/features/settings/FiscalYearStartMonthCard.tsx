@@ -10,29 +10,29 @@ const MAX_MONTH = 12;
 
 export function FiscalYearStartMonthCard() {
   const {
-    data: setting,
+    data: settings,
     error,
     isLoading,
     mutate,
-  } = useSWR("fiscal-year-setting", () => apiClient.fiscalYears.getSetting());
+  } = useSWR("settings", () => apiClient.settings.get());
   const [draft, setDraft] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
   useEffect(() => {
-    if (setting) {
-      setDraft(String(setting.startMonth));
+    if (settings) {
+      setDraft(String(settings.fiscalYearStartMonth));
     }
-  }, [setting]);
+  }, [settings]);
 
   function revertDraft() {
-    if (setting) {
-      setDraft(String(setting.startMonth));
+    if (settings) {
+      setDraft(String(settings.fiscalYearStartMonth));
     }
     setErrorMessage(undefined);
   }
 
   async function commitDraft() {
-    if (!setting) {
+    if (!settings) {
       return;
     }
     const parsed = Number.parseInt(draft, 10);
@@ -41,23 +41,17 @@ export function FiscalYearStartMonthCard() {
       revertDraft();
       return;
     }
-    if (parsed === setting.startMonth) {
+    if (parsed === settings.fiscalYearStartMonth) {
       setErrorMessage(undefined);
       return;
     }
 
     try {
-      await apiClient.fiscalYears.saveSetting({
-        startMonth: parsed,
-        durationMonths: setting.durationMonths,
-        namingRule: setting.namingRule,
-      });
+      await apiClient.settings.save({ fiscalYearStartMonth: parsed });
       setErrorMessage(undefined);
       await mutate();
     } catch (caught) {
-      setErrorMessage(
-        caught instanceof Error ? caught.message : "事業年度設定の保存に失敗しました。",
-      );
+      setErrorMessage(caught instanceof Error ? caught.message : "設定の保存に失敗しました。");
       revertDraft();
     }
   }
@@ -75,10 +69,10 @@ export function FiscalYearStartMonthCard() {
 
   return (
     <div>
-      {isLoading || !setting ? <p className={styles.muted}>読み込み中です。</p> : null}
-      {error ? <p className="form-error">事業年度設定の読み込みに失敗しました。</p> : null}
+      {isLoading || !settings ? <p className={styles.muted}>読み込み中です。</p> : null}
+      {error ? <p className="form-error">設定の読み込みに失敗しました。</p> : null}
 
-      {setting ? (
+      {settings ? (
         <div className={styles.row}>
           <span className={styles.label}>開始月</span>
           <input

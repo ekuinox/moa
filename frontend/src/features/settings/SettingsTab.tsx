@@ -1,6 +1,6 @@
 import { AppCard } from "../../components";
 import { CategoryChipEditor } from "../categories/CategoryChipEditor";
-import { FiscalYearStartMonthCard } from "../fiscal-years/FiscalYearStartMonthCard";
+import { FiscalYearStartMonthCard } from "./FiscalYearStartMonthCard";
 import styles from "./SettingsTab.module.css";
 
 /** 設定タブ。種別と事業年度の基本ルールをひとつの画面で扱う。 */

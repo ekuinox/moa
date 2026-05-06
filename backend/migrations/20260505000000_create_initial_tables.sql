@@ -20,30 +20,17 @@ CREATE TABLE categories (
 
 CREATE INDEX idx_categories_name ON categories (name);
 
--- 事業年度を生成・解釈するための基本ルール。
--- 初期実装では 1 レコードだけを使うが、永続化の形は将来の拡張を妨げないようにしておく。
-CREATE TABLE fiscal_year_settings (
-  id TEXT PRIMARY KEY NOT NULL,
-  start_month INTEGER NOT NULL CHECK (start_month BETWEEN 1 AND 12),
-  duration_months INTEGER NOT NULL CHECK (duration_months > 0),
-  naming_rule TEXT NOT NULL,
+-- アプリ全体に対する設定をまとめて保持する単一行テーブル。
+-- 列を増やすことで設定項目を追加できるよう、シングルトン制約 (`id = 'default'`) を入れておく。
+CREATE TABLE settings (
+  id TEXT PRIMARY KEY NOT NULL DEFAULT 'default' CHECK (id = 'default'),
+  fiscal_year_start_month INTEGER NOT NULL DEFAULT 4 CHECK (fiscal_year_start_month BETWEEN 1 AND 12),
   created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
   updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
 );
 
--- 実際の事業年度期間。
--- 要件上、事業年度は月単位なので YYYY-MM の文字列として保持する。
-CREATE TABLE fiscal_years (
-  id TEXT PRIMARY KEY NOT NULL,
-  name TEXT NOT NULL,
-  start_month TEXT NOT NULL,
-  end_month TEXT NOT NULL,
-  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
-  updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
-  CHECK (start_month <= end_month)
-);
-
-CREATE INDEX idx_fiscal_years_period ON fiscal_years (start_month, end_month);
+-- 設定はテーブル作成時に既定値で 1 行だけ用意する。
+INSERT INTO settings (id) VALUES ('default');
 
 -- 買掛・売掛の明細。
 -- 買掛と売掛は同じ項目を持つため `kind` で区別する。
