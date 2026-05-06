@@ -30,6 +30,26 @@
   color: #4d5d66;
 }
 
+.confirm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid #c9d3dc;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #5f6f7a;
+  cursor: pointer;
+}
+
+.confirm:hover {
+  border-color: #245f73;
+  color: #245f73;
+  background: #e8f3f6;
+}
+
 .error {
   margin: 12px 0 0;
 }

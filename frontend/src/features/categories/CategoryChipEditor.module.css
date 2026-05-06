@@ -44,7 +44,8 @@
   min-width: 80px;
 }
 
-.chipDelete {
+.chipDelete,
+.chipConfirm {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -59,6 +60,11 @@
 .chipDelete:hover {
   color: #b04040;
   background: #fbeaea;
+}
+
+.chipConfirm:hover {
+  color: #245f73;
+  background: #e8f3f6;
 }
 
 .adderChip {

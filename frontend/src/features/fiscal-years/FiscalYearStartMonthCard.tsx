@@ -1,3 +1,4 @@
+import { Check } from "lucide-react";
 import { type KeyboardEvent, useEffect, useState } from "react";
 import useSWR from "swr";
 
@@ -93,6 +94,16 @@ export function FiscalYearStartMonthCard() {
             aria-label="事業年度の開始月"
           />
           <span className={styles.suffix}>月</span>
+          <button
+            className={styles.confirm}
+            type="button"
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => void commitDraft()}
+            aria-label="開始月を保存"
+            title="保存"
+          >
+            <Check size={14} aria-hidden="true" />
+          </button>
         </div>
       ) : null}
 

@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { type KeyboardEvent, useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 
@@ -157,6 +157,16 @@ export function CategoryChipEditor() {
             placeholder="種別を追加"
             aria-label="種別を追加"
           />
+          <button
+            className={styles.chipConfirm}
+            type="button"
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => void commitAdder()}
+            aria-label="種別を登録"
+            title="登録"
+          >
+            <Check size={14} aria-hidden="true" />
+          </button>
         </div>
       </div>
 
