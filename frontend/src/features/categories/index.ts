@@ -1,1 +1,1 @@
-export { CategoryMaster } from "./CategoryMaster";
+export { CategoryChipEditor } from "./CategoryChipEditor";

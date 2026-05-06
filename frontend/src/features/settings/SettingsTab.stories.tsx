@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { PartnerMaster } from "./PartnerMaster";
+import { SettingsTab } from "./SettingsTab";
 
 const meta = {
-  title: "Features/Partners/PartnerMaster",
-  component: PartnerMaster,
-} satisfies Meta<typeof PartnerMaster>;
+  title: "Features/Settings/SettingsTab",
+  component: SettingsTab,
+} satisfies Meta<typeof SettingsTab>;
 
 export default meta;
 

@@ -97,6 +97,8 @@
   - [x] 年度期間の重複チェックを実装する
   - [x] React の設定画面を作る
   - [x] テストを書く
+  - [x] issue #29 の画面案を元に種別と年度をまとめた設定タブを実装する
+  - [x] fiscal_year_settings / fiscal_years テーブルを廃止し、`settings` テーブルに統合する
 
 - [x] 買掛・売掛明細を実装する
   - [x] domain model を作る

@@ -66,14 +66,10 @@ async fn connect_dev_database() -> SeedResult<SqlitePool> {
 }
 
 /// 外部キーの参照順に合わせて既存データをすべて削除する。
+/// `settings` テーブルは `id = 'default'` の単一行をマイグレーションで挿入するため
+/// ここでは削除せず、CSV からの値で上書きする。
 async fn clear_existing_data(pool: &SqlitePool) -> SeedResult<()> {
-    for table in [
-        "account_entries",
-        "fiscal_years",
-        "fiscal_year_settings",
-        "categories",
-        "partners",
-    ] {
+    for table in ["account_entries", "categories", "partners"] {
         sqlx::query(&format!("DELETE FROM {table}"))
             .execute(pool)
             .await?;
@@ -86,15 +82,12 @@ async fn clear_existing_data(pool: &SqlitePool) -> SeedResult<()> {
 async fn insert_seed_data(pool: &SqlitePool, seed_dir: &Path) -> SeedResult<()> {
     let partners: Vec<PartnerRow> = read_csv(seed_dir, "partners.csv")?;
     let categories: Vec<CategoryRow> = read_csv(seed_dir, "categories.csv")?;
-    let fiscal_year_settings: Vec<FiscalYearSettingRow> =
-        read_csv(seed_dir, "fiscal_year_settings.csv")?;
-    let fiscal_years: Vec<FiscalYearRow> = read_csv(seed_dir, "fiscal_years.csv")?;
+    let settings: Vec<SettingsRow> = read_csv(seed_dir, "settings.csv")?;
     let account_entries: Vec<AccountEntryRow> = read_csv(seed_dir, "account_entries.csv")?;
 
     insert_partners(pool, &partners).await?;
     insert_categories(pool, &categories).await?;
-    insert_fiscal_year_settings(pool, &fiscal_year_settings).await?;
-    insert_fiscal_years(pool, &fiscal_years).await?;
+    apply_settings(pool, &settings).await?;
     insert_account_entries(pool, &account_entries).await?;
 
     Ok(())
@@ -151,43 +144,22 @@ async fn insert_categories(pool: &SqlitePool, rows: &[CategoryRow]) -> SeedResul
     Ok(())
 }
 
-async fn insert_fiscal_year_settings(
-    pool: &SqlitePool,
-    rows: &[FiscalYearSettingRow],
-) -> SeedResult<()> {
-    for row in rows {
-        sqlx::query(
-            r#"
-            INSERT INTO fiscal_year_settings (id, start_month, duration_months, naming_rule)
-            VALUES (?, ?, ?, ?)
-            "#,
-        )
-        .bind(&row.id)
-        .bind(row.start_month)
-        .bind(row.duration_months)
-        .bind(&row.naming_rule)
-        .execute(pool)
-        .await?;
-    }
-
-    Ok(())
-}
-
-async fn insert_fiscal_years(pool: &SqlitePool, rows: &[FiscalYearRow]) -> SeedResult<()> {
-    for row in rows {
-        sqlx::query(
-            r#"
-            INSERT INTO fiscal_years (id, name, start_month, end_month)
-            VALUES (?, ?, ?, ?)
-            "#,
-        )
-        .bind(&row.id)
-        .bind(&row.name)
-        .bind(&row.start_month)
-        .bind(&row.end_month)
-        .execute(pool)
-        .await?;
-    }
+/// `settings.csv` は単一行を想定する。マイグレーションで挿入された既定行を上書きする。
+async fn apply_settings(pool: &SqlitePool, rows: &[SettingsRow]) -> SeedResult<()> {
+    let row = rows
+        .first()
+        .ok_or("settings.csv must contain exactly one row")?;
+    sqlx::query(
+        r#"
+        UPDATE settings
+        SET fiscal_year_start_month = ?,
+            updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+        WHERE id = 'default'
+        "#,
+    )
+    .bind(row.fiscal_year_start_month)
+    .execute(pool)
+    .await?;
 
     Ok(())
 }
@@ -230,19 +202,8 @@ struct CategoryRow {
 }
 
 #[derive(Debug, Deserialize)]
-struct FiscalYearSettingRow {
-    id: String,
-    start_month: i64,
-    duration_months: i64,
-    naming_rule: String,
-}
-
-#[derive(Debug, Deserialize)]
-struct FiscalYearRow {
-    id: String,
-    name: String,
-    start_month: String,
-    end_month: String,
+struct SettingsRow {
+    fiscal_year_start_month: i64,
 }
 
 #[derive(Debug, Deserialize)]
