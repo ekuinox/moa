@@ -52,6 +52,60 @@ describe("App", () => {
     expect(screen.getByRole("heading", { name: "事業年度を追加" })).toBeInTheDocument();
   });
 
+  it("opens and cancels the partner add modal without saving", async () => {
+    const user = userEvent.setup();
+
+    render(<App />);
+
+    const partnerRail = screen.getByRole("complementary", { name: "取引先一覧" });
+    await user.click(within(partnerRail).getByRole("button", { name: "追加" }));
+
+    const dialog = screen.getByRole("dialog", { name: "取引先を追加" });
+    await user.type(within(dialog).getByLabelText("名前"), "テスト商事");
+    await user.type(within(dialog).getByLabelText("読み仮名"), "テストショウジ");
+    await user.click(dialog.parentElement as HTMLElement);
+
+    expect(screen.getByRole("dialog", { name: "取引先を追加" })).toBeInTheDocument();
+
+    await user.click(within(dialog).getByRole("button", { name: "取消" }));
+
+    expect(screen.queryByRole("dialog", { name: "取引先を追加" })).not.toBeInTheDocument();
+    expect(within(partnerRail).queryByText("テスト商事")).not.toBeInTheDocument();
+  });
+
+  it("validates partner kana in the modal", async () => {
+    const user = userEvent.setup();
+
+    render(<App />);
+
+    const partnerRail = screen.getByRole("complementary", { name: "取引先一覧" });
+    await user.click(within(partnerRail).getByRole("button", { name: "追加" }));
+
+    const dialog = screen.getByRole("dialog", { name: "取引先を追加" });
+    await user.type(within(dialog).getByLabelText("名前"), "テスト商事");
+    await user.type(within(dialog).getByLabelText("読み仮名"), "てすとしょうじ");
+    await user.click(within(dialog).getByRole("button", { name: "登録" }));
+
+    expect(
+      within(dialog).getByText("読み仮名はカタカナ、半角英数字のみ入力できます。"),
+    ).toBeInTheDocument();
+    expect(within(partnerRail).queryByText("テスト商事")).not.toBeInTheDocument();
+  });
+
+  it("opens the partner edit modal from the ledger partner list", async () => {
+    const user = userEvent.setup();
+
+    render(<App />);
+
+    const partnerRail = screen.getByRole("complementary", { name: "取引先一覧" });
+    await user.click(await within(partnerRail).findByRole("button", { name: "青木商店を編集" }));
+
+    const dialog = screen.getByRole("dialog", { name: "取引先を編集" });
+
+    expect(within(dialog).getByDisplayValue("青木商店")).toBeInTheDocument();
+    expect(within(dialog).getByRole("button", { name: "確認" })).toBeInTheDocument();
+  });
+
   it("asks for confirmation before deleting an account entry", async () => {
     const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
     const user = userEvent.setup();
