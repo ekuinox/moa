@@ -1,4 +1,4 @@
-import type { ApiClient } from ".";
+import type { AccountEntry, AccountEntryKind, ApiClient } from ".";
 import { commands } from "./bindings.generated";
 
 export function createTauriApiClient(): ApiClient {
@@ -57,5 +57,34 @@ export function createTauriApiClient(): ApiClient {
         return commands.generateFiscalYear(input);
       },
     },
+    accountEntries: {
+      async list() {
+        return (await commands.listAccountEntries()).map(toAccountEntry);
+      },
+      async create(input) {
+        return toAccountEntry(await commands.createAccountEntry(input));
+      },
+      async update(input) {
+        return toAccountEntry(await commands.updateAccountEntry(input));
+      },
+      async delete(id) {
+        await commands.deleteAccountEntry(id);
+      },
+    },
+  };
+}
+
+function toAccountEntry(entry: {
+  readonly id: string;
+  readonly kind: string;
+  readonly occurredOn: string;
+  readonly partnerId: string;
+  readonly categoryId: string;
+  readonly description: string;
+  readonly amount: number;
+}): AccountEntry {
+  return {
+    ...entry,
+    kind: entry.kind as AccountEntryKind,
   };
 }

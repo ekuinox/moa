@@ -1,13 +1,14 @@
 import { useState } from "react";
 
-import { CategoryMaster, FiscalYearSettings, PartnerMaster } from "./features";
+import { AccountEntryList, CategoryMaster, FiscalYearSettings, PartnerMaster } from "./features";
 
-type View = "partners" | "categories" | "fiscalYears";
+type View = "partners" | "categories" | "fiscalYears" | "accountEntries";
 
 const viewTitles: Record<View, string> = {
   partners: "取引先マスタ",
   categories: "種別マスタ",
   fiscalYears: "事業年度設定",
+  accountEntries: "買掛・売掛明細",
 };
 
 export function App() {
@@ -19,7 +20,7 @@ export function App() {
         <header className="page-header">
           <p className="eyebrow">moa</p>
           <h1>{viewTitles[view]}</h1>
-          <nav className="master-nav" aria-label="マスタ切り替え">
+          <nav className="master-nav" aria-label="画面切り替え">
             <button
               className={view === "partners" ? "master-nav__item is-active" : "master-nav__item"}
               type="button"
@@ -41,12 +42,22 @@ export function App() {
             >
               事業年度
             </button>
+            <button
+              className={
+                view === "accountEntries" ? "master-nav__item is-active" : "master-nav__item"
+              }
+              type="button"
+              onClick={() => setView("accountEntries")}
+            >
+              明細
+            </button>
           </nav>
         </header>
 
         {view === "partners" ? <PartnerMaster /> : null}
         {view === "categories" ? <CategoryMaster /> : null}
         {view === "fiscalYears" ? <FiscalYearSettings /> : null}
+        {view === "accountEntries" ? <AccountEntryList /> : null}
       </div>
     </main>
   );
