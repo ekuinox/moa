@@ -23,7 +23,11 @@ pub fn builder() -> Builder<tauri::Wry> {
             super::commands::create_fiscal_year,
             super::commands::update_fiscal_year,
             super::commands::delete_fiscal_year,
-            super::commands::generate_fiscal_year
+            super::commands::generate_fiscal_year,
+            super::commands::list_account_entries,
+            super::commands::create_account_entry,
+            super::commands::update_account_entry,
+            super::commands::delete_account_entry
         ])
         .error_handling(ErrorHandlingMode::Throw)
 }

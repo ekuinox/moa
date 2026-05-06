@@ -7,12 +7,14 @@ use crate::{
     infrastructure::{
         db::AppDatabase,
         repositories::{
+            account_entry_repository::SqliteAccountEntryRepository,
             category_repository::SqliteCategoryRepository,
             fiscal_year_repository::SqliteFiscalYearRepository,
             partner_repository::SqlitePartnerRepository,
         },
     },
     interface::dto::{
+        account_entry::{AccountEntryDto, CreateAccountEntryDto, UpdateAccountEntryDto},
         category::{CategoryDto, CreateCategoryDto, UpdateCategoryDto},
         fiscal_year::{
             CreateFiscalYearDto, FiscalYearDto, FiscalYearSettingDto, GenerateFiscalYearDto,
@@ -193,6 +195,52 @@ pub async fn generate_fiscal_year(
         use_cases::fiscal_years::generate_fiscal_year(&repository, input.into()).await?;
 
     Ok(fiscal_year.into())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn list_account_entries(
+    database: State<'_, AppDatabase>,
+) -> Result<Vec<AccountEntryDto>, String> {
+    let repository = SqliteAccountEntryRepository::new(database.pool());
+    let entries = use_cases::account_entries::list_account_entries(&repository).await?;
+
+    Ok(entries.into_iter().map(AccountEntryDto::from).collect())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn create_account_entry(
+    database: State<'_, AppDatabase>,
+    input: CreateAccountEntryDto,
+) -> Result<AccountEntryDto, String> {
+    let repository = SqliteAccountEntryRepository::new(database.pool());
+    let entry = use_cases::account_entries::create_account_entry(&repository, input.into()).await?;
+
+    Ok(entry.into())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn update_account_entry(
+    database: State<'_, AppDatabase>,
+    input: UpdateAccountEntryDto,
+) -> Result<AccountEntryDto, String> {
+    let repository = SqliteAccountEntryRepository::new(database.pool());
+    let entry = use_cases::account_entries::update_account_entry(&repository, input.into()).await?;
+
+    Ok(entry.into())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn delete_account_entry(
+    database: State<'_, AppDatabase>,
+    id: String,
+) -> Result<(), String> {
+    let repository = SqliteAccountEntryRepository::new(database.pool());
+
+    use_cases::account_entries::delete_account_entry(&repository, &id).await
 }
 
 #[cfg(test)]

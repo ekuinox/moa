@@ -2,7 +2,7 @@
 
 ## 方針
 
-最初にプロジェクト土台を整えたあと、取引先マスタをフロントエンドから DB まで通す薄い縦切りとして実装する。
+最初にプロジェクト土台を整えたあと、取引先マスタをフロントエンドから DB まで通す薄い縦割りとして実装する。
 
 ## タスク
 
@@ -96,16 +96,16 @@
   - [x] React の設定画面を作る
   - [x] テストを書く
 
-- [ ] 買掛・売掛明細を実装する
-  - [ ] domain model を作る
-  - [ ] repository trait を作る
-  - [ ] sqlx repository 実装を作る
-  - [ ] mock repository 実装を作る
-  - [ ] usecase を作る
-  - [ ] Tauri command を作る
-  - [ ] React の一覧画面を作る
-  - [ ] React の追加・編集・削除 UI を作る
-  - [ ] テストを書く
+- [x] 買掛・売掛明細を実装する
+  - [x] domain model を作る
+  - [x] repository trait を作る
+  - [x] sqlx repository 実装を作る
+  - [x] mock repository 実装を作る
+  - [x] usecase を作る
+  - [x] Tauri command を作る
+  - [x] React の一覧画面を作る
+  - [x] React の追加・編集・削除 UI を作る
+  - [x] テストを書く
 
 - [ ] 一覧・フィルタ・集計を実装する
   - [ ] 月次表示を作る

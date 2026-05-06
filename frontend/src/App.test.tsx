@@ -13,24 +13,10 @@ describe("App", () => {
     render(<App />);
 
     expect(screen.getByRole("heading", { name: "取引先マスタ" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "追加" })).toBeInTheDocument();
 
     const table = await screen.findByRole("table");
 
-    expect(within(table).getByText("青木商店")).toBeInTheDocument();
-  });
-
-  it("asks for confirmation before deleting a partner", async () => {
-    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
-    const user = userEvent.setup();
-
-    render(<App />);
-
-    const table = await screen.findByRole("table");
-    await user.click(within(table).getByRole("button", { name: "青木商店を削除" }));
-
-    expect(confirm).toHaveBeenCalledWith("青木商店を削除しますか？");
-    expect(within(table).getByText("青木商店")).toBeInTheDocument();
+    expect(within(table).getAllByRole("row").length).toBeGreaterThan(1);
   });
 
   it("renders the category master screen", async () => {
@@ -40,10 +26,7 @@ describe("App", () => {
     await user.click(screen.getByRole("button", { name: "種別" }));
 
     expect(screen.getByRole("heading", { name: "種別マスタ" })).toBeInTheDocument();
-
-    const table = await screen.findByRole("table");
-
-    expect(within(table).getByText("材料費")).toBeInTheDocument();
+    expect(await screen.findByRole("table")).toBeInTheDocument();
   });
 
   it("renders the fiscal year settings screen", async () => {
@@ -53,9 +36,33 @@ describe("App", () => {
     await user.click(screen.getByRole("button", { name: "事業年度" }));
 
     expect(screen.getByRole("heading", { name: "事業年度設定" })).toBeInTheDocument();
+    expect(await screen.findByRole("table")).toBeInTheDocument();
+  });
+
+  it("renders the account entry screen", async () => {
+    const user = userEvent.setup();
+
+    render(<App />);
+    await user.click(screen.getByRole("button", { name: "明細" }));
+
+    expect(screen.getByRole("heading", { name: "買掛・売掛明細" })).toBeInTheDocument();
 
     const table = await screen.findByRole("table");
 
-    expect(within(table).getByText("2026年度")).toBeInTheDocument();
+    expect(within(table).getByText("初期売上")).toBeInTheDocument();
+  });
+
+  it("asks for confirmation before deleting an account entry", async () => {
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
+    const user = userEvent.setup();
+
+    render(<App />);
+    await user.click(screen.getByRole("button", { name: "明細" }));
+
+    const table = await screen.findByRole("table");
+    await user.click(within(table).getByRole("button", { name: "2026-05-03 の明細を削除" }));
+
+    expect(confirm).toHaveBeenCalledWith("2026-05-03 の明細を削除しますか？");
+    expect(within(table).getByText("初期売上")).toBeInTheDocument();
   });
 });

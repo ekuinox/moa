@@ -12,6 +12,7 @@ export interface ApiClient {
   readonly categories: CategoryApiClient;
   /** 事業年度設定と事業年度を操作する API。 */
   readonly fiscalYears: FiscalYearApiClient;
+  readonly accountEntries: AccountEntryApiClient;
 }
 
 /** バックエンド疎通確認の結果。 */
@@ -170,6 +171,44 @@ export interface FiscalYearApiClient {
   readonly delete: (id: string) => Promise<void>;
   /** 設定の基本ルールから事業年度を自動生成する。 */
   readonly generate: (input: GenerateFiscalYearInput) => Promise<FiscalYear>;
+}
+
+export type AccountEntryKind = "payable" | "receivable";
+
+export interface AccountEntry {
+  readonly id: string;
+  readonly kind: AccountEntryKind;
+  readonly occurredOn: string;
+  readonly partnerId: string;
+  readonly categoryId: string;
+  readonly description: string;
+  readonly amount: number;
+}
+
+export interface CreateAccountEntryInput {
+  readonly kind: AccountEntryKind;
+  readonly occurredOn: string;
+  readonly partnerId: string;
+  readonly categoryId: string;
+  readonly description: string;
+  readonly amount: number;
+}
+
+export interface UpdateAccountEntryInput {
+  readonly id: string;
+  readonly kind: AccountEntryKind;
+  readonly occurredOn: string;
+  readonly partnerId: string;
+  readonly categoryId: string;
+  readonly description: string;
+  readonly amount: number;
+}
+
+export interface AccountEntryApiClient {
+  readonly list: () => Promise<AccountEntry[]>;
+  readonly create: (input: CreateAccountEntryInput) => Promise<AccountEntry>;
+  readonly update: (input: UpdateAccountEntryInput) => Promise<AccountEntry>;
+  readonly delete: (id: string) => Promise<void>;
 }
 
 /** API クライアント生成時のオプション。 */
