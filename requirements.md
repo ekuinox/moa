@@ -214,6 +214,7 @@ frontend/
 ### Vite dev 単体での動作確認
 
 - Tauri として起動しなくても、Vite dev server だけで画面の動作確認をある程度できるようにする。
+- Tauri dev の SQLite には、開発時に既存データを削除して seed データを投入できるコマンドを用意する。
 - React からデータアクセスする処理は、Tauri command を直接呼ばず、アプリ内の API クライアント層を経由する。
 - API クライアント層は、本番時は Tauri command binding を呼ぶ。
 - Vite dev 単体起動時は、モックまたはインメモリ実装を使えるようにする。
