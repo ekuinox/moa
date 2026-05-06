@@ -1,4 +1,3 @@
-import { Settings } from "lucide-react";
 import { useState } from "react";
 
 import { AccountEntryList, SettingsTab } from "./features";
@@ -49,10 +48,8 @@ export function App() {
               className={view === "settings" ? "app-tabs__item is-active" : "app-tabs__item"}
               type="button"
               onClick={() => setView("settings")}
-              aria-label="設定"
-              title="設定"
             >
-              <Settings size={17} aria-hidden="true" />
+              設定
             </button>
           </nav>
         </header>
