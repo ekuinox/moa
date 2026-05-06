@@ -22,6 +22,11 @@ CREATE INDEX idx_categories_name ON categories (name);
 
 -- アプリ全体に対する設定をまとめて保持する単一行テーブル。
 -- 列を増やすことで設定項目を追加できるよう、シングルトン制約 (`id = 'default'`) を入れておく。
+--
+-- JSON ファイルで持つ案も検討したが、要件の「永続化するファイル数は極力少なくする」を
+-- 優先し、業務データと同じ SQLite に格納する。CHECK 制約で値域を担保しやすい点、
+-- sqlx / migrations / Tauri command の既存パターンをそのまま流用できる点もこの選択の理由。
+-- 設定が入れ子構造になったり、ユーザーに外部編集させたくなった時点で再検討する。
 CREATE TABLE settings (
   id TEXT PRIMARY KEY NOT NULL DEFAULT 'default' CHECK (id = 'default'),
   fiscal_year_start_month INTEGER NOT NULL DEFAULT 4 CHECK (fiscal_year_start_month BETWEEN 1 AND 12),
