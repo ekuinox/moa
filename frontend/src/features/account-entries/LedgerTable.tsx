@@ -1,0 +1,105 @@
+import type { AccountEntry, Category } from "../../lib/api";
+import { EditableNewRow, LedgerRow, LedgerTotalRow } from "./LedgerRows";
+import styles from "./LedgerTable.module.css";
+import type { AccountEntryFormState } from "./types";
+
+export interface LedgerTableProps {
+  readonly activeRowKey: string | undefined;
+  readonly canEdit: boolean;
+  readonly categories: readonly Category[];
+  readonly categoryNames: ReadonlyMap<string, string>;
+  readonly editingRows: Readonly<Record<string, AccountEntryFormState>>;
+  readonly highlightedEntryId: string | undefined;
+  readonly partnerNames: ReadonlyMap<string, string>;
+  readonly selectedMonth: string;
+  readonly totalAmount: number;
+  readonly visibleEntries: readonly AccountEntry[];
+  readonly onDeleteEntry: (entry: AccountEntry) => void;
+  readonly onFinishEditing: (entry: AccountEntry) => void;
+  readonly onSaveExisting: (entry: AccountEntry) => void;
+  readonly onSaveNew: (draft: AccountEntryFormState) => void;
+  readonly onStartEditing: (entry: AccountEntry) => void;
+  readonly onUpdateRow: (rowKey: string, values: Partial<AccountEntryFormState>) => void;
+}
+
+/** 台帳テーブルの枠組みを表示し、行ごとの編集処理は行コンポーネントへ委譲する。 */
+export function LedgerTable({
+  activeRowKey,
+  canEdit,
+  categories,
+  categoryNames,
+  editingRows,
+  highlightedEntryId,
+  partnerNames,
+  selectedMonth,
+  totalAmount,
+  visibleEntries,
+  onDeleteEntry,
+  onFinishEditing,
+  onSaveExisting,
+  onSaveNew,
+  onStartEditing,
+  onUpdateRow,
+}: LedgerTableProps) {
+  return (
+    <div className={styles.tableWrap}>
+      <table className={styles.table}>
+        <colgroup>
+          <col className={styles.dateCol} />
+          {!canEdit ? <col className={styles.partnerCol} /> : null}
+          <col className={styles.categoryCol} />
+          <col />
+          <col className={styles.amountCol} />
+          <col className={styles.actionCol} />
+        </colgroup>
+        <thead>
+          <tr>
+            <th>日付</th>
+            {!canEdit ? <th>取引先</th> : null}
+            <th>種別</th>
+            <th>摘要</th>
+            <th>税込金額</th>
+            <th>
+              <span className="visually-hidden">操作</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {visibleEntries.map((entry) => (
+            <LedgerRow
+              canEdit={canEdit}
+              categories={categories}
+              categoryName={categoryNames.get(entry.categoryId) ?? "未登録の種別"}
+              activeRowKey={activeRowKey}
+              draft={editingRows[entry.id]}
+              entry={entry}
+              isHighlighted={highlightedEntryId === entry.id}
+              key={entry.id}
+              partnerName={partnerNames.get(entry.partnerId) ?? "未登録の取引先"}
+              onDelete={() => onDeleteEntry(entry)}
+              onFinishEditing={() => onFinishEditing(entry)}
+              onSave={() => onSaveExisting(entry)}
+              onStartEditing={() => onStartEditing(entry)}
+              onUpdate={(values) => onUpdateRow(entry.id, values)}
+            />
+          ))}
+          {canEdit ? (
+            <EditableNewRow
+              categories={categories}
+              selectedMonth={selectedMonth}
+              onSave={onSaveNew}
+            />
+          ) : null}
+          {!canEdit && visibleEntries.length === 0 ? (
+            <tr>
+              <td colSpan={6}>
+                <p className="muted-text">この条件の明細はまだ登録されていません。</p>
+              </td>
+            </tr>
+          ) : null}
+        </tbody>
+        <LedgerTotalRow canEdit={canEdit} totalAmount={totalAmount} />
+      </table>
+    </div>
+  );
+}

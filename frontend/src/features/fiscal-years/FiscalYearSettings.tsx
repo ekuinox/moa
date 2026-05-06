@@ -1,5 +1,5 @@
 import { Pencil, Plus, Trash2, Wand2, X } from "lucide-react";
-import { type FormEvent, useState } from "react";
+import { type SubmitEvent, useState } from "react";
 import useSWR from "swr";
 
 import { AppCard } from "../../components";
@@ -67,7 +67,7 @@ export function FiscalYearSettings() {
   const currentSettingForm = settingForm ?? (setting ? settingToForm(setting) : undefined);
   const isEditingFiscalYear = Boolean(fiscalYearForm.id);
 
-  async function handleSettingSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSettingSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!currentSettingForm) {
       return;
@@ -85,7 +85,7 @@ export function FiscalYearSettings() {
     }
   }
 
-  async function handleFiscalYearSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleFiscalYearSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     setFiscalYearErrorMessage(undefined);
 
@@ -134,7 +134,7 @@ export function FiscalYearSettings() {
     }
   }
 
-  async function handleGenerate(event: FormEvent<HTMLFormElement>) {
+  async function handleGenerate(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     setGenerateErrorMessage(undefined);
 

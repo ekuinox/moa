@@ -60,7 +60,7 @@ describe("App", () => {
     await user.click(await screen.findByRole("button", { name: "青木商店" }));
 
     const table = await screen.findByRole("table");
-    await user.click(within(table).getByRole("button", { name: "2026-05-01 の明細を削除" }));
+    await user.click(screen.getByRole("button", { name: "2026-05-01 の明細を削除" }));
 
     expect(confirm).toHaveBeenCalledWith("2026-05-01 の明細を削除しますか？");
     expect(within(table).getByText("初期仕入")).toBeInTheDocument();
@@ -79,9 +79,7 @@ describe("App", () => {
     await user.clear(description);
     await user.type(description, "材料仕入");
 
-    expect(
-      within(table).getByRole("button", { name: "2026-05-01 の明細を保存" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "2026-05-01 の明細を保存" })).toBeInTheDocument();
   });
 
   it("leaves input mode when focus moves outside the edited row", async () => {
@@ -100,8 +98,6 @@ describe("App", () => {
 
     expect(within(table).queryByDisplayValue("材料仕入")).not.toBeInTheDocument();
     expect(within(table).getByText("材料仕入")).toBeInTheDocument();
-    expect(
-      within(table).getByRole("button", { name: "2026-05-01 の明細を保存" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "2026-05-01 の明細を保存" })).toBeInTheDocument();
   });
 });
