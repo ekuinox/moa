@@ -10,7 +10,8 @@ const meta = {
     partners: storyPartners,
     selectedPartnerId: storyPartners[0].id,
     onSelectPartner: () => undefined,
-    onShowAddTodo: () => undefined,
+    onAddPartner: () => undefined,
+    onEditPartner: () => undefined,
   },
 } satisfies Meta<typeof LedgerPartnerRail>;
 
