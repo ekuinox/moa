@@ -8,6 +8,12 @@ import styles from "./FiscalYearStartMonthCard.module.css";
 const MIN_MONTH = 1;
 const MAX_MONTH = 12;
 
+/**
+ * 事業年度の開始月をインライン編集する。
+ *
+ * Enter または ✓ ボタンで確定し、blur / Escape では保存せずに保存済み値へ revert する。
+ * 1〜12 の範囲外を確定しようとした場合はエラー文言を出して値を戻す。
+ */
 export function FiscalYearStartMonthCard() {
   const {
     data: settings,
@@ -24,6 +30,7 @@ export function FiscalYearStartMonthCard() {
     }
   }, [settings]);
 
+  /** 編集途中の draft を保存済みの値に戻し、エラー表示も消す。 */
   function revertDraft() {
     if (settings) {
       setDraft(String(settings.fiscalYearStartMonth));
@@ -31,6 +38,10 @@ export function FiscalYearStartMonthCard() {
     setErrorMessage(undefined);
   }
 
+  /**
+   * 入力された draft を保存する。
+   * 範囲外や数値以外なら revert してエラーを表示し、未変更なら API を呼ばずに終了する。
+   */
   async function commitDraft() {
     if (!settings) {
       return;
@@ -56,6 +67,7 @@ export function FiscalYearStartMonthCard() {
     }
   }
 
+  /** 入力中のキー操作を処理する。Enter は確定、Escape は revert + blur。 */
   function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
       event.preventDefault();

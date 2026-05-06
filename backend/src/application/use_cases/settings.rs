@@ -5,6 +5,7 @@ use crate::{
     domain::models::settings::{Settings, UpdateSettings},
 };
 
+/// 永続化された設定を取得する。`settings` テーブルの初期行はマイグレーションで挿入される。
 pub async fn get_settings(
     repository: &impl SettingsRepository<Error = impl std::fmt::Display>,
 ) -> Result<Settings, String> {
@@ -14,6 +15,7 @@ pub async fn get_settings(
         .map_err(|error| error.to_string())
 }
 
+/// 設定を保存する。1〜12 の範囲外を弾いてから repository に書き込む。
 pub async fn save_settings(
     repository: &impl SettingsRepository<Error = impl std::fmt::Display>,
     input: UpdateSettings,

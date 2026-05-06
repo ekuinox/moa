@@ -109,6 +109,7 @@ pub async fn delete_category(database: State<'_, AppDatabase>, id: String) -> Re
     use_cases::categories::delete_category(&repository, &id).await
 }
 
+/// 設定を取得する Tauri command。
 #[tauri::command]
 #[specta::specta]
 pub async fn get_settings(database: State<'_, AppDatabase>) -> Result<SettingsDto, String> {
@@ -118,6 +119,7 @@ pub async fn get_settings(database: State<'_, AppDatabase>) -> Result<SettingsDt
     Ok(settings.into())
 }
 
+/// 設定を保存する Tauri command。
 #[tauri::command]
 #[specta::specta]
 pub async fn save_settings(

@@ -5,6 +5,13 @@ import useSWR from "swr";
 import { apiClient, type Category } from "../../lib/api";
 import styles from "./CategoryChipEditor.module.css";
 
+/**
+ * 種別マスタを横並びチップで一覧・編集する。
+ *
+ * - 既存チップ: クリックで編集モードへ切り替え。Enter で保存、Escape / blur で破棄。
+ * - 末尾の入力チップ: 種別を新規追加する。Enter または ✓ ボタンで確定。
+ * - 各チップの × は確認ダイアログを挟んだ上で削除する。
+ */
 export function CategoryChipEditor() {
   const {
     data: categories = [],
@@ -24,17 +31,20 @@ export function CategoryChipEditor() {
     }
   }, [editingId]);
 
+  /** 指定したチップを編集モードに切り替える。 */
   function startEditing(category: Category) {
     setErrorMessage(undefined);
     setEditingId(category.id);
     setEditingValue(category.name);
   }
 
+  /** 編集を破棄して表示モードに戻す。 */
   function cancelEditing() {
     setEditingId(undefined);
     setEditingValue("");
   }
 
+  /** 編集中の値を確定する。空白のみまたは未変更ならキャンセル扱いにする。 */
   async function commitEditing(category: Category) {
     const trimmed = editingValue.trim();
     if (!trimmed || trimmed === category.name) {
@@ -51,6 +61,7 @@ export function CategoryChipEditor() {
     }
   }
 
+  /** 削除確認ダイアログを表示し、承認されたチップを削除する。 */
   async function handleDelete(category: Category) {
     setErrorMessage(undefined);
     const confirmed = window.confirm(`${category.name}を削除しますか？`);
@@ -68,6 +79,7 @@ export function CategoryChipEditor() {
     }
   }
 
+  /** 末尾の入力チップに入力されている値で種別を新規作成する。 */
   async function commitAdder() {
     const trimmed = adderValue.trim();
     if (!trimmed) {
@@ -84,6 +96,7 @@ export function CategoryChipEditor() {
     }
   }
 
+  /** 編集中の input でのキー入力を処理する。Enter は確定、Escape は破棄。 */
   function handleEditingKeyDown(event: KeyboardEvent<HTMLInputElement>, category: Category) {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -94,6 +107,7 @@ export function CategoryChipEditor() {
     }
   }
 
+  /** 追加 input でのキー入力を処理する。Enter は確定、Escape は値クリアして blur する。 */
   function handleAdderKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
       event.preventDefault();
