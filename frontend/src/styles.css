@@ -18,6 +18,11 @@ body {
   margin: 0;
 }
 
+body,
+#root {
+  min-height: 100vh;
+}
+
 button,
 input,
 textarea,
@@ -26,37 +31,50 @@ select {
 }
 
 .app-shell {
-  display: block;
+  display: grid;
+  height: 100dvh;
   min-height: 100vh;
-  padding: 32px 24px;
+  padding: 20px 18px;
 }
 
 .app-layout {
-  width: min(100%, 1120px);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
+  width: min(100%, 1280px);
+  height: 100%;
   margin: 0 auto;
 }
 
-.page-header {
-  margin-bottom: 24px;
+.app-topbar {
+  display: flex;
+  gap: 16px;
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #d6dde3;
 }
 
+.app-topbar h1,
 .page-header h1 {
   margin: 0;
   color: #172026;
-  font-size: 1.8rem;
+  font-size: 1.45rem;
   line-height: 1.25;
 }
 
+.app-tabs,
 .master-nav {
   display: inline-flex;
   gap: 4px;
   padding: 4px;
-  margin-top: 16px;
   border: 1px solid #d6dde3;
   border-radius: 8px;
   background: #ffffff;
 }
 
+.app-tabs__item,
 .master-nav__item {
   min-height: 34px;
   padding: 6px 12px;
@@ -68,9 +86,53 @@ select {
   font-weight: 600;
 }
 
+.app-tabs__item {
+  min-width: 48px;
+}
+
+.app-tabs__item.is-active,
 .master-nav__item.is-active {
   color: #ffffff;
   background: #245f73;
+}
+
+.settings-layout {
+  display: grid;
+  gap: 16px;
+}
+
+.settings-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.settings-nav__item {
+  min-height: 34px;
+  padding: 7px 12px;
+  border: 1px solid #c9d3dc;
+  border-radius: 6px;
+  color: #4d5d66;
+  background: #ffffff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.settings-nav__item.is-active {
+  border-color: #245f73;
+  color: #ffffff;
+  background: #245f73;
+}
+
+.placeholder-panel {
+  padding: 24px;
+  border: 1px solid #d6dde3;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.placeholder-panel h2 {
+  margin: 0 0 8px;
 }
 
 .partner-grid {
@@ -191,6 +253,8 @@ select {
 
 .primary-button,
 .secondary-button,
+.small-button,
+.primary-icon-button,
 .icon-button {
   display: inline-flex;
   gap: 6px;
@@ -202,10 +266,19 @@ select {
 }
 
 .primary-button,
-.secondary-button {
+.secondary-button,
+.small-button {
   min-height: 38px;
   padding: 8px 12px;
   font-weight: 600;
+}
+
+.small-button {
+  min-height: 30px;
+  padding: 5px 9px;
+  border-color: #c9d3dc;
+  color: #172026;
+  background: #ffffff;
 }
 
 .primary-button {
@@ -220,6 +293,7 @@ select {
 }
 
 .icon-button {
+  flex: 0 0 34px;
   width: 34px;
   height: 34px;
   border-color: #c9d3dc;
@@ -229,6 +303,14 @@ select {
 
 .icon-button--danger {
   color: #9a3412;
+}
+
+.primary-icon-button {
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  color: #ffffff;
+  background: #245f73;
 }
 
 .form-error {
@@ -271,6 +353,8 @@ select {
 .table-actions {
   display: inline-flex;
   gap: 6px;
+  justify-content: flex-end;
+  width: 100%;
 }
 
 .visually-hidden {
@@ -287,6 +371,19 @@ select {
 @media (max-width: 760px) {
   .app-shell {
     padding: 20px 14px;
+  }
+
+  .app-topbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .app-tabs {
+    width: 100%;
+  }
+
+  .app-tabs__item {
+    flex: 1;
   }
 
   .partner-grid {

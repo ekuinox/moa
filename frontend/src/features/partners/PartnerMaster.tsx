@@ -1,5 +1,5 @@
 import { Pencil, Plus, Trash2, X } from "lucide-react";
-import { type FormEvent, useState } from "react";
+import { type SubmitEvent, useState } from "react";
 import useSWR from "swr";
 
 import { AppCard } from "../../components";
@@ -32,7 +32,7 @@ export function PartnerMaster() {
 
   const isEditing = Boolean(form.id);
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     setErrorMessage(undefined);
 

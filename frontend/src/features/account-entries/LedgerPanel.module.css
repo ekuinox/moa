@@ -1,0 +1,52 @@
+.panel {
+  display: grid;
+  grid-template-rows: auto auto auto auto minmax(0, 1fr);
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid #cfd8df;
+  border-radius: 0 0 8px 8px;
+  background: #ffffff;
+}
+
+.panelHeader {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e4e9ee;
+}
+
+.panelHeader h2 {
+  margin: 0;
+  font-size: 1.12rem;
+}
+
+.noticeBar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  border-bottom: 1px solid #d7e7ec;
+  color: #245f73;
+  background: #eef8fa;
+}
+
+.noticeBar button {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 6px;
+  color: #245f73;
+  background: transparent;
+  cursor: pointer;
+}
+
+.inlineError {
+  padding: 10px 14px;
+  border-bottom: 1px solid #e4e9ee;
+}

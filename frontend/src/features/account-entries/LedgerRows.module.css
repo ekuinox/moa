@@ -1,0 +1,73 @@
+.row {
+  cursor: default;
+}
+
+.row:not(.editing) td:not(:last-child) {
+  cursor: text;
+}
+
+.newRow td {
+  background: #fbfdfe;
+}
+
+.row.editing td {
+  background: #fbfdfe;
+}
+
+.row:not(.editing):hover td {
+  background: #f8fafb;
+}
+
+.highlighted td {
+  animation: highlightAddedRow 2.4s ease-out;
+}
+
+@keyframes highlightAddedRow {
+  0%,
+  70% {
+    background: #fff4bf;
+  }
+
+  100% {
+    background: transparent;
+  }
+}
+
+.amountCell {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.tableInput {
+  min-width: 0;
+  width: 100%;
+  min-height: 36px;
+  padding: 7px 9px;
+  border: 1px solid #c9d3dc;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #172026;
+}
+
+.tableInput:focus {
+  border-color: #2d6f86;
+  outline: 3px solid #d9edf2;
+}
+
+.amountInput {
+  text-align: right;
+}
+
+.tableActions {
+  display: inline-flex;
+  gap: 6px;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.saveButton {
+  flex: 0 0 80px;
+  width: 80px;
+  min-width: 80px;
+  white-space: nowrap;
+}

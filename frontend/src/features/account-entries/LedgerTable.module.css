@@ -1,0 +1,66 @@
+.tableWrap {
+  min-height: 0;
+  overflow: auto;
+}
+
+.table {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 800px;
+  border-collapse: collapse;
+  font-size: 0.93rem;
+}
+
+.dateCol {
+  width: 168px;
+}
+
+.partnerCol {
+  width: 164px;
+}
+
+.categoryCol {
+  width: 164px;
+}
+
+.amountCol {
+  width: 156px;
+}
+
+.actionCol {
+  width: 112px;
+}
+
+.table th,
+.table td {
+  height: 44px;
+  padding: 7px 10px;
+  border-bottom: 1px solid #e4e9ee;
+  overflow: hidden;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  color: #4d5d66;
+  background: #f8fafb;
+  font-weight: 700;
+}
+
+.table tfoot th,
+.table tfoot td {
+  position: sticky;
+  bottom: 0;
+  border-top: 1px solid #cfd8df;
+  background: #fbfcfd;
+  font-weight: 800;
+}
+
+@media (max-width: 760px) {
+  .table {
+    min-width: 800px;
+  }
+}

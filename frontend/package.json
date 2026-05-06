@@ -19,11 +19,14 @@
     "tauri:build": "cross-env TAURI_APP_PATH=../backend TAURI_FRONTEND_PATH=. tauri build"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@tauri-apps/api": "^2.11.0",
     "lucide-react": "^1.14.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "swr": "^2.4.1"
+    "react-hook-form": "^7.75.0",
+    "swr": "^2.4.1",
+    "valibot": "^1.4.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
