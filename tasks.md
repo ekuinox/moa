@@ -63,6 +63,7 @@
   - [x] Tauri binding 実装を作る
   - [x] mock / in-memory 実装を作る
   - [x] Vite dev で mock 実装に差し替える
+  - [x] issue #27 の開発用 seed データ投入コマンドを追加する
 
 - [x] 取引先マスタを実装する
   - [x] domain model を作る

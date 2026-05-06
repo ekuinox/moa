@@ -55,6 +55,9 @@ tauri-info:
 db-drop:
     sqlx database drop -y --database-url "{{DB_URL}}"
 
+db-seed seed_dir='backend/dev-seed':
+    cargo run --manifest-path backend/Cargo.toml --bin seed_dev_data -- "{{seed_dir}}"
+
 validate: fmt lint deny typecheck test
 
 ci: refresh validate deny build
