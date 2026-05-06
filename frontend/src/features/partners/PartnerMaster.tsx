@@ -43,6 +43,7 @@ export function PartnerMaster() {
     try {
       await apiClient.partners.delete(partner.id);
       await mutate();
+      setEditingPartner(undefined);
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "取引先の削除に失敗しました。");
     }
@@ -107,6 +108,7 @@ export function PartnerMaster() {
         partner={editingPartner}
         onCancel={() => setEditingPartner(undefined)}
         onSave={handleSave}
+        onDelete={handleDelete}
       />
     </div>
   );

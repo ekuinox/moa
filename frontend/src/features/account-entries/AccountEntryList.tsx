@@ -53,6 +53,22 @@ export function AccountEntryList({ kind }: AccountEntryListProps) {
     closePartnerDialog();
   }
 
+  async function handleDeletePartner(partner: Partner) {
+    const confirmed = window.confirm(`${partner.name}を削除しますか？`);
+    if (!confirmed) {
+      return;
+    }
+
+    await apiClient.partners.delete(partner.id);
+    await mutate("partners");
+
+    if (ledger.selectedPartnerId === partner.id) {
+      ledger.selectPartner("all");
+    }
+
+    closePartnerDialog();
+  }
+
   return (
     <div className={styles.screen}>
       <LedgerPartnerRail
@@ -76,6 +92,7 @@ export function AccountEntryList({ kind }: AccountEntryListProps) {
         partner={editingPartner}
         onCancel={closePartnerDialog}
         onSave={handleSavePartner}
+        onDelete={handleDeletePartner}
       />
     </div>
   );

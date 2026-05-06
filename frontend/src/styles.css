@@ -253,6 +253,7 @@ select {
 
 .primary-button,
 .secondary-button,
+.danger-button,
 .small-button,
 .primary-icon-button,
 .icon-button {
@@ -267,6 +268,7 @@ select {
 
 .primary-button,
 .secondary-button,
+.danger-button,
 .small-button {
   min-height: 38px;
   padding: 8px 12px;
@@ -290,6 +292,12 @@ select {
   border-color: #c9d3dc;
   color: #172026;
   background: #ffffff;
+}
+
+.danger-button {
+  border-color: #f0c8ba;
+  color: #9a3412;
+  background: #fff8f5;
 }
 
 .icon-button {

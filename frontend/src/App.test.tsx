@@ -103,7 +103,24 @@ describe("App", () => {
     const dialog = screen.getByRole("dialog", { name: "取引先を編集" });
 
     expect(within(dialog).getByDisplayValue("青木商店")).toBeInTheDocument();
-    expect(within(dialog).getByRole("button", { name: "確認" })).toBeInTheDocument();
+    expect(within(dialog).getByRole("button", { name: "確定" })).toBeInTheDocument();
+    expect(within(dialog).getByRole("button", { name: "削除" })).toBeInTheDocument();
+  });
+
+  it("asks for confirmation before deleting a partner from the edit modal", async () => {
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
+    const user = userEvent.setup();
+
+    render(<App />);
+
+    const partnerRail = screen.getByRole("complementary", { name: "取引先一覧" });
+    await user.click(await within(partnerRail).findByRole("button", { name: "青木商店を編集" }));
+
+    const dialog = screen.getByRole("dialog", { name: "取引先を編集" });
+    await user.click(within(dialog).getByRole("button", { name: "削除" }));
+
+    expect(confirm).toHaveBeenCalledWith("青木商店を削除しますか？");
+    expect(screen.getByRole("dialog", { name: "取引先を編集" })).toBeInTheDocument();
   });
 
   it("asks for confirmation before deleting an account entry", async () => {
