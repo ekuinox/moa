@@ -32,7 +32,7 @@ describe("App", () => {
     expect(within(table).getByText("初期売上")).toBeInTheDocument();
   });
 
-  it("renders the settings screens", async () => {
+  it("renders the settings tab with category chips and fiscal year start month", async () => {
     const user = userEvent.setup();
 
     render(<App />);
@@ -40,16 +40,12 @@ describe("App", () => {
     await user.click(within(appTabs).getByRole("button", { name: "設定" }));
 
     expect(screen.getByRole("heading", { name: "設定" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "取引先一覧" })).toBeInTheDocument();
-    expect(await screen.findByRole("table")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "種別" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "年度" })).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "種別" }));
-
-    expect(screen.getByRole("heading", { name: "種別一覧" })).toBeInTheDocument();
-
-    await user.click(screen.getByRole("button", { name: "事業年度" }));
-
-    expect(screen.getByRole("heading", { name: "事業年度を追加" })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "材料費を削除" })).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: "種別を追加" })).toBeInTheDocument();
+    expect(screen.getByRole("spinbutton", { name: "事業年度の開始月" })).toHaveValue(4);
   });
 
   it("opens and cancels the partner add modal without saving", async () => {

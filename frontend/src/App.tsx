@@ -1,10 +1,9 @@
 import { Settings } from "lucide-react";
 import { useState } from "react";
 
-import { AccountEntryList, CategoryMaster, FiscalYearSettings, PartnerMaster } from "./features";
+import { AccountEntryList, SettingsTab } from "./features";
 
 type View = "payable" | "receivable" | "cash" | "settings";
-type SettingsView = "partners" | "categories" | "fiscalYears";
 
 const viewTitles: Record<View, string> = {
   payable: "買掛表",
@@ -15,7 +14,6 @@ const viewTitles: Record<View, string> = {
 
 export function App() {
   const [view, setView] = useState<View>("payable");
-  const [settingsView, setSettingsView] = useState<SettingsView>("partners");
 
   return (
     <main className="app-shell">
@@ -67,48 +65,7 @@ export function App() {
             <p className="muted-text">出納画面は今後実装します。</p>
           </section>
         ) : null}
-        {view === "settings" ? (
-          <section className="settings-layout">
-            <nav className="settings-nav" aria-label="設定切り替え">
-              <button
-                className={
-                  settingsView === "partners"
-                    ? "settings-nav__item is-active"
-                    : "settings-nav__item"
-                }
-                type="button"
-                onClick={() => setSettingsView("partners")}
-              >
-                取引先
-              </button>
-              <button
-                className={
-                  settingsView === "categories"
-                    ? "settings-nav__item is-active"
-                    : "settings-nav__item"
-                }
-                type="button"
-                onClick={() => setSettingsView("categories")}
-              >
-                種別
-              </button>
-              <button
-                className={
-                  settingsView === "fiscalYears"
-                    ? "settings-nav__item is-active"
-                    : "settings-nav__item"
-                }
-                type="button"
-                onClick={() => setSettingsView("fiscalYears")}
-              >
-                事業年度
-              </button>
-            </nav>
-            {settingsView === "partners" ? <PartnerMaster /> : null}
-            {settingsView === "categories" ? <CategoryMaster /> : null}
-            {settingsView === "fiscalYears" ? <FiscalYearSettings /> : null}
-          </section>
-        ) : null}
+        {view === "settings" ? <SettingsTab /> : null}
       </div>
     </main>
   );
