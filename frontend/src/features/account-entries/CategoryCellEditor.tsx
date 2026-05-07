@@ -47,30 +47,30 @@ export function CategoryCellEditor({
   }
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.chips}>
-        {value.map((id) => {
-          const category = categories.find((item) => item.id === id);
-          const label = category?.name ?? "(削除済み)";
-          return (
-            <span className={styles.chip} key={id}>
-              <span className={styles.chipLabel}>{label}</span>
-              {disabled ? null : (
-                <button
-                  type="button"
-                  className={styles.chipRemove}
-                  onClick={() => removeChip(id)}
-                  aria-label={`${label} を外す`}
-                  title="外す"
-                >
-                  <X size={12} aria-hidden="true" />
-                </button>
-              )}
-            </span>
-          );
-        })}
-      </div>
-      <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
+    <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
+      <Popover.Anchor className={styles.wrapper}>
+        <div className={styles.chips}>
+          {value.map((id) => {
+            const category = categories.find((item) => item.id === id);
+            const label = category?.name ?? "(削除済み)";
+            return (
+              <span className={styles.chip} key={id}>
+                <span className={styles.chipLabel}>{label}</span>
+                {disabled ? null : (
+                  <button
+                    type="button"
+                    className={styles.chipRemove}
+                    onClick={() => removeChip(id)}
+                    aria-label={`${label} を外す`}
+                    title="外す"
+                  >
+                    <X size={12} aria-hidden="true" />
+                  </button>
+                )}
+              </span>
+            );
+          })}
+        </div>
         <Popover.Trigger asChild>
           <button
             type="button"
@@ -82,40 +82,40 @@ export function CategoryCellEditor({
             <Plus size={14} aria-hidden="true" />
           </button>
         </Popover.Trigger>
-        <Popover.Portal>
-          <Popover.Content
-            className={styles.popover}
-            sideOffset={6}
-            align="start"
-            collisionPadding={8}
-          >
-            <p className={styles.popoverTitle} id={labelId}>
-              種別を選択
-            </p>
-            {sortedCategories.length === 0 ? (
-              <p className={styles.empty}>登録された種別がありません。</p>
-            ) : (
-              <ul className={styles.list} aria-labelledby={labelId}>
-                {sortedCategories.map((category) => {
-                  const checked = selectedSet.has(category.id);
-                  return (
-                    <li key={category.id}>
-                      <label className={styles.option}>
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={() => toggle(category.id)}
-                        />
-                        <span>{category.name}</span>
-                      </label>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </Popover.Content>
-        </Popover.Portal>
-      </Popover.Root>
-    </div>
+      </Popover.Anchor>
+      <Popover.Portal>
+        <Popover.Content
+          className={styles.popover}
+          sideOffset={6}
+          align="start"
+          collisionPadding={8}
+        >
+          <p className={styles.popoverTitle} id={labelId}>
+            種別を選択
+          </p>
+          {sortedCategories.length === 0 ? (
+            <p className={styles.empty}>登録された種別がありません。</p>
+          ) : (
+            <ul className={styles.list} aria-labelledby={labelId}>
+              {sortedCategories.map((category) => {
+                const checked = selectedSet.has(category.id);
+                return (
+                  <li key={category.id}>
+                    <label className={styles.option}>
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggle(category.id)}
+                      />
+                      <span>{category.name}</span>
+                    </label>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
   );
 }
