@@ -122,7 +122,7 @@ export interface AccountEntry {
   readonly kind: AccountEntryKind;
   readonly occurredOn: string;
   readonly partnerId: string;
-  readonly categoryId: string;
+  readonly categoryIds: readonly string[];
   readonly description: string;
   readonly amount: number;
 }
@@ -131,7 +131,7 @@ export interface CreateAccountEntryInput {
   readonly kind: AccountEntryKind;
   readonly occurredOn: string;
   readonly partnerId: string;
-  readonly categoryId: string;
+  readonly categoryIds: readonly string[];
   readonly description: string;
   readonly amount: number;
 }
@@ -141,7 +141,7 @@ export interface UpdateAccountEntryInput {
   readonly kind: AccountEntryKind;
   readonly occurredOn: string;
   readonly partnerId: string;
-  readonly categoryId: string;
+  readonly categoryIds: readonly string[];
   readonly description: string;
   readonly amount: number;
 }

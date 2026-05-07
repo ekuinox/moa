@@ -18,7 +18,6 @@ const rowMeta = {
     activeRowKey: undefined,
     canEdit: true,
     categories: storyCategories,
-    categoryName: "仕入",
     draft: undefined,
     entry: storyEntries[0],
     isHighlighted: false,

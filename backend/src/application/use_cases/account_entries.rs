@@ -1,5 +1,7 @@
 //! Account entry use cases.
 
+use std::collections::HashSet;
+
 use crate::{
     application::ports::account_entry_repository::AccountEntryRepository,
     domain::models::account_entry::{AccountEntry, NewAccountEntry, UpdateAccountEntry},
@@ -22,7 +24,7 @@ pub async fn create_account_entry(
         &input.kind,
         &input.occurred_on,
         &input.partner_id,
-        &input.category_id,
+        &input.category_ids,
         input.amount,
     )?;
 
@@ -43,7 +45,7 @@ pub async fn update_account_entry(
         &input.kind,
         &input.occurred_on,
         &input.partner_id,
-        &input.category_id,
+        &input.category_ids,
         input.amount,
     )?;
 
@@ -71,7 +73,7 @@ fn validate_entry(
     kind: &str,
     occurred_on: &str,
     partner_id: &str,
-    category_id: &str,
+    category_ids: &[String],
     amount: i64,
 ) -> Result<(), String> {
     if !matches!(kind.trim(), "payable" | "receivable") {
@@ -83,8 +85,15 @@ fn validate_entry(
     if partner_id.trim().is_empty() {
         return Err("取引先を指定してください。".to_string());
     }
-    if category_id.trim().is_empty() {
-        return Err("種別を指定してください。".to_string());
+    let mut seen = HashSet::new();
+    for category_id in category_ids {
+        let trimmed = category_id.trim();
+        if trimmed.is_empty() {
+            return Err("空の種別 ID は指定できません。".to_string());
+        }
+        if !seen.insert(trimmed.to_string()) {
+            return Err("同じ種別を重複して指定することはできません。".to_string());
+        }
     }
     if amount < 0 {
         return Err("金額は 0 以上で入力してください。".to_string());
@@ -160,7 +169,7 @@ mod tests {
                     kind: input.kind,
                     occurred_on: input.occurred_on,
                     partner_id: input.partner_id,
-                    category_id: input.category_id,
+                    category_ids: input.category_ids,
                     description: input.description,
                     amount: input.amount,
                 };
@@ -179,7 +188,7 @@ mod tests {
                     kind: input.kind,
                     occurred_on: input.occurred_on,
                     partner_id: input.partner_id,
-                    category_id: input.category_id,
+                    category_ids: input.category_ids,
                     description: input.description,
                     amount: input.amount,
                 };
@@ -212,7 +221,7 @@ mod tests {
                 "payable",
                 "2026-05-06",
                 "partner-1",
-                "category-1",
+                vec!["category-1".to_string()],
                 "memo",
                 1200,
             ),
@@ -221,6 +230,27 @@ mod tests {
 
         assert_eq!(entry.kind, "payable");
         assert_eq!(entry.amount, 1200);
+        assert_eq!(entry.category_ids, vec!["category-1".to_string()]);
+    }
+
+    #[test]
+    fn creates_entry_without_categories() {
+        let repository = InMemoryAccountEntryRepository::new(Vec::new());
+
+        let entry = tauri::async_runtime::block_on(create_account_entry(
+            &repository,
+            NewAccountEntry::new(
+                "receivable",
+                "2026-05-06",
+                "partner-1",
+                Vec::new(),
+                "memo",
+                500,
+            ),
+        ))
+        .unwrap();
+
+        assert!(entry.category_ids.is_empty());
     }
 
     #[test]
@@ -233,7 +263,7 @@ mod tests {
                 "other",
                 "2026-05-06",
                 "partner-1",
-                "category-1",
+                vec!["category-1".to_string()],
                 "memo",
                 1200,
             ),
@@ -255,12 +285,53 @@ mod tests {
                 "payable",
                 "2026-05-06",
                 "partner-1",
-                "category-1",
+                vec!["category-1".to_string()],
                 "memo",
                 -1,
             ),
         ));
 
         assert_eq!(result.unwrap_err(), "金額は 0 以上で入力してください。");
+    }
+
+    #[test]
+    fn rejects_duplicate_category_ids() {
+        let repository = InMemoryAccountEntryRepository::new(Vec::new());
+
+        let result = tauri::async_runtime::block_on(create_account_entry(
+            &repository,
+            NewAccountEntry::new(
+                "payable",
+                "2026-05-06",
+                "partner-1",
+                vec!["category-1".to_string(), "category-1".to_string()],
+                "memo",
+                1200,
+            ),
+        ));
+
+        assert_eq!(
+            result.unwrap_err(),
+            "同じ種別を重複して指定することはできません。"
+        );
+    }
+
+    #[test]
+    fn rejects_empty_category_id() {
+        let repository = InMemoryAccountEntryRepository::new(Vec::new());
+
+        let result = tauri::async_runtime::block_on(create_account_entry(
+            &repository,
+            NewAccountEntry::new(
+                "payable",
+                "2026-05-06",
+                "partner-1",
+                vec!["   ".to_string()],
+                "memo",
+                1200,
+            ),
+        ));
+
+        assert_eq!(result.unwrap_err(), "空の種別 ID は指定できません。");
     }
 }

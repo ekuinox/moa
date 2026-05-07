@@ -13,6 +13,7 @@ import {
   isSameDraft,
   normalizeFormValues,
 } from "./accountEntryForm";
+import { CategoryCellEditor } from "./CategoryCellEditor";
 import { formatCurrency, formatDate } from "./formatters";
 import styles from "./LedgerRows.module.css";
 import type { AccountEntryFormState } from "./types";
@@ -20,7 +21,6 @@ import type { AccountEntryFormState } from "./types";
 export interface LedgerRowProps {
   readonly canEdit: boolean;
   readonly categories: readonly Category[];
-  readonly categoryName: string;
   readonly activeRowKey: string | undefined;
   readonly draft: AccountEntryFormState | undefined;
   readonly entry: AccountEntry;
@@ -37,7 +37,6 @@ export interface LedgerRowProps {
 export function LedgerRow({
   canEdit,
   categories,
-  categoryName,
   activeRowKey,
   draft,
   entry,
@@ -57,7 +56,6 @@ export function LedgerRow({
     values: rowDraft,
   });
   const watchedOccurredOn = useWatch({ control: form.control, name: "occurredOn" });
-  const watchedCategoryId = useWatch({ control: form.control, name: "categoryId" });
   const watchedDescription = useWatch({ control: form.control, name: "description" });
   const watchedAmount = useWatch({ control: form.control, name: "amount" });
   const editableCellProps =
@@ -82,7 +80,7 @@ export function LedgerRow({
 
     const watchedValues = normalizeFormValues({
       occurredOn: watchedOccurredOn,
-      categoryId: watchedCategoryId,
+      categoryIds: rowDraft.categoryIds,
       description: watchedDescription,
       amount: watchedAmount,
     });
@@ -90,15 +88,7 @@ export function LedgerRow({
     if (!isSameDraft(watchedValues, rowDraft)) {
       onUpdate(watchedValues);
     }
-  }, [
-    isEditing,
-    onUpdate,
-    rowDraft,
-    watchedAmount,
-    watchedCategoryId,
-    watchedDescription,
-    watchedOccurredOn,
-  ]);
+  }, [isEditing, onUpdate, rowDraft, watchedAmount, watchedDescription, watchedOccurredOn]);
 
   return (
     <tr
@@ -124,20 +114,15 @@ export function LedgerRow({
         )}
       </td>
       {!canEdit ? <td>{partnerName}</td> : null}
-      <td {...editableCellProps}>
-        {isEditing ? (
-          <select className={styles.tableInput} {...form.register("categoryId")}>
-            <option value="">選択してください</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        ) : draft ? (
-          categories.find((category) => category.id === rowDraft.categoryId)?.name
+      <td>
+        {canEdit ? (
+          <CategoryCellEditor
+            categories={categories}
+            value={rowDraft.categoryIds}
+            onChange={(next) => onUpdate({ categoryIds: [...next] })}
+          />
         ) : (
-          categoryName
+          <CategoryReadOnlyChips categoryIds={rowDraft.categoryIds} categories={categories} />
         )}
       </td>
       <td {...editableCellProps}>
@@ -208,12 +193,12 @@ export function EditableNewRow({
     defaultValues: createEmptyForm(selectedPeriod, fiscalYearStartMonth),
   });
   const watchedOccurredOn = useWatch({ control: form.control, name: "occurredOn" });
-  const watchedCategoryId = useWatch({ control: form.control, name: "categoryId" });
+  const watchedCategoryIds = useWatch({ control: form.control, name: "categoryIds" });
   const watchedDescription = useWatch({ control: form.control, name: "description" });
   const watchedAmount = useWatch({ control: form.control, name: "amount" });
   const draft = normalizeFormValues({
     occurredOn: watchedOccurredOn,
-    categoryId: watchedCategoryId,
+    categoryIds: watchedCategoryIds,
     description: watchedDescription,
     amount: watchedAmount,
   });
@@ -229,14 +214,16 @@ export function EditableNewRow({
         <input className={styles.tableInput} type="date" {...form.register("occurredOn")} />
       </td>
       <td>
-        <select className={styles.tableInput} {...form.register("categoryId")}>
-          <option value="">選択してください</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
+        <CategoryCellEditor
+          categories={categories}
+          value={draft.categoryIds}
+          onChange={(next) =>
+            form.setValue("categoryIds", [...next], {
+              shouldDirty: true,
+              shouldTouch: true,
+            })
+          }
+        />
       </td>
       <td>
         <input className={styles.tableInput} {...form.register("description")} />
@@ -263,6 +250,30 @@ export function EditableNewRow({
         ) : null}
       </td>
     </tr>
+  );
+}
+
+export interface CategoryReadOnlyChipsProps {
+  readonly categoryIds: readonly string[];
+  readonly categories: readonly Category[];
+}
+
+/** 編集できないモード（売上一覧のすべての取引先表示）で、種別チップだけを並べる。 */
+export function CategoryReadOnlyChips({ categoryIds, categories }: CategoryReadOnlyChipsProps) {
+  if (categoryIds.length === 0) {
+    return null;
+  }
+  return (
+    <span className={styles.readOnlyChips}>
+      {categoryIds.map((id) => {
+        const category = categories.find((item) => item.id === id);
+        return (
+          <span className={styles.readOnlyChip} key={id}>
+            {category?.name ?? "(削除済み)"}
+          </span>
+        );
+      })}
+    </span>
   );
 }
 

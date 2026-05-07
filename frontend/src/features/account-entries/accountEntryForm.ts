@@ -8,7 +8,13 @@ import type { AccountEntryFormState } from "./types";
 const accountEntryDraftSchema = v.object({
   occurredOn: v.pipe(v.string(), v.regex(/^\d{4}-\d{2}-\d{2}$/)),
   partnerId: v.pipe(v.string(), v.nonEmpty()),
-  categoryId: v.pipe(v.string(), v.nonEmpty()),
+  categoryIds: v.pipe(
+    v.array(v.pipe(v.string(), v.nonEmpty())),
+    v.check(
+      (ids) => new Set(ids).size === ids.length,
+      "同じ種別を重複して指定することはできません。",
+    ),
+  ),
   description: v.string(),
   amount: v.pipe(v.string(), v.regex(/^\d+$/)),
 });
@@ -16,7 +22,7 @@ const accountEntryDraftSchema = v.object({
 /** テーブル内で編集できるセルを react-hook-form で扱うための schema。 */
 export const accountEntryFormSchema = v.object({
   occurredOn: accountEntryDraftSchema.entries.occurredOn,
-  categoryId: accountEntryDraftSchema.entries.categoryId,
+  categoryIds: accountEntryDraftSchema.entries.categoryIds,
   description: accountEntryDraftSchema.entries.description,
   amount: accountEntryDraftSchema.entries.amount,
 });
@@ -28,7 +34,7 @@ export function createEmptyForm(
 ): AccountEntryFormState {
   return {
     occurredOn: createInitialOccurredOn(selectedPeriod, fiscalYearStartMonth),
-    categoryId: "",
+    categoryIds: [],
     description: "",
     amount: "0",
   };
@@ -49,7 +55,7 @@ function createInitialOccurredOn(selectedPeriod: string, fiscalYearStartMonth: n
 export function createFormFromEntry(entry: AccountEntry): AccountEntryFormState {
   return {
     occurredOn: entry.occurredOn,
-    categoryId: entry.categoryId,
+    categoryIds: [...entry.categoryIds],
     description: entry.description,
     amount: entry.amount.toString(),
   };
@@ -59,7 +65,7 @@ export function createFormFromEntry(entry: AccountEntry): AccountEntryFormState 
 export function normalizeFormValues(values: Partial<AccountEntryFormState>): AccountEntryFormState {
   return {
     occurredOn: values.occurredOn ?? "",
-    categoryId: values.categoryId ?? "",
+    categoryIds: values.categoryIds ?? [],
     description: values.description ?? "",
     amount: values.amount ?? "",
   };
@@ -69,7 +75,7 @@ export function normalizeFormValues(values: Partial<AccountEntryFormState>): Acc
 export function isSameDraft(left: AccountEntryFormState, right: AccountEntryFormState) {
   return (
     left.occurredOn === right.occurredOn &&
-    left.categoryId === right.categoryId &&
+    isSameCategoryIdSet(left.categoryIds, right.categoryIds) &&
     left.description === right.description &&
     left.amount === right.amount
   );
@@ -79,7 +85,7 @@ export function isSameDraft(left: AccountEntryFormState, right: AccountEntryForm
 export function isRowDirty(draft: AccountEntryFormState, entry: AccountEntry) {
   return (
     draft.occurredOn !== entry.occurredOn ||
-    draft.categoryId !== entry.categoryId ||
+    !isSameCategoryIdSet(draft.categoryIds, entry.categoryIds) ||
     draft.description !== entry.description ||
     Number.parseInt(draft.amount, 10) !== entry.amount
   );
@@ -94,7 +100,7 @@ export function isNewRowDirty(
   const empty = createEmptyForm(selectedPeriod, fiscalYearStartMonth);
   return (
     draft.occurredOn !== empty.occurredOn ||
-    draft.categoryId !== empty.categoryId ||
+    !isSameCategoryIdSet(draft.categoryIds, empty.categoryIds) ||
     draft.description !== empty.description ||
     draft.amount !== empty.amount
   );
@@ -116,8 +122,17 @@ export function parseDraft(draft: AccountEntryFormState, partnerId: string) {
   return {
     occurredOn: parsed.output.occurredOn,
     partnerId: parsed.output.partnerId,
-    categoryId: parsed.output.categoryId,
+    categoryIds: parsed.output.categoryIds,
     description: parsed.output.description.trim(),
     amount,
   };
+}
+
+/** 種別 ID の集合一致を判定する。順序は無視する。 */
+function isSameCategoryIdSet(left: readonly string[], right: readonly string[]) {
+  if (left.length !== right.length) {
+    return false;
+  }
+  const set = new Set(left);
+  return right.every((id) => set.has(id));
 }

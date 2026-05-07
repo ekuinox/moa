@@ -69,7 +69,12 @@ async fn connect_dev_database() -> SeedResult<SqlitePool> {
 /// `settings` テーブルは `id = 'default'` の単一行をマイグレーションで挿入するため
 /// ここでは削除せず、CSV からの値で上書きする。
 async fn clear_existing_data(pool: &SqlitePool) -> SeedResult<()> {
-    for table in ["account_entries", "categories", "partners"] {
+    for table in [
+        "account_entry_categories",
+        "account_entries",
+        "categories",
+        "partners",
+    ] {
         sqlx::query(&format!("DELETE FROM {table}"))
             .execute(pool)
             .await?;
@@ -164,25 +169,41 @@ async fn apply_settings(pool: &SqlitePool, rows: &[SettingsRow]) -> SeedResult<(
     Ok(())
 }
 
+/// CSV は `id, kind, occurred_on, partner_id, category_id, description, amount` の形式。
+/// 種別を多対多で表現するため、同じ entry id を持つ行が複数あれば 1 entry に複数種別を紐付ける。
+/// `category_id` が空欄の行は種別なしの entry として扱う。
 async fn insert_account_entries(pool: &SqlitePool, rows: &[AccountEntryRow]) -> SeedResult<()> {
     for row in rows {
         sqlx::query(
             r#"
-            INSERT INTO account_entries (
-              id, kind, occurred_on, partner_id, category_id, description, amount
+            INSERT OR IGNORE INTO account_entries (
+              id, kind, occurred_on, partner_id, description, amount
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?)
             "#,
         )
         .bind(&row.id)
         .bind(&row.kind)
         .bind(&row.occurred_on)
         .bind(&row.partner_id)
-        .bind(&row.category_id)
         .bind(&row.description)
         .bind(row.amount)
         .execute(pool)
         .await?;
+
+        let category_id = row.category_id.trim();
+        if !category_id.is_empty() {
+            sqlx::query(
+                r#"
+                INSERT OR IGNORE INTO account_entry_categories (account_entry_id, category_id)
+                VALUES (?, ?)
+                "#,
+            )
+            .bind(&row.id)
+            .bind(category_id)
+            .execute(pool)
+            .await?;
+        }
     }
 
     Ok(())

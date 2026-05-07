@@ -1,11 +1,12 @@
 import type { AccountEntryKind } from "../../lib/api";
 
-/** 明細行を編集フォームとして扱うときの文字列ベースの値。 */
+/** 明細行を編集フォームとして扱うときの文字列ベースの値。
+ * react-hook-form / valibot 側が mutable な型を要求するため categoryIds は配列のまま保持する。 */
 export interface AccountEntryFormState {
-  readonly occurredOn: string;
-  readonly categoryId: string;
-  readonly description: string;
-  readonly amount: string;
+  occurredOn: string;
+  categoryIds: string[];
+  description: string;
+  amount: string;
 }
 
 /** 上位の買掛/売掛タブから渡される台帳一覧の props。 */

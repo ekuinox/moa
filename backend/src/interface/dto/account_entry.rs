@@ -12,7 +12,7 @@ pub struct AccountEntryDto {
     pub kind: String,
     pub occurred_on: String,
     pub partner_id: String,
-    pub category_id: String,
+    pub category_ids: Vec<String>,
     pub description: String,
     pub amount: i64,
 }
@@ -23,7 +23,7 @@ pub struct CreateAccountEntryDto {
     pub kind: String,
     pub occurred_on: String,
     pub partner_id: String,
-    pub category_id: String,
+    pub category_ids: Vec<String>,
     pub description: String,
     pub amount: i64,
 }
@@ -35,7 +35,7 @@ pub struct UpdateAccountEntryDto {
     pub kind: String,
     pub occurred_on: String,
     pub partner_id: String,
-    pub category_id: String,
+    pub category_ids: Vec<String>,
     pub description: String,
     pub amount: i64,
 }
@@ -47,7 +47,7 @@ impl From<AccountEntry> for AccountEntryDto {
             kind: entry.kind,
             occurred_on: entry.occurred_on,
             partner_id: entry.partner_id,
-            category_id: entry.category_id,
+            category_ids: entry.category_ids,
             description: entry.description,
             amount: entry.amount,
         }
@@ -60,7 +60,7 @@ impl From<CreateAccountEntryDto> for NewAccountEntry {
             input.kind,
             input.occurred_on,
             input.partner_id,
-            input.category_id,
+            input.category_ids,
             input.description,
             input.amount,
         )
@@ -74,7 +74,7 @@ impl From<UpdateAccountEntryDto> for UpdateAccountEntry {
             input.kind,
             input.occurred_on,
             input.partner_id,
-            input.category_id,
+            input.category_ids,
             input.description,
             input.amount,
         )

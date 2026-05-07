@@ -29,6 +29,7 @@ interface LedgerActionParams {
   readonly setErrorMessage: Dispatch<SetStateAction<string | undefined>>;
   readonly setHighlightedEntryId: Dispatch<SetStateAction<string | undefined>>;
   readonly setNoticeMessage: Dispatch<SetStateAction<string | undefined>>;
+  readonly setSelectedCategoryFilter: Dispatch<SetStateAction<ReadonlySet<string> | null>>;
   readonly setSelectedFiscalYear: Dispatch<SetStateAction<number>>;
   readonly setSelectedPartnerId: Dispatch<SetStateAction<string>>;
   readonly setSelectedPeriod: Dispatch<SetStateAction<string>>;
@@ -56,6 +57,7 @@ export function createLedgerActions({
   setErrorMessage,
   setHighlightedEntryId,
   setNoticeMessage,
+  setSelectedCategoryFilter,
   setSelectedFiscalYear,
   setSelectedPartnerId,
   setSelectedPeriod,
@@ -83,6 +85,11 @@ export function createLedgerActions({
     setSelectedFiscalYear(fiscalYear);
     setSelectedPeriod(fiscalYearKey(fiscalYear));
     resetEditableRows();
+  }
+
+  /** 種別ヘッダのフィルタを更新する。null は「フィルタ未適用」。 */
+  function selectCategoryFilter(next: ReadonlySet<string> | null) {
+    setSelectedCategoryFilter(next);
   }
 
   /** 保存済み行をインライン編集状態にする。 */
@@ -200,6 +207,7 @@ export function createLedgerActions({
     finishEditingRow,
     saveExisting,
     saveNew,
+    selectCategoryFilter,
     selectFiscalYear,
     selectPartner,
     selectPeriod,
