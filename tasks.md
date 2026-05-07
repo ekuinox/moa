@@ -30,6 +30,7 @@
   - [x] Vitest + React Testing Library を導入する
   - [x] Storybook を導入する
   - [x] Playwright を導入する
+  - [x] issue #30 の CI セットアップ失敗と `deny` 二重実行を改善する
 
 - [x] アーキテクチャ骨格を作る
   - [x] `backend/src/domain` を作る
