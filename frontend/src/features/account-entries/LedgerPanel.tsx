@@ -46,11 +46,11 @@ export function LedgerPanel({ ledger }: LedgerPanelProps) {
         activeRowKey={ledger.activeRowKey}
         canEdit={ledger.canEdit}
         categories={ledger.categories}
-        categoryNames={ledger.categoryNames}
         editingRows={ledger.editingRows}
         fiscalYearStartMonth={ledger.fiscalYearStartMonth}
         highlightedEntryId={ledger.highlightedEntryId}
         partnerNames={ledger.partnerNames}
+        selectedCategoryFilter={ledger.selectedCategoryFilter}
         selectedPeriod={ledger.selectedPeriod}
         totalAmount={ledger.totalAmount}
         visibleEntries={ledger.visibleEntries}
@@ -58,6 +58,7 @@ export function LedgerPanel({ ledger }: LedgerPanelProps) {
         onFinishEditing={ledger.finishEditingRow}
         onSaveExisting={ledger.saveExisting}
         onSaveNew={ledger.saveNew}
+        onSelectCategoryFilter={ledger.selectCategoryFilter}
         onStartEditing={ledger.startEditing}
         onUpdateRow={ledger.updateRow}
       />

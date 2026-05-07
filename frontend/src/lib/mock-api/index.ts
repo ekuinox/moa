@@ -153,7 +153,7 @@ function createInMemoryAccountEntryStore() {
       kind: "payable",
       occurredOn: "2026-05-01",
       partnerId: "mock-partner-1",
-      categoryId: "mock-category-1",
+      categoryIds: ["mock-category-1"],
       description: "初期仕入",
       amount: 12000,
     },
@@ -162,7 +162,7 @@ function createInMemoryAccountEntryStore() {
       kind: "receivable",
       occurredOn: "2026-05-03",
       partnerId: "mock-partner-2",
-      categoryId: "mock-category-2",
+      categoryIds: ["mock-category-2"],
       description: "初期売上",
       amount: 24000,
     },
@@ -179,7 +179,7 @@ function createInMemoryAccountEntryStore() {
         kind: input.kind,
         occurredOn: input.occurredOn.trim(),
         partnerId: input.partnerId.trim(),
-        categoryId: input.categoryId.trim(),
+        categoryIds: normalizeCategoryIds(input.categoryIds),
         description: input.description.trim(),
         amount: input.amount,
       };
@@ -196,7 +196,7 @@ function createInMemoryAccountEntryStore() {
         kind: input.kind,
         occurredOn: input.occurredOn.trim(),
         partnerId: input.partnerId.trim(),
-        categoryId: input.categoryId.trim(),
+        categoryIds: normalizeCategoryIds(input.categoryIds),
         description: input.description.trim(),
         amount: input.amount,
       };
@@ -215,11 +215,15 @@ function sortAccountEntries(entries: AccountEntry[]) {
   return [...entries].sort((left, right) => right.occurredOn.localeCompare(left.occurredOn));
 }
 
+function normalizeCategoryIds(ids: readonly string[]): readonly string[] {
+  return ids.map((id) => id.trim()).filter((id) => id.length > 0);
+}
+
 function validateAccountEntry(input: {
   readonly kind: AccountEntryKind;
   readonly occurredOn: string;
   readonly partnerId: string;
-  readonly categoryId: string;
+  readonly categoryIds: readonly string[];
   readonly amount: number;
 }) {
   if (input.kind !== "payable" && input.kind !== "receivable") {
@@ -231,8 +235,16 @@ function validateAccountEntry(input: {
   if (!input.partnerId.trim()) {
     throw new Error("取引先を指定してください。");
   }
-  if (!input.categoryId.trim()) {
-    throw new Error("種別を指定してください。");
+  const seen = new Set<string>();
+  for (const id of input.categoryIds) {
+    const trimmed = id.trim();
+    if (trimmed.length === 0) {
+      throw new Error("空の種別 ID は指定できません。");
+    }
+    if (seen.has(trimmed)) {
+      throw new Error("同じ種別を重複して指定することはできません。");
+    }
+    seen.add(trimmed);
   }
   if (input.amount < 0) {
     throw new Error("金額は 0 以上で入力してください。");

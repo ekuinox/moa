@@ -36,7 +36,7 @@ export const storyEntries = [
     kind: "payable",
     occurredOn: "2026-05-06",
     partnerId: "partner-1",
-    categoryId: "category-1",
+    categoryIds: ["category-1"],
     description: "材料仕入",
     amount: 55000,
   },
@@ -45,7 +45,7 @@ export const storyEntries = [
     kind: "payable",
     occurredOn: "2026-05-16",
     partnerId: "partner-1",
-    categoryId: "category-2",
+    categoryIds: ["category-2", "category-3"],
     description: "施工代",
     amount: 170000,
   },
@@ -54,7 +54,7 @@ export const storyEntries = [
     kind: "payable",
     occurredOn: "2026-05-21",
     partnerId: "partner-2",
-    categoryId: "category-3",
+    categoryIds: [],
     description: "備品購入",
     amount: 10000,
   },
@@ -63,7 +63,7 @@ export const storyEntries = [
 /** Storybook で編集中の行を描画するためのフォーム値サンプル。 */
 export const storyEditingRow = {
   occurredOn: "2026-05-16",
-  categoryId: "category-2",
+  categoryIds: ["category-2"],
   description: "施工代（調整中）",
   amount: "180000",
 } satisfies AccountEntryFormState;

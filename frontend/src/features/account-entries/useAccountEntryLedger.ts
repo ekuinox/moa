@@ -17,6 +17,9 @@ export function useAccountEntryLedger(kind: AccountEntryKind) {
   const [selectedFiscalYear, setSelectedFiscalYear] = useState(() =>
     fiscalYearOf(currentYearMonth(), DEFAULT_FISCAL_YEAR_START_MONTH),
   );
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<ReadonlySet<string> | null>(
+    null,
+  );
   const [editingRows, setEditingRows] = useState<Record<string, AccountEntryFormState>>({});
   const [activeRowKey, setActiveRowKey] = useState<string | undefined>();
   const [highlightedEntryId, setHighlightedEntryId] = useState<string | undefined>();
@@ -46,6 +49,7 @@ export function useAccountEntryLedger(kind: AccountEntryKind) {
     selectedPeriod,
     selectedPartnerId,
     fiscalYearStartMonth,
+    selectedCategoryFilter,
   );
   const totalAmount = calculateTotalAmount(visibleEntries);
   const selectedPartnerName =
@@ -66,6 +70,7 @@ export function useAccountEntryLedger(kind: AccountEntryKind) {
         setErrorMessage,
         setHighlightedEntryId,
         setNoticeMessage,
+        setSelectedCategoryFilter,
         setSelectedFiscalYear,
         setSelectedPartnerId,
         setSelectedPeriod,
@@ -138,6 +143,7 @@ export function useAccountEntryLedger(kind: AccountEntryKind) {
     noticeMessage,
     partners,
     partnerNames,
+    selectedCategoryFilter,
     selectedFiscalYear,
     selectedPartnerId,
     selectedPartnerName,
@@ -152,6 +158,7 @@ export function useAccountEntryLedger(kind: AccountEntryKind) {
     finishEditingRow: actions.finishEditingRow,
     saveExisting: actions.saveExisting,
     saveNew: actions.saveNew,
+    selectCategoryFilter: actions.selectCategoryFilter,
     selectFiscalYear: actions.selectFiscalYear,
     selectPartner: actions.selectPartner,
     selectPeriod: actions.selectPeriod,

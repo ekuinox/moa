@@ -1,0 +1,91 @@
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  cursor: pointer;
+}
+
+.trigger:hover {
+  background: #f4f7f9;
+}
+
+.triggerActive {
+  background: #e8f3f6;
+  border-color: #b1d4dd;
+  color: #245f73;
+  font-weight: 600;
+}
+
+.popover {
+  min-width: 220px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 10px 12px;
+  border: 1px solid #c9d3dc;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(23, 32, 38, 0.12);
+  color: #172026;
+  z-index: 1000;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.popoverTitle {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #5f6f7a;
+}
+
+.clearButton {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #2d6f86;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.clearButton:hover {
+  color: #245f73;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: normal;
+}
+
+.option:hover {
+  background: #f4f7f9;
+}
+
+.uncategorized {
+  color: #5f6f7a;
+  font-style: italic;
+}

@@ -6,7 +6,7 @@ pub struct AccountEntry {
     pub kind: String,
     pub occurred_on: String,
     pub partner_id: String,
-    pub category_id: String,
+    pub category_ids: Vec<String>,
     pub description: String,
     pub amount: i64,
 }
@@ -16,7 +16,7 @@ pub struct NewAccountEntry {
     pub kind: String,
     pub occurred_on: String,
     pub partner_id: String,
-    pub category_id: String,
+    pub category_ids: Vec<String>,
     pub description: String,
     pub amount: i64,
 }
@@ -27,7 +27,7 @@ pub struct UpdateAccountEntry {
     pub kind: String,
     pub occurred_on: String,
     pub partner_id: String,
-    pub category_id: String,
+    pub category_ids: Vec<String>,
     pub description: String,
     pub amount: i64,
 }
@@ -37,7 +37,7 @@ impl NewAccountEntry {
         kind: impl Into<String>,
         occurred_on: impl Into<String>,
         partner_id: impl Into<String>,
-        category_id: impl Into<String>,
+        category_ids: Vec<String>,
         description: impl Into<String>,
         amount: i64,
     ) -> Self {
@@ -45,7 +45,7 @@ impl NewAccountEntry {
             kind: kind.into(),
             occurred_on: occurred_on.into(),
             partner_id: partner_id.into(),
-            category_id: category_id.into(),
+            category_ids,
             description: description.into(),
             amount,
         }
@@ -58,7 +58,7 @@ impl UpdateAccountEntry {
         kind: impl Into<String>,
         occurred_on: impl Into<String>,
         partner_id: impl Into<String>,
-        category_id: impl Into<String>,
+        category_ids: Vec<String>,
         description: impl Into<String>,
         amount: i64,
     ) -> Self {
@@ -67,7 +67,7 @@ impl UpdateAccountEntry {
             kind: kind.into(),
             occurred_on: occurred_on.into(),
             partner_id: partner_id.into(),
-            category_id: category_id.into(),
+            category_ids,
             description: description.into(),
             amount,
         }

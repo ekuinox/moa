@@ -1,5 +1,7 @@
 //! SQLite-backed account entry repository.
 
+use std::collections::HashMap;
+
 use sqlx::{FromRow, SqlitePool};
 
 use crate::{
@@ -26,7 +28,7 @@ impl AccountEntryRepository for SqliteAccountEntryRepository<'_> {
         Box::pin(async move {
             let rows = sqlx::query_as::<_, AccountEntryRow>(
                 r#"
-                SELECT id, kind, occurred_on, partner_id, category_id, description, amount
+                SELECT id, kind, occurred_on, partner_id, description, amount
                 FROM account_entries
                 ORDER BY occurred_on DESC, updated_at DESC
                 "#,
@@ -34,7 +36,30 @@ impl AccountEntryRepository for SqliteAccountEntryRepository<'_> {
             .fetch_all(self.pool)
             .await?;
 
-            Ok(rows.into_iter().map(AccountEntry::from).collect())
+            let links = sqlx::query_as::<_, AccountEntryCategoryRow>(
+                r#"
+                SELECT account_entry_id, category_id
+                FROM account_entry_categories
+                "#,
+            )
+            .fetch_all(self.pool)
+            .await?;
+
+            let mut by_entry: HashMap<String, Vec<String>> = HashMap::new();
+            for link in links {
+                by_entry
+                    .entry(link.account_entry_id)
+                    .or_default()
+                    .push(link.category_id);
+            }
+
+            Ok(rows
+                .into_iter()
+                .map(|row| {
+                    let category_ids = by_entry.remove(&row.id).unwrap_or_default();
+                    build_account_entry(row, category_ids)
+                })
+                .collect())
         })
     }
 
@@ -43,25 +68,44 @@ impl AccountEntryRepository for SqliteAccountEntryRepository<'_> {
         input: NewAccountEntry,
     ) -> RepositoryFuture<'_, AccountEntry, Self::Error> {
         Box::pin(async move {
+            let mut tx = self.pool.begin().await?;
+
             let row = sqlx::query_as::<_, AccountEntryRow>(
                 r#"
                 INSERT INTO account_entries (
-                  id, kind, occurred_on, partner_id, category_id, description, amount
+                  id, kind, occurred_on, partner_id, description, amount
                 )
-                VALUES (lower(hex(randomblob(16))), ?, ?, ?, ?, ?, ?)
-                RETURNING id, kind, occurred_on, partner_id, category_id, description, amount
+                VALUES (lower(hex(randomblob(16))), ?, ?, ?, ?, ?)
+                RETURNING id, kind, occurred_on, partner_id, description, amount
                 "#,
             )
             .bind(input.kind.trim())
             .bind(input.occurred_on.trim())
             .bind(input.partner_id.trim())
-            .bind(input.category_id.trim())
             .bind(input.description.trim())
             .bind(input.amount)
-            .fetch_one(self.pool)
+            .fetch_one(&mut *tx)
             .await?;
 
-            Ok(row.into())
+            let mut category_ids: Vec<String> = Vec::with_capacity(input.category_ids.len());
+            for category_id in &input.category_ids {
+                let trimmed = category_id.trim().to_string();
+                sqlx::query(
+                    r#"
+                    INSERT INTO account_entry_categories (account_entry_id, category_id)
+                    VALUES (?, ?)
+                    "#,
+                )
+                .bind(&row.id)
+                .bind(&trimmed)
+                .execute(&mut *tx)
+                .await?;
+                category_ids.push(trimmed);
+            }
+
+            tx.commit().await?;
+
+            Ok(build_account_entry(row, category_ids))
         })
     }
 
@@ -70,6 +114,8 @@ impl AccountEntryRepository for SqliteAccountEntryRepository<'_> {
         input: UpdateAccountEntry,
     ) -> RepositoryFuture<'_, AccountEntry, Self::Error> {
         Box::pin(async move {
+            let mut tx = self.pool.begin().await?;
+
             let row = sqlx::query_as::<_, AccountEntryRow>(
                 r#"
                 UPDATE account_entries
@@ -77,25 +123,51 @@ impl AccountEntryRepository for SqliteAccountEntryRepository<'_> {
                   kind = ?,
                   occurred_on = ?,
                   partner_id = ?,
-                  category_id = ?,
                   description = ?,
                   amount = ?,
                   updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
                 WHERE id = ?
-                RETURNING id, kind, occurred_on, partner_id, category_id, description, amount
+                RETURNING id, kind, occurred_on, partner_id, description, amount
                 "#,
             )
             .bind(input.kind.trim())
             .bind(input.occurred_on.trim())
             .bind(input.partner_id.trim())
-            .bind(input.category_id.trim())
             .bind(input.description.trim())
             .bind(input.amount)
-            .bind(input.id)
-            .fetch_one(self.pool)
+            .bind(&input.id)
+            .fetch_one(&mut *tx)
             .await?;
 
-            Ok(row.into())
+            sqlx::query(
+                r#"
+                DELETE FROM account_entry_categories
+                WHERE account_entry_id = ?
+                "#,
+            )
+            .bind(&row.id)
+            .execute(&mut *tx)
+            .await?;
+
+            let mut category_ids: Vec<String> = Vec::with_capacity(input.category_ids.len());
+            for category_id in &input.category_ids {
+                let trimmed = category_id.trim().to_string();
+                sqlx::query(
+                    r#"
+                    INSERT INTO account_entry_categories (account_entry_id, category_id)
+                    VALUES (?, ?)
+                    "#,
+                )
+                .bind(&row.id)
+                .bind(&trimmed)
+                .execute(&mut *tx)
+                .await?;
+                category_ids.push(trimmed);
+            }
+
+            tx.commit().await?;
+
+            Ok(build_account_entry(row, category_ids))
         })
     }
 
@@ -129,21 +201,24 @@ struct AccountEntryRow {
     kind: String,
     occurred_on: String,
     partner_id: String,
-    category_id: String,
     description: String,
     amount: i64,
 }
 
-impl From<AccountEntryRow> for AccountEntry {
-    fn from(row: AccountEntryRow) -> Self {
-        Self {
-            id: row.id,
-            kind: row.kind,
-            occurred_on: row.occurred_on,
-            partner_id: row.partner_id,
-            category_id: row.category_id,
-            description: row.description,
-            amount: row.amount,
-        }
+#[derive(FromRow)]
+struct AccountEntryCategoryRow {
+    account_entry_id: String,
+    category_id: String,
+}
+
+fn build_account_entry(row: AccountEntryRow, category_ids: Vec<String>) -> AccountEntry {
+    AccountEntry {
+        id: row.id,
+        kind: row.kind,
+        occurred_on: row.occurred_on,
+        partner_id: row.partner_id,
+        category_ids,
+        description: row.description,
+        amount: row.amount,
     }
 }

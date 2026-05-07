@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 
 import type { AccountEntry, Category } from "../../lib/api";
+import { CategoryFilterHeader } from "./CategoryFilterHeader";
 import { EditableNewRow, LedgerRow, LedgerTotalRow } from "./LedgerRows";
 import styles from "./LedgerTable.module.css";
 import type { AccountEntryFormState } from "./types";
@@ -9,11 +10,11 @@ export interface LedgerTableProps {
   readonly activeRowKey: string | undefined;
   readonly canEdit: boolean;
   readonly categories: readonly Category[];
-  readonly categoryNames: ReadonlyMap<string, string>;
   readonly editingRows: Readonly<Record<string, AccountEntryFormState>>;
   readonly fiscalYearStartMonth: number;
   readonly highlightedEntryId: string | undefined;
   readonly partnerNames: ReadonlyMap<string, string>;
+  readonly selectedCategoryFilter: ReadonlySet<string> | null;
   readonly selectedPeriod: string;
   readonly totalAmount: number;
   readonly visibleEntries: readonly AccountEntry[];
@@ -21,6 +22,7 @@ export interface LedgerTableProps {
   readonly onFinishEditing: (entry: AccountEntry) => void;
   readonly onSaveExisting: (entry: AccountEntry) => void;
   readonly onSaveNew: (draft: AccountEntryFormState) => void;
+  readonly onSelectCategoryFilter: (next: ReadonlySet<string> | null) => void;
   readonly onStartEditing: (entry: AccountEntry) => void;
   readonly onUpdateRow: (rowKey: string, values: Partial<AccountEntryFormState>) => void;
 }
@@ -30,11 +32,11 @@ export function LedgerTable({
   activeRowKey,
   canEdit,
   categories,
-  categoryNames,
   editingRows,
   fiscalYearStartMonth,
   highlightedEntryId,
   partnerNames,
+  selectedCategoryFilter,
   selectedPeriod,
   totalAmount,
   visibleEntries,
@@ -42,6 +44,7 @@ export function LedgerTable({
   onFinishEditing,
   onSaveExisting,
   onSaveNew,
+  onSelectCategoryFilter,
   onStartEditing,
   onUpdateRow,
 }: LedgerTableProps) {
@@ -87,7 +90,13 @@ export function LedgerTable({
           <tr>
             <th>日付</th>
             {!canEdit ? <th>取引先</th> : null}
-            <th>種別</th>
+            <th>
+              <CategoryFilterHeader
+                categories={categories}
+                value={selectedCategoryFilter}
+                onChange={onSelectCategoryFilter}
+              />
+            </th>
             <th>摘要</th>
             <th>税込金額</th>
             <th>
@@ -100,7 +109,6 @@ export function LedgerTable({
             <LedgerRow
               canEdit={canEdit}
               categories={categories}
-              categoryName={categoryNames.get(entry.categoryId) ?? "未登録の種別"}
               activeRowKey={activeRowKey}
               draft={editingRows[entry.id]}
               entry={entry}

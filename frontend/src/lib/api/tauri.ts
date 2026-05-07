@@ -47,10 +47,20 @@ export function createTauriApiClient(): ApiClient {
         return (await commands.listAccountEntries()).map(toAccountEntry);
       },
       async create(input) {
-        return toAccountEntry(await commands.createAccountEntry(input));
+        return toAccountEntry(
+          await commands.createAccountEntry({
+            ...input,
+            categoryIds: [...input.categoryIds],
+          }),
+        );
       },
       async update(input) {
-        return toAccountEntry(await commands.updateAccountEntry(input));
+        return toAccountEntry(
+          await commands.updateAccountEntry({
+            ...input,
+            categoryIds: [...input.categoryIds],
+          }),
+        );
       },
       async delete(id) {
         await commands.deleteAccountEntry(id);
@@ -64,7 +74,7 @@ function toAccountEntry(entry: {
   readonly kind: string;
   readonly occurredOn: string;
   readonly partnerId: string;
-  readonly categoryId: string;
+  readonly categoryIds: readonly string[];
   readonly description: string;
   readonly amount: number;
 }): AccountEntry {

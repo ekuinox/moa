@@ -3,6 +3,9 @@ import { createEmptyForm, createFormFromEntry, isRowDirty } from "./accountEntry
 import { fiscalYearRange, parseFiscalYearKey } from "./fiscalYear";
 import type { AccountEntryFormState } from "./types";
 
+/** 「種別未設定」の行をフィルタで指定するための擬似キー。実際の category ID と衝突しないよう接頭辞を付ける。 */
+export const UNCATEGORIZED_FILTER_KEY = "__moa_uncategorized__";
+
 /** 明細一覧を現在の台帳表示範囲へ絞り込み、古い日付が上に来る順で並べる。 */
 export function createVisibleEntries(
   entries: readonly AccountEntry[],
@@ -10,6 +13,7 @@ export function createVisibleEntries(
   selectedPeriod: string,
   selectedPartnerId: string,
   fiscalYearStartMonth: number,
+  selectedCategoryFilter: ReadonlySet<string> | null,
 ) {
   const matchesPeriod = createPeriodMatcher(selectedPeriod, fiscalYearStartMonth);
   return [...entries]
@@ -20,9 +24,26 @@ export function createVisibleEntries(
       if (!matchesPeriod(entry.occurredOn)) {
         return false;
       }
-      return selectedPartnerId === "all" || entry.partnerId === selectedPartnerId;
+      if (selectedPartnerId !== "all" && entry.partnerId !== selectedPartnerId) {
+        return false;
+      }
+      return matchesCategoryFilter(entry, selectedCategoryFilter);
     })
     .sort((left, right) => left.occurredOn.localeCompare(right.occurredOn));
+}
+
+/** 種別フィルタの一致判定。null は「フィルタ未適用」を意味し全件通す。 */
+function matchesCategoryFilter(
+  entry: AccountEntry,
+  selectedCategoryFilter: ReadonlySet<string> | null,
+) {
+  if (selectedCategoryFilter === null) {
+    return true;
+  }
+  if (entry.categoryIds.length === 0) {
+    return selectedCategoryFilter.has(UNCATEGORIZED_FILTER_KEY);
+  }
+  return entry.categoryIds.some((id) => selectedCategoryFilter.has(id));
 }
 
 /** 期間キーが FY なら年度範囲、月なら従来通りの前方一致で判定する関数を返す。 */
