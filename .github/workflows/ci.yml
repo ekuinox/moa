@@ -31,3 +31,7 @@ jobs:
 
       - name: CI
         run: just ci
+
+      - name: Report Rust target size
+        if: always()
+        run: node ./.github/scripts/report-rust-target-size.mjs
