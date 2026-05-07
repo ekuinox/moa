@@ -6,11 +6,13 @@
 
 .fiscalYearSelect {
   min-width: 110px;
+  min-height: 34px;
   padding: 0 28px 0 12px;
   border: 1px solid #cfd8df;
-  border-radius: 8px;
-  background: #f8fafb;
-  color: #245f73;
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+  background-color: #f8fafb;
+  color: #4d5d66;
   font-weight: 700;
   cursor: pointer;
   appearance: none;
