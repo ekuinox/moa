@@ -82,8 +82,12 @@ export function AccountEntryList({ kind }: AccountEntryListProps) {
       <section className={styles.workspace} aria-label={`${ledger.title}明細`}>
         <LedgerPeriodTabs
           monthTabs={ledger.monthTabs}
-          selectedMonth={ledger.selectedMonth}
-          onSelectMonth={ledger.selectMonth}
+          selectedPeriod={ledger.selectedPeriod}
+          availableFiscalYears={ledger.availableFiscalYears}
+          selectedFiscalYear={ledger.selectedFiscalYear}
+          fiscalYearStartMonth={ledger.fiscalYearStartMonth}
+          onSelectPeriod={ledger.selectPeriod}
+          onSelectFiscalYear={ledger.selectFiscalYear}
         />
         <LedgerPanel ledger={ledger} />
       </section>

@@ -41,23 +41,30 @@ const entries: AccountEntry[] = [
     amount: 4000,
   }),
   createEntry({
-    id: "other-month",
+    id: "previous-fy-march",
     kind: "payable",
-    occurredOn: "2026-04-30",
+    occurredOn: "2026-03-31",
     partnerId: "partner-a",
     amount: 5000,
+  }),
+  createEntry({
+    id: "next-fy-april",
+    kind: "payable",
+    occurredOn: "2027-04-01",
+    partnerId: "partner-a",
+    amount: 6000,
   }),
 ];
 
 describe("ledgerState", () => {
   it("表示対象の明細を月・種別・取引先で絞り込み、日付昇順に並べる", () => {
-    const visibleEntries = createVisibleEntries(entries, "payable", "2026-05", "partner-a");
+    const visibleEntries = createVisibleEntries(entries, "payable", "2026-05", "partner-a", 4);
 
     expect(visibleEntries.map((entry) => entry.id)).toEqual(["old-payable", "new-payable"]);
   });
 
   it("すべての取引先では取引先で絞り込まず、日付昇順に並べる", () => {
-    const visibleEntries = createVisibleEntries(entries, "payable", "2026-05", "all");
+    const visibleEntries = createVisibleEntries(entries, "payable", "2026-05", "all", 4);
 
     expect(visibleEntries.map((entry) => entry.id)).toEqual([
       "old-payable",
@@ -66,14 +73,26 @@ describe("ledgerState", () => {
     ]);
   });
 
-  it("年間選択時は同じ年の明細を通して表示する", () => {
-    const visibleEntries = createVisibleEntries(entries, "payable", "2026", "partner-a");
+  it("年度開始月 4 で FY2026 を選んだら 2026-04 〜 2027-03 の明細だけを返す", () => {
+    const visibleEntries = createVisibleEntries(entries, "payable", "FY2026", "partner-a", 4);
+
+    expect(visibleEntries.map((entry) => entry.id)).toEqual(["old-payable", "new-payable"]);
+  });
+
+  it("年度開始月 1 で FY2026 を選んだら暦年 2026 全期間を返す", () => {
+    const visibleEntries = createVisibleEntries(entries, "payable", "FY2026", "partner-a", 1);
 
     expect(visibleEntries.map((entry) => entry.id)).toEqual([
-      "other-month",
+      "previous-fy-march",
       "old-payable",
       "new-payable",
     ]);
+  });
+
+  it("年度開始月 4 で FY2025 を選ぶと 3 月の明細が含まれる", () => {
+    const visibleEntries = createVisibleEntries(entries, "payable", "FY2025", "partner-a", 4);
+
+    expect(visibleEntries.map((entry) => entry.id)).toEqual(["previous-fy-march"]);
   });
 
   it("表示対象明細の合計金額を計算する", () => {
@@ -101,7 +120,7 @@ describe("ledgerState", () => {
       },
     };
 
-    const next = updateEditingRow(current, "row", { description: "after" }, "2026-05");
+    const next = updateEditingRow(current, "row", { description: "after" }, "2026-05", 4);
 
     expect(next.row).toEqual({
       occurredOn: "2026-05-01",
@@ -147,6 +166,7 @@ describe("ledgerState", () => {
       entry.id,
       { amount: "2000" },
       "2026-05",
+      4,
     );
 
     expect(closeUnchangedEditingRow(current, entry)).toEqual(current);

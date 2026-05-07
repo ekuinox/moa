@@ -1,5 +1,6 @@
 import type { AccountEntry, AccountEntryKind } from "../../lib/api";
 import { createEmptyForm, createFormFromEntry, isRowDirty } from "./accountEntryForm";
+import { fiscalYearRange, parseFiscalYearKey } from "./fiscalYear";
 import type { AccountEntryFormState } from "./types";
 
 /** 明細一覧を現在の台帳表示範囲へ絞り込み、古い日付が上に来る順で並べる。 */
@@ -8,18 +9,34 @@ export function createVisibleEntries(
   kind: AccountEntryKind,
   selectedPeriod: string,
   selectedPartnerId: string,
+  fiscalYearStartMonth: number,
 ) {
+  const matchesPeriod = createPeriodMatcher(selectedPeriod, fiscalYearStartMonth);
   return [...entries]
     .filter((entry) => {
       if (entry.kind !== kind) {
         return false;
       }
-      if (!entry.occurredOn.startsWith(selectedPeriod)) {
+      if (!matchesPeriod(entry.occurredOn)) {
         return false;
       }
       return selectedPartnerId === "all" || entry.partnerId === selectedPartnerId;
     })
     .sort((left, right) => left.occurredOn.localeCompare(right.occurredOn));
+}
+
+/** 期間キーが FY なら年度範囲、月なら従来通りの前方一致で判定する関数を返す。 */
+function createPeriodMatcher(
+  selectedPeriod: string,
+  fiscalYearStartMonth: number,
+): (occurredOn: string) => boolean {
+  const fiscalYear = parseFiscalYearKey(selectedPeriod);
+  if (fiscalYear !== undefined) {
+    const range = fiscalYearRange(fiscalYear, fiscalYearStartMonth);
+    return (occurredOn) =>
+      occurredOn >= range.startIsoDate && occurredOn < range.endIsoDateExclusive;
+  }
+  return (occurredOn) => occurredOn.startsWith(selectedPeriod);
 }
 
 /** 明細一覧の合計金額を計算する。 */
@@ -43,9 +60,10 @@ export function updateEditingRow(
   editingRows: Readonly<Record<string, AccountEntryFormState>>,
   rowKey: string,
   values: Partial<AccountEntryFormState>,
-  selectedMonth: string,
+  selectedPeriod: string,
+  fiscalYearStartMonth: number,
 ) {
-  const base = editingRows[rowKey] ?? createEmptyForm(selectedMonth);
+  const base = editingRows[rowKey] ?? createEmptyForm(selectedPeriod, fiscalYearStartMonth);
   return {
     ...editingRows,
     [rowKey]: {

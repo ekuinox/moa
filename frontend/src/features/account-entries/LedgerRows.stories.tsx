@@ -70,7 +70,8 @@ export const NewRow: EditableNewRowStory = {
   ),
   args: {
     categories: storyCategories,
-    selectedMonth: "2026-05",
+    selectedPeriod: "2026-05",
+    fiscalYearStartMonth: 4,
     onSave: () => undefined,
   },
 };

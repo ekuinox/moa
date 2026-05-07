@@ -36,20 +36,35 @@ describe("formatters", () => {
     expect(currentYearMonth()).toBe("2026-05");
   });
 
-  it("選択月を含む年の年間タブと 12 か月タブを作る", () => {
-    const tabs = createMonthTabs("2026-05");
+  it("年度開始月が 4 のときは年間タブと 4 月始まりの 12 か月タブを作る", () => {
+    const tabs = createMonthTabs({ fiscalYear: 2026, fiscalYearStartMonth: 4 });
 
     expect(tabs).toHaveLength(13);
-    expect(tabs[0]).toEqual({ key: "2026", label: "年間" });
+    expect(tabs[0]).toEqual({ key: "FY2026", label: "年間" });
+    expect(tabs[1]).toEqual({ key: "2026-04", label: "4" });
+    expect(tabs[9]).toEqual({ key: "2026-12", label: "12" });
+    expect(tabs[10]).toEqual({ key: "2027-01", label: "1" });
+    expect(tabs[12]).toEqual({ key: "2027-03", label: "3" });
+  });
+
+  it("年度開始月が 1 のときは暦年と一致する 12 か月タブを作る", () => {
+    const tabs = createMonthTabs({ fiscalYear: 2026, fiscalYearStartMonth: 1 });
+
+    expect(tabs).toHaveLength(13);
+    expect(tabs[0]).toEqual({ key: "FY2026", label: "年間" });
     expect(tabs[1]).toEqual({ key: "2026-01", label: "1" });
-    expect(tabs[5]).toEqual({ key: "2026-05", label: "5" });
     expect(tabs[12]).toEqual({ key: "2026-12", label: "12" });
   });
 
-  it("期間キーを台帳タイトル用に整形する", () => {
-    expect(formatLedgerMonth("2026")).toBe("2026年");
-    expect(formatLedgerMonth("2026-05")).toBe("2026/5");
-    expect(formatLedgerMonth("2026-11")).toBe("2026/11");
+  it("FY キーは年度開始月に応じて年度・年表記を切り替える", () => {
+    expect(formatLedgerMonth("FY2026", 4)).toBe("2026年度");
+    expect(formatLedgerMonth("FY2026", 1)).toBe("2026年");
+  });
+
+  it("月キーは年度開始月に関わらず YYYY/M 形式に整形する", () => {
+    expect(formatLedgerMonth("2026-05", 4)).toBe("2026/5");
+    expect(formatLedgerMonth("2027-02", 4)).toBe("2027/2");
+    expect(formatLedgerMonth("2026-11", 1)).toBe("2026/11");
   });
 
   it("ISO 日付を読み取りセル用の M/D 形式へ整形する", () => {

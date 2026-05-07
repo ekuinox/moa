@@ -2,6 +2,7 @@ import type { Dispatch, SetStateAction } from "react";
 
 import { type AccountEntry, type AccountEntryKind, apiClient } from "../../lib/api";
 import { parseDraft } from "./accountEntryForm";
+import { fiscalYearKey } from "./fiscalYear";
 import {
   closeUnchangedEditingRow,
   openEditingRow,
@@ -18,17 +19,19 @@ interface LedgerActionParams {
   readonly activeRowKey: string | undefined;
   readonly canEdit: boolean;
   readonly editingRows: Readonly<Record<string, AccountEntryFormState>>;
+  readonly fiscalYearStartMonth: number;
   readonly kind: AccountEntryKind;
   readonly mutate: () => Promise<unknown>;
-  readonly selectedMonth: string;
   readonly selectedPartnerId: string;
+  readonly selectedPeriod: string;
   readonly setActiveRowKey: Dispatch<SetStateAction<string | undefined>>;
   readonly setEditingRows: EditingRowsSetter;
   readonly setErrorMessage: Dispatch<SetStateAction<string | undefined>>;
   readonly setHighlightedEntryId: Dispatch<SetStateAction<string | undefined>>;
   readonly setNoticeMessage: Dispatch<SetStateAction<string | undefined>>;
-  readonly setSelectedMonth: Dispatch<SetStateAction<string>>;
+  readonly setSelectedFiscalYear: Dispatch<SetStateAction<number>>;
   readonly setSelectedPartnerId: Dispatch<SetStateAction<string>>;
+  readonly setSelectedPeriod: Dispatch<SetStateAction<string>>;
 }
 
 interface ActiveRowPointerDownParams {
@@ -43,17 +46,19 @@ export function createLedgerActions({
   activeRowKey,
   canEdit,
   editingRows,
+  fiscalYearStartMonth,
   kind,
   mutate,
-  selectedMonth,
   selectedPartnerId,
+  selectedPeriod,
   setActiveRowKey,
   setEditingRows,
   setErrorMessage,
   setHighlightedEntryId,
   setNoticeMessage,
-  setSelectedMonth,
+  setSelectedFiscalYear,
   setSelectedPartnerId,
+  setSelectedPeriod,
 }: LedgerActionParams) {
   /** 表示範囲を変えたあとに、一時的な編集状態を消す。 */
   function resetEditableRows() {
@@ -67,9 +72,16 @@ export function createLedgerActions({
     resetEditableRows();
   }
 
-  /** 月を切り替え、前の期間に紐づいていたドラフトを破棄する。 */
-  function selectMonth(month: string) {
-    setSelectedMonth(month);
+  /** 期間（月または年度年間）を切り替え、前の期間に紐づいたドラフトを破棄する。 */
+  function selectPeriod(period: string) {
+    setSelectedPeriod(period);
+    resetEditableRows();
+  }
+
+  /** 年度プルダウンの切替時は年間表示にリセットして、その年度のタブ並びへ切り替える。 */
+  function selectFiscalYear(fiscalYear: number) {
+    setSelectedFiscalYear(fiscalYear);
+    setSelectedPeriod(fiscalYearKey(fiscalYear));
     resetEditableRows();
   }
 
@@ -85,7 +97,9 @@ export function createLedgerActions({
 
   /** 編集中の保存済み行のドラフトを保持する。 */
   function updateRow(rowKey: string, values: Partial<AccountEntryFormState>) {
-    setEditingRows((current) => updateEditingRow(current, rowKey, values, selectedMonth));
+    setEditingRows((current) =>
+      updateEditingRow(current, rowKey, values, selectedPeriod, fiscalYearStartMonth),
+    );
   }
 
   /** 保存済み行のドラフトを保存する。 */
@@ -186,8 +200,9 @@ export function createLedgerActions({
     finishEditingRow,
     saveExisting,
     saveNew,
-    selectMonth,
+    selectFiscalYear,
     selectPartner,
+    selectPeriod,
     showTodo,
     startEditing,
     updateRow,

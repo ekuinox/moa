@@ -1,5 +1,6 @@
 import type { AccountEntry, Category, Partner } from "../../lib/api";
-import type { AccountEntryFormState, MonthTab } from "./types";
+import { createMonthTabs } from "./formatters";
+import type { AccountEntryFormState } from "./types";
 
 /** Storybook で帳票コンポーネントの見た目を確認するための取引先サンプル。 */
 export const storyPartners = [
@@ -15,22 +16,18 @@ export const storyCategories = [
   { id: "category-3", name: "消耗品" },
 ] satisfies Category[];
 
-/** Storybook で月次・年間タブの状態を確認するための期間サンプル。 */
-export const storyMonthTabs = [
-  { key: "annual", label: "年間" },
-  { key: "2026-01", label: "1" },
-  { key: "2026-02", label: "2" },
-  { key: "2026-03", label: "3" },
-  { key: "2026-04", label: "4" },
-  { key: "2026-05", label: "5" },
-  { key: "2026-06", label: "6" },
-  { key: "2026-07", label: "7" },
-  { key: "2026-08", label: "8" },
-  { key: "2026-09", label: "9" },
-  { key: "2026-10", label: "10" },
-  { key: "2026-11", label: "11" },
-  { key: "2026-12", label: "12" },
-] satisfies MonthTab[];
+/** Storybook の既定値で使う年度開始月（4 月）と現年度（FY2026）。 */
+export const storyFiscalYearStartMonth = 4;
+export const storyFiscalYear = 2026;
+
+/** Storybook で年度別の月タブを確認するためのサンプル（年度開始月=4）。 */
+export const storyMonthTabs = createMonthTabs({
+  fiscalYear: storyFiscalYear,
+  fiscalYearStartMonth: storyFiscalYearStartMonth,
+});
+
+/** Storybook で年度プルダウンの選択肢に使うサンプル。 */
+export const storyAvailableFiscalYears = [2026, 2025, 2024] as const;
 
 /** Storybook で一覧・行編集・合計表示を確認するための明細サンプル。 */
 export const storyEntries = [

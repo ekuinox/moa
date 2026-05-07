@@ -16,7 +16,7 @@ export function LedgerPanel({ ledger }: LedgerPanelProps) {
         <div>
           <p className="eyebrow">{ledger.selectedPartnerName}</p>
           <h2>
-            {ledger.title} ({formatLedgerMonth(ledger.selectedMonth)})
+            {ledger.title} ({formatLedgerMonth(ledger.selectedPeriod, ledger.fiscalYearStartMonth)})
           </h2>
         </div>
         <button
@@ -48,9 +48,10 @@ export function LedgerPanel({ ledger }: LedgerPanelProps) {
         categories={ledger.categories}
         categoryNames={ledger.categoryNames}
         editingRows={ledger.editingRows}
+        fiscalYearStartMonth={ledger.fiscalYearStartMonth}
         highlightedEntryId={ledger.highlightedEntryId}
         partnerNames={ledger.partnerNames}
-        selectedMonth={ledger.selectedMonth}
+        selectedPeriod={ledger.selectedPeriod}
         totalAmount={ledger.totalAmount}
         visibleEntries={ledger.visibleEntries}
         onDeleteEntry={ledger.deleteEntry}

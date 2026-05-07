@@ -191,15 +191,21 @@ export function LedgerRow({
 
 export interface EditableNewRowProps {
   readonly categories: readonly Category[];
-  readonly selectedMonth: string;
+  readonly selectedPeriod: string;
+  readonly fiscalYearStartMonth: number;
   readonly onSave: (draft: AccountEntryFormState) => void;
 }
 
 /** 選択中の取引先のまま新規明細を追加するための、末尾の空行を表示する。 */
-export function EditableNewRow({ categories, selectedMonth, onSave }: EditableNewRowProps) {
+export function EditableNewRow({
+  categories,
+  selectedPeriod,
+  fiscalYearStartMonth,
+  onSave,
+}: EditableNewRowProps) {
   const form = useForm<AccountEntryFormState>({
     resolver: valibotResolver(accountEntryFormSchema),
-    defaultValues: createEmptyForm(selectedMonth),
+    defaultValues: createEmptyForm(selectedPeriod, fiscalYearStartMonth),
   });
   const watchedOccurredOn = useWatch({ control: form.control, name: "occurredOn" });
   const watchedCategoryId = useWatch({ control: form.control, name: "categoryId" });
@@ -211,11 +217,11 @@ export function EditableNewRow({ categories, selectedMonth, onSave }: EditableNe
     description: watchedDescription,
     amount: watchedAmount,
   });
-  const hasChanges = isNewRowDirty(draft, selectedMonth);
+  const hasChanges = isNewRowDirty(draft, selectedPeriod, fiscalYearStartMonth);
 
   useEffect(() => {
-    form.reset(createEmptyForm(selectedMonth));
-  }, [form, selectedMonth]);
+    form.reset(createEmptyForm(selectedPeriod, fiscalYearStartMonth));
+  }, [form, selectedPeriod, fiscalYearStartMonth]);
 
   return (
     <tr className={`${styles.row} ${styles.newRow}`}>
