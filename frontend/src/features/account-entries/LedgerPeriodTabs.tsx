@@ -28,7 +28,10 @@ export function LedgerPeriodTabs({
         className={styles.fiscalYearSelect}
         aria-label="年度切替"
         value={selectedFiscalYear}
-        onChange={(event) => onSelectFiscalYear(Number(event.target.value))}
+        onChange={(event) => {
+          onSelectFiscalYear(Number(event.target.value));
+          event.currentTarget.blur();
+        }}
       >
         {availableFiscalYears.map((fiscalYear) => (
           <option key={fiscalYear} value={fiscalYear}>
