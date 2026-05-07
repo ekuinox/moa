@@ -1,6 +1,7 @@
 import * as v from "valibot";
 
 import type { AccountEntry } from "../../lib/api";
+import { parseFiscalYearKey } from "./fiscalYear";
 import type { AccountEntryFormState } from "./types";
 
 /** 開いている表から決まる取引先を含めた、保存直前の明細ドラフト用 schema。 */
@@ -21,19 +22,25 @@ export const accountEntryFormSchema = v.object({
 });
 
 /** 選択期間に合わせた新規入力行の初期値を作る。 */
-export function createEmptyForm(selectedPeriod: string): AccountEntryFormState {
+export function createEmptyForm(
+  selectedPeriod: string,
+  fiscalYearStartMonth: number,
+): AccountEntryFormState {
   return {
-    occurredOn: createInitialOccurredOn(selectedPeriod),
+    occurredOn: createInitialOccurredOn(selectedPeriod, fiscalYearStartMonth),
     categoryId: "",
     description: "",
     amount: "0",
   };
 }
 
-/** 年間表示では年初、月表示では月初を新規行の初期日付にする。 */
-function createInitialOccurredOn(selectedPeriod: string) {
-  if (/^\d{4}$/.test(selectedPeriod)) {
-    return `${selectedPeriod}-01-01`;
+/** 年度表示では年度開始月の 1 日、月表示では月初を新規行の初期日付にする。 */
+function createInitialOccurredOn(selectedPeriod: string, fiscalYearStartMonth: number) {
+  const fiscalYear = parseFiscalYearKey(selectedPeriod);
+  if (fiscalYear !== undefined) {
+    const year = fiscalYear.toString().padStart(4, "0");
+    const month = fiscalYearStartMonth.toString().padStart(2, "0");
+    return `${year}-${month}-01`;
   }
   return `${selectedPeriod}-01`;
 }
@@ -79,8 +86,12 @@ export function isRowDirty(draft: AccountEntryFormState, entry: AccountEntry) {
 }
 
 /** 常に表示される新規入力行に、ユーザー入力が入っているかを判定する。 */
-export function isNewRowDirty(draft: AccountEntryFormState, selectedMonth: string) {
-  const empty = createEmptyForm(selectedMonth);
+export function isNewRowDirty(
+  draft: AccountEntryFormState,
+  selectedPeriod: string,
+  fiscalYearStartMonth: number,
+) {
+  const empty = createEmptyForm(selectedPeriod, fiscalYearStartMonth);
   return (
     draft.occurredOn !== empty.occurredOn ||
     draft.categoryId !== empty.categoryId ||

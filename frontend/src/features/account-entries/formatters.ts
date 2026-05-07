@@ -1,7 +1,6 @@
 import type { Category, Partner } from "../../lib/api";
+import { fiscalYearKey, fiscalYearRange, parseFiscalYearKey } from "./fiscalYear";
 import type { MonthTab } from "./types";
-
-const visibleMonthCount = 12;
 
 /** 台帳テーブルで表示する種別や取引先を、id から名前へ引ける Map にする。 */
 export function mapById(items: readonly Partner[] | readonly Category[]) {
@@ -13,29 +12,27 @@ export function currentYearMonth() {
   return new Date().toISOString().slice(0, 7);
 }
 
-/** 選択期間を含む年の、年間と 12 か月固定タブを作る。 */
-export function createMonthTabs(selectedMonth: string): MonthTab[] {
-  const [yearText, monthText] = selectedMonth.split("-");
-  const year = Number.parseInt(yearText ?? "", 10);
-  const month = Number.parseInt(monthText ?? "", 10);
-
-  const yearKey = year.toString().padStart(4, "0");
+/** 指定した年度の年間タブと、年度開始月から並ぶ 12 か月タブを作る。 */
+export function createMonthTabs(input: {
+  readonly fiscalYear: number;
+  readonly fiscalYearStartMonth: number;
+}): MonthTab[] {
+  const { fiscalYear, fiscalYearStartMonth } = input;
+  const range = fiscalYearRange(fiscalYear, fiscalYearStartMonth);
   return [
-    { key: yearKey, label: "年間" },
-    ...Array.from({ length: visibleMonthCount }, (_, index) => {
-      const monthNumber = index + 1;
-      return {
-        key: `${yearKey}-${monthNumber.toString().padStart(2, "0")}`,
-        label: monthNumber.toString(),
-      };
-    }).map((item) => (item.key === selectedMonth ? { ...item, label: month.toString() } : item)),
+    { key: fiscalYearKey(fiscalYear), label: "年間" },
+    ...range.months.map(({ year, month }) => ({
+      key: `${year.toString().padStart(4, "0")}-${month.toString().padStart(2, "0")}`,
+      label: month.toString(),
+    })),
   ];
 }
 
-/** YYYY または YYYY-MM の期間キーを台帳タイトル用に整形する。 */
-export function formatLedgerMonth(value: string) {
-  if (/^\d{4}$/.test(value)) {
-    return `${value}年`;
+/** 期間キーを台帳タイトル用に整形する。FYxxxx は年度表記、YYYY-MM は月表記。 */
+export function formatLedgerMonth(value: string, fiscalYearStartMonth: number) {
+  const fiscalYear = parseFiscalYearKey(value);
+  if (fiscalYear !== undefined) {
+    return fiscalYearStartMonth === 1 ? `${fiscalYear}年` : `${fiscalYear}年度`;
   }
   const [year, month] = value.split("-");
   return `${year}/${Number.parseInt(month ?? "", 10)}`;

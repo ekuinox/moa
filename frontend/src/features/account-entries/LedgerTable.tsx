@@ -11,9 +11,10 @@ export interface LedgerTableProps {
   readonly categories: readonly Category[];
   readonly categoryNames: ReadonlyMap<string, string>;
   readonly editingRows: Readonly<Record<string, AccountEntryFormState>>;
+  readonly fiscalYearStartMonth: number;
   readonly highlightedEntryId: string | undefined;
   readonly partnerNames: ReadonlyMap<string, string>;
-  readonly selectedMonth: string;
+  readonly selectedPeriod: string;
   readonly totalAmount: number;
   readonly visibleEntries: readonly AccountEntry[];
   readonly onDeleteEntry: (entry: AccountEntry) => void;
@@ -31,9 +32,10 @@ export function LedgerTable({
   categories,
   categoryNames,
   editingRows,
+  fiscalYearStartMonth,
   highlightedEntryId,
   partnerNames,
-  selectedMonth,
+  selectedPeriod,
   totalAmount,
   visibleEntries,
   onDeleteEntry,
@@ -115,7 +117,8 @@ export function LedgerTable({
           {canEdit ? (
             <EditableNewRow
               categories={categories}
-              selectedMonth={selectedMonth}
+              selectedPeriod={selectedPeriod}
+              fiscalYearStartMonth={fiscalYearStartMonth}
               onSave={onSaveNew}
             />
           ) : null}
