@@ -3,6 +3,7 @@ import { Check, Plus, Trash2 } from "lucide-react";
 import { type KeyboardEvent, memo, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
+import { Button } from "../../components";
 import type { AccountEntry, Category } from "../../lib/api";
 import {
   accountEntryFormSchema,
@@ -148,25 +149,27 @@ export function LedgerRow({
         {canEdit ? (
           <div className={styles.tableActions}>
             {isDirty ? (
-              <button
-                className="primary-icon-button"
+              <Button
+                size="icon"
+                variant="primary"
                 type="button"
                 aria-label={`${entry.occurredOn} の明細を保存`}
                 onClick={onSave}
                 title="保存"
               >
                 <Check size={16} aria-hidden="true" />
-              </button>
+              </Button>
             ) : null}
-            <button
-              className="icon-button icon-button--danger"
+            <Button
+              size="icon"
+              variant="danger"
               type="button"
               aria-label={`${entry.occurredOn} の明細を削除`}
               onClick={onDelete}
               title="削除"
             >
               <Trash2 size={16} aria-hidden="true" />
-            </button>
+            </Button>
           </div>
         ) : null}
       </td>
@@ -238,15 +241,16 @@ export function EditableNewRow({
       </td>
       <td>
         {hasChanges ? (
-          <button
-            className={`primary-button ${styles.saveButton}`}
+          <Button
+            className={styles.saveButton}
+            variant="primary"
             type="button"
             onClick={() => onSave(draft)}
             aria-label="新しい明細を追加"
           >
             <Plus size={16} aria-hidden="true" />
             追加
-          </button>
+          </Button>
         ) : null}
       </td>
     </tr>

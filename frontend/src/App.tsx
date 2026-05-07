@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import styles from "./App.module.css";
+import { Text } from "./components";
 import { AccountEntryList, SettingsTab } from "./features";
 
 type View = "payable" | "receivable" | "cash" | "settings";
@@ -15,37 +17,45 @@ export function App() {
   const [view, setView] = useState<View>("payable");
 
   return (
-    <main className="app-shell">
-      <div className="app-layout">
-        <header className="app-topbar">
+    <main className={styles.shell}>
+      <div className={styles.layout}>
+        <header className={styles.topbar}>
           <div>
-            <p className="eyebrow">moa</p>
+            <Text tone="eyebrow">moa</Text>
             <h1>{viewTitles[view]}</h1>
           </div>
-          <nav className="app-tabs" aria-label="画面切り替え">
+          <nav className={styles.tabs} aria-label="画面切り替え">
             <button
-              className={view === "payable" ? "app-tabs__item is-active" : "app-tabs__item"}
+              className={
+                view === "payable" ? `${styles.tabItem} ${styles.tabItemActive}` : styles.tabItem
+              }
               type="button"
               onClick={() => setView("payable")}
             >
               買掛
             </button>
             <button
-              className={view === "receivable" ? "app-tabs__item is-active" : "app-tabs__item"}
+              className={
+                view === "receivable" ? `${styles.tabItem} ${styles.tabItemActive}` : styles.tabItem
+              }
               type="button"
               onClick={() => setView("receivable")}
             >
               売掛
             </button>
             <button
-              className={view === "cash" ? "app-tabs__item is-active" : "app-tabs__item"}
+              className={
+                view === "cash" ? `${styles.tabItem} ${styles.tabItemActive}` : styles.tabItem
+              }
               type="button"
               onClick={() => setView("cash")}
             >
               出納
             </button>
             <button
-              className={view === "settings" ? "app-tabs__item is-active" : "app-tabs__item"}
+              className={
+                view === "settings" ? `${styles.tabItem} ${styles.tabItemActive}` : styles.tabItem
+              }
               type="button"
               onClick={() => setView("settings")}
             >
@@ -57,9 +67,9 @@ export function App() {
         {view === "payable" ? <AccountEntryList kind="payable" /> : null}
         {view === "receivable" ? <AccountEntryList kind="receivable" /> : null}
         {view === "cash" ? (
-          <section className="placeholder-panel">
+          <section className={styles.placeholderPanel}>
             <h2>出納</h2>
-            <p className="muted-text">出納画面は今後実装します。</p>
+            <Text>出納画面は今後実装します。</Text>
           </section>
         ) : null}
         {view === "settings" ? <SettingsTab /> : null}

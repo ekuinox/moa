@@ -1,0 +1,88 @@
+.shell {
+  display: grid;
+  height: 100dvh;
+  min-height: 100vh;
+  padding: 20px 18px;
+}
+
+.layout {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
+  width: min(100%, 1280px);
+  height: 100%;
+  margin: 0 auto;
+}
+
+.topbar {
+  display: flex;
+  gap: 16px;
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #d6dde3;
+}
+
+.topbar h1 {
+  margin: 0;
+  color: #172026;
+  font-size: 1.45rem;
+  line-height: 1.25;
+}
+
+.tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid #d6dde3;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.tabItem {
+  min-width: 48px;
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 6px;
+  color: #4d5d66;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.tabItemActive {
+  color: #ffffff;
+  background: #245f73;
+}
+
+.placeholderPanel {
+  padding: 24px;
+  border: 1px solid #d6dde3;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.placeholderPanel h2 {
+  margin: 0 0 8px;
+}
+
+@media (max-width: 760px) {
+  .shell {
+    padding: 20px 14px;
+  }
+
+  .topbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .tabs {
+    width: 100%;
+  }
+
+  .tabItem {
+    flex: 1;
+  }
+}

@@ -1,5 +1,6 @@
 import { Pencil, Plus } from "lucide-react";
 
+import { Button } from "../../components";
 import type { Partner } from "../../lib/api";
 import styles from "./LedgerPartnerRail.module.css";
 
@@ -23,10 +24,10 @@ export function LedgerPartnerRail({
     <aside className={styles.partnerRail} aria-label="取引先一覧">
       <div className={styles.partnerRailHeader}>
         <h2>取引先</h2>
-        <button className="small-button" type="button" onClick={onAddPartner}>
+        <Button size="small" type="button" onClick={onAddPartner}>
           <Plus size={15} aria-hidden="true" />
           追加
-        </button>
+        </Button>
       </div>
       <div className={styles.partnerList}>
         <button

@@ -2,6 +2,7 @@ import { Check } from "lucide-react";
 import { type KeyboardEvent, useEffect, useState } from "react";
 import useSWR from "swr";
 
+import { Text } from "../../components";
 import { apiClient } from "../../lib/api";
 import styles from "./FiscalYearStartMonthCard.module.css";
 
@@ -82,7 +83,7 @@ export function FiscalYearStartMonthCard() {
   return (
     <div>
       {isLoading || !settings ? <p className={styles.muted}>読み込み中です。</p> : null}
-      {error ? <p className="form-error">設定の読み込みに失敗しました。</p> : null}
+      {error ? <Text tone="error">設定の読み込みに失敗しました。</Text> : null}
 
       {settings ? (
         <div className={styles.row}>
@@ -113,7 +114,11 @@ export function FiscalYearStartMonthCard() {
         </div>
       ) : null}
 
-      {errorMessage ? <p className={`form-error ${styles.error}`}>{errorMessage}</p> : null}
+      {errorMessage ? (
+        <Text tone="error" className={styles.error}>
+          {errorMessage}
+        </Text>
+      ) : null}
     </div>
   );
 }

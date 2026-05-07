@@ -1,4 +1,7 @@
 import { X } from "lucide-react";
+
+import { Button, Text } from "../../components";
+
 import { formatLedgerMonth } from "./formatters";
 import styles from "./LedgerPanel.module.css";
 import { LedgerTable } from "./LedgerTable";
@@ -14,18 +17,17 @@ export function LedgerPanel({ ledger }: LedgerPanelProps) {
     <div className={styles.panel}>
       <div className={styles.panelHeader}>
         <div>
-          <p className="eyebrow">{ledger.selectedPartnerName}</p>
+          <Text tone="eyebrow">{ledger.selectedPartnerName}</Text>
           <h2>
             {ledger.title} ({formatLedgerMonth(ledger.selectedPeriod, ledger.fiscalYearStartMonth)})
           </h2>
         </div>
-        <button
-          className="secondary-button"
+        <Button
           type="button"
           onClick={() => ledger.showTodo("設定タブで編集する内容は未設計です。")}
         >
           設定
-        </button>
+        </Button>
       </div>
 
       {ledger.noticeMessage ? (
@@ -37,10 +39,12 @@ export function LedgerPanel({ ledger }: LedgerPanelProps) {
         </div>
       ) : null}
 
-      {ledger.isEntriesLoading ? <p className="muted-text">読み込み中です。</p> : null}
-      {ledger.entriesError ? <p className="form-error">明細の読み込みに失敗しました。</p> : null}
+      {ledger.isEntriesLoading ? <Text>読み込み中です。</Text> : null}
+      {ledger.entriesError ? <Text tone="error">明細の読み込みに失敗しました。</Text> : null}
       {ledger.errorMessage ? (
-        <p className={`form-error ${styles.inlineError}`}>{ledger.errorMessage}</p>
+        <Text tone="error" className={styles.inlineError}>
+          {ledger.errorMessage}
+        </Text>
       ) : null}
       <LedgerTable
         activeRowKey={ledger.activeRowKey}

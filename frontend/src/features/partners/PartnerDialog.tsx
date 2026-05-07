@@ -1,6 +1,7 @@
 import { Trash2, X } from "lucide-react";
 import { type SubmitEvent, useEffect, useRef, useState } from "react";
 
+import { Button, Field, Text } from "../../components";
 import type { Partner } from "../../lib/api";
 import styles from "./PartnerDialog.module.css";
 
@@ -94,43 +95,48 @@ export function PartnerDialog({ isOpen, partner, onCancel, onSave, onDelete }: P
       >
         <header className={styles.header}>
           <h2 id="partner-dialog-title">{isEditing ? "取引先を編集" : "取引先を追加"}</h2>
-          <button className="icon-button" type="button" onClick={onCancel} aria-label="閉じる">
+          <Button size="icon" type="button" onClick={onCancel} aria-label="閉じる">
             <X size={16} aria-hidden="true" />
-          </button>
+          </Button>
         </header>
 
         <form className={styles.form} onSubmit={handleSubmit}>
-          <label className="field">
-            <span className="field__label">名前</span>
+          <Field label="名前" htmlFor="partner-dialog-name">
             <input
+              id="partner-dialog-name"
               ref={firstInputRef}
               value={form.name}
               onChange={(event) => setForm({ ...form, name: event.target.value })}
               required
             />
-          </label>
-          <label className="field">
-            <span className="field__label">読み仮名</span>
+          </Field>
+          <Field label="読み仮名" htmlFor="partner-dialog-kana">
             <input
+              id="partner-dialog-kana"
               value={form.kana}
               onChange={(event) => setForm({ ...form, kana: event.target.value })}
               required
             />
-          </label>
-          {errorMessage ? <p className="form-error">{errorMessage}</p> : null}
+          </Field>
+          {errorMessage ? <Text tone="error">{errorMessage}</Text> : null}
           <div className={styles.actions}>
             {isEditing && onDelete ? (
-              <button className="danger-button" type="button" onClick={() => void handleDelete()}>
+              <Button
+                className={styles.deleteButton}
+                variant="danger"
+                type="button"
+                onClick={() => void handleDelete()}
+              >
                 <Trash2 size={16} aria-hidden="true" />
                 削除
-              </button>
+              </Button>
             ) : null}
-            <button className="primary-button" type="submit">
+            <Button variant="primary" type="submit">
               {isEditing ? "確定" : "登録"}
-            </button>
-            <button className="secondary-button" type="button" onClick={onCancel}>
+            </Button>
+            <Button type="button" onClick={onCancel}>
               取消
-            </button>
+            </Button>
           </div>
         </form>
       </section>
