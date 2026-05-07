@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 
+import { Text, VisuallyHidden } from "../../components";
 import type { AccountEntry, Category } from "../../lib/api";
 import { CategoryFilterHeader } from "./CategoryFilterHeader";
 import { EditableNewRow, LedgerRow, LedgerTotalRow } from "./LedgerRows";
@@ -100,7 +101,7 @@ export function LedgerTable({
             <th>摘要</th>
             <th>税込金額</th>
             <th>
-              <span className="visually-hidden">操作</span>
+              <VisuallyHidden>操作</VisuallyHidden>
             </th>
           </tr>
         </thead>
@@ -133,7 +134,7 @@ export function LedgerTable({
           {!canEdit && visibleEntries.length === 0 ? (
             <tr>
               <td colSpan={6}>
-                <p className="muted-text">この条件の明細はまだ登録されていません。</p>
+                <Text>この条件の明細はまだ登録されていません。</Text>
               </td>
             </tr>
           ) : null}

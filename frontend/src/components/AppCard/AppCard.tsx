@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import styles from "./AppCard.module.css";
+
 /** 業務画面で使う標準カードの表示内容。 */
 export interface AppCardProps {
   /** カード見出し。 */
@@ -14,15 +16,15 @@ export interface AppCardProps {
 
 export function AppCard({ title, description, actions, children }: AppCardProps) {
   return (
-    <section className="app-card">
-      <header className="app-card__header">
+    <section className={styles.card}>
+      <header className={styles.header}>
         <div>
-          <h2 className="app-card__title">{title}</h2>
-          {description ? <p className="app-card__description">{description}</p> : null}
+          <h2 className={styles.title}>{title}</h2>
+          {description ? <p className={styles.description}>{description}</p> : null}
         </div>
-        {actions ? <div className="app-card__actions">{actions}</div> : null}
+        {actions ? <div className={styles.actions}>{actions}</div> : null}
       </header>
-      <div className="app-card__body">{children}</div>
+      <div className={styles.body}>{children}</div>
     </section>
   );
 }

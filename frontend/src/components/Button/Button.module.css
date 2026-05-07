@@ -1,0 +1,55 @@
+.button {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.medium {
+  min-height: 38px;
+  padding: 8px 12px;
+  font-weight: 600;
+}
+
+.small {
+  min-height: 30px;
+  padding: 5px 9px;
+  font-weight: 600;
+}
+
+.icon {
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+}
+
+.primary {
+  color: #ffffff;
+  background: #245f73;
+}
+
+.secondary {
+  border-color: #c9d3dc;
+  color: #172026;
+  background: #ffffff;
+}
+
+.danger {
+  border-color: #f0c8ba;
+  color: #9a3412;
+  background: #fff8f5;
+}
+
+.icon.secondary {
+  color: #245f73;
+}
+
+.icon.danger {
+  border-color: #c9d3dc;
+  color: #9a3412;
+  background: #ffffff;
+}

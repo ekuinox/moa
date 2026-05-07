@@ -1,0 +1,28 @@
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.label {
+  color: #4d5d66;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #c9d3dc;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #172026;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: #2d6f86;
+  outline: 3px solid #d9edf2;
+}

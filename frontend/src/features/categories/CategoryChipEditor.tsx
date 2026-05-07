@@ -2,6 +2,7 @@ import { Check, X } from "lucide-react";
 import { type KeyboardEvent, useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 
+import { Text } from "../../components";
 import { apiClient, type Category } from "../../lib/api";
 import styles from "./CategoryChipEditor.module.css";
 
@@ -122,7 +123,7 @@ export function CategoryChipEditor() {
   return (
     <div>
       {isLoading ? <p className={styles.muted}>読み込み中です。</p> : null}
-      {error ? <p className="form-error">種別の読み込みに失敗しました。</p> : null}
+      {error ? <Text tone="error">種別の読み込みに失敗しました。</Text> : null}
 
       <div className={styles.list}>
         {categories.map((category) => {
@@ -184,7 +185,11 @@ export function CategoryChipEditor() {
         </div>
       </div>
 
-      {errorMessage ? <p className={`form-error ${styles.error}`}>{errorMessage}</p> : null}
+      {errorMessage ? (
+        <Text tone="error" className={styles.error}>
+          {errorMessage}
+        </Text>
+      ) : null}
     </div>
   );
 }
