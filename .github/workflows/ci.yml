@@ -23,6 +23,8 @@ jobs:
 
       - name: Set up mise
         uses: jdx/mise-action@v2
+        env:
+          MISE_JOBS: 1
         with:
           install: true
           cache: true

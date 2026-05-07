@@ -31,7 +31,7 @@ lint:
 
 deny:
     pnpm --dir frontend audit
-    cargo deny --manifest-path backend/Cargo.toml check
+    cargo-deny --manifest-path backend/Cargo.toml check
 
 typecheck:
     pnpm --dir frontend typecheck
@@ -60,4 +60,4 @@ db-seed seed_dir='backend/dev-seed':
 
 validate: fmt lint deny typecheck test
 
-ci: refresh validate deny build
+ci: refresh validate
