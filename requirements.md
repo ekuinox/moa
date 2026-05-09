@@ -180,6 +180,7 @@ frontend/
 
 - フロントエンドの lint / format は Biome を第一候補にする。
 - TypeScript の型チェックは `tsc --noEmit` で行う。
+- フロントエンドの TypeScript target / lib は `ES2025` に揃える。
 - Rust の format は rustfmt を使う。
 - Rust の lint は clippy を使う。
 - package script と mise task の両方から実行できるようにする。

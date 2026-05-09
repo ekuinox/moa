@@ -64,3 +64,34 @@
     min-width: 800px;
   }
 }
+
+@media print {
+  .tableWrap {
+    overflow: visible;
+  }
+
+  .table {
+    min-width: 0;
+    font-size: 0.82rem;
+  }
+
+  .table thead th,
+  .table tfoot th,
+  .table tfoot td {
+    position: static;
+  }
+
+  .table th,
+  .table td {
+    height: auto;
+    padding: 6px 8px;
+    border-color: #8d9aa3;
+    white-space: normal;
+  }
+
+  .actionCol,
+  .table th:last-child,
+  .table td:last-child {
+    display: none;
+  }
+}

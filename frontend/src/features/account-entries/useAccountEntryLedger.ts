@@ -153,6 +153,7 @@ export function useAccountEntryLedger(kind: AccountEntryKind) {
     visibleEntries,
     errorMessage,
     highlightedEntryId,
+    kind,
     clearNotice: actions.clearNotice,
     deleteEntry: actions.deleteEntry,
     finishEditingRow: actions.finishEditingRow,

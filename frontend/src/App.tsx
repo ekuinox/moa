@@ -19,7 +19,7 @@ export function App() {
   return (
     <main className={styles.shell}>
       <div className={styles.layout}>
-        <header className={styles.topbar}>
+        <header className={styles.topbar} data-print-hidden>
           <div>
             <Text tone="eyebrow">moa</Text>
             <h1>{viewTitles[view]}</h1>

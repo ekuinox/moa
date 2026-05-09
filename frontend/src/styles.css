@@ -29,3 +29,22 @@ textarea,
 select {
   font: inherit;
 }
+
+@media print {
+  :root,
+  body {
+    background: #ffffff;
+  }
+
+  body {
+    min-width: 0;
+  }
+
+  [data-print-hidden] {
+    display: none;
+  }
+
+  [data-print-surface] {
+    break-inside: avoid;
+  }
+}
