@@ -78,10 +78,10 @@ export function createLedgerExportScope({
       partner: canEdit ? undefined : (partnerNames.get(entry.partnerId) ?? "未登録の取引先"),
       categories: formatCategoryNames(entry.categoryIds, categoryNames),
       description: entry.description,
-      amount: formatCurrency(entry.amount),
+      amount: entry.amount.toString(),
     })),
     title,
-    totalAmount: formatCurrency(totalAmount),
+    totalAmount: totalAmount.toString(),
   };
 }
 
