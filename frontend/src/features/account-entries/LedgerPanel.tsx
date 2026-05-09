@@ -62,13 +62,6 @@ export function LedgerPanel({ ledger }: LedgerPanelProps) {
             <Download size={16} aria-hidden="true" />
             CSV
           </Button>
-          <Button
-            type="button"
-            size="small"
-            onClick={() => ledger.showTodo("設定タブで編集する内容は未設計です。")}
-          >
-            設定
-          </Button>
         </div>
       </div>
 
