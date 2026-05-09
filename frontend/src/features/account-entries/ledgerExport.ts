@@ -103,8 +103,11 @@ export function downloadLedgerCsv(scope: LedgerExportScope) {
   const link = document.createElement("a");
   link.href = url;
   link.download = scope.fileName;
+  link.style.display = "none";
+  document.body.append(link);
   link.click();
-  URL.revokeObjectURL(url);
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 export function printLedger() {
