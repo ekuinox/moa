@@ -146,6 +146,17 @@ describe("App", () => {
     expect(print).toHaveBeenCalledOnce();
   });
 
+  it("shows an alert when CSV export is used outside Tauri", async () => {
+    const alert = vi.spyOn(window, "alert").mockImplementation(() => undefined);
+    const user = userEvent.setup();
+
+    render(<App />);
+    await screen.findByRole("table");
+    await user.click(screen.getByRole("button", { name: "表示中の表を CSV 出力" }));
+
+    expect(alert).toHaveBeenCalledWith("CSV 出力は Tauri アプリで起動した場合のみ利用できます。");
+  });
+
   it("shows row save action after editing a selected partner ledger row", async () => {
     const user = userEvent.setup();
 

@@ -97,17 +97,26 @@ export function serializeLedgerCsv(scope: LedgerExportScope) {
   return [header, ...body, totalRow].map((row) => row.map(escapeCsvCell).join(",")).join("\r\n");
 }
 
-export function downloadLedgerCsv(scope: LedgerExportScope) {
-  const blob = new Blob([serializeLedgerCsv(scope)], { type: "text/csv;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = scope.fileName;
-  link.style.display = "none";
-  document.body.append(link);
-  link.click();
-  link.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+export async function downloadLedgerCsv(scope: LedgerExportScope) {
+  if (!isTauriRuntime()) {
+    window.alert("CSV 出力は Tauri アプリで起動した場合のみ利用できます。");
+    return;
+  }
+
+  const [{ save }, { writeTextFile }] = await Promise.all([
+    import("@tauri-apps/plugin-dialog"),
+    import("@tauri-apps/plugin-fs"),
+  ]);
+  const path = await save({
+    defaultPath: scope.fileName,
+    filters: [{ name: "CSV", extensions: ["csv"] }],
+  });
+
+  if (!path) {
+    return;
+  }
+
+  await writeTextFile(path, serializeLedgerCsv(scope));
 }
 
 export function printLedger() {
@@ -141,4 +150,8 @@ function escapeCsvCell(value: string) {
     return value;
   }
   return `"${value.replaceAll('"', '""')}"`;
+}
+
+function isTauriRuntime() {
+  return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
 }
