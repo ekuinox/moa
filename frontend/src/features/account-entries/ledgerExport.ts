@@ -1,6 +1,6 @@
 import type { AccountEntry, AccountEntryKind, Category } from "../../lib/api";
 import { commands } from "../../lib/api/bindings.generated";
-import { formatCurrency, formatDate, formatLedgerMonth } from "./formatters";
+import { formatDate, formatLedgerMonth } from "./formatters";
 
 export interface LedgerExportColumn {
   readonly key: "occurredOn" | "partner" | "categories" | "description" | "amount";
@@ -47,7 +47,7 @@ const BASE_COLUMNS = [
 ] satisfies readonly LedgerExportColumn[];
 const PARTNER_COLUMN = { key: "partner", label: "取引先" } satisfies LedgerExportColumn;
 
-/** 表示中の台帳を CSV/印刷へ渡すための、期間差し替え可能なスナップショットにする。 */
+/** 表示中の台帳を CSV へ渡すための、期間差し替え可能なスナップショットにする。 */
 export function createLedgerExportScope({
   canEdit,
   categories,
@@ -105,10 +105,6 @@ export async function downloadLedgerCsv(scope: LedgerExportScope) {
   }
 
   await commands.exportLedgerCsv(scope.fileName, serializeLedgerCsv(scope));
-}
-
-export function printLedger() {
-  window.print();
 }
 
 function createLedgerCsvFileName({

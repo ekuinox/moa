@@ -1,4 +1,4 @@
-import { Download, Printer, X } from "lucide-react";
+import { Download, X } from "lucide-react";
 import { useMemo } from "react";
 
 import { Button, Text } from "../../components";
@@ -6,7 +6,7 @@ import { Button, Text } from "../../components";
 import { formatLedgerMonth } from "./formatters";
 import styles from "./LedgerPanel.module.css";
 import { LedgerTable } from "./LedgerTable";
-import { createLedgerExportScope, downloadLedgerCsv, printLedger } from "./ledgerExport";
+import { createLedgerExportScope, downloadLedgerCsv } from "./ledgerExport";
 import type { useAccountEntryLedger } from "./useAccountEntryLedger";
 
 export interface LedgerPanelProps {
@@ -44,7 +44,7 @@ export function LedgerPanel({ ledger }: LedgerPanelProps) {
   );
 
   return (
-    <div className={styles.panel} data-print-surface>
+    <div className={styles.panel}>
       <div className={styles.panelHeader}>
         <div>
           <Text tone="eyebrow">{ledger.selectedPartnerName}</Text>
@@ -52,7 +52,7 @@ export function LedgerPanel({ ledger }: LedgerPanelProps) {
             {ledger.title} ({formatLedgerMonth(ledger.selectedPeriod, ledger.fiscalYearStartMonth)})
           </h2>
         </div>
-        <div className={styles.headerActions} data-print-hidden>
+        <div className={styles.headerActions}>
           <Button
             type="button"
             size="small"
@@ -61,10 +61,6 @@ export function LedgerPanel({ ledger }: LedgerPanelProps) {
           >
             <Download size={16} aria-hidden="true" />
             CSV
-          </Button>
-          <Button type="button" size="small" onClick={printLedger} aria-label="表示中の表を印刷">
-            <Printer size={16} aria-hidden="true" />
-            印刷
           </Button>
           <Button
             type="button"

@@ -18,7 +18,6 @@ describe("App", () => {
 
     expect(within(table).getByText("初期仕入")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "表示中の表を CSV 出力" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "表示中の表を印刷" })).toBeInTheDocument();
   });
 
   it("renders the receivable ledger screen", async () => {
@@ -133,17 +132,6 @@ describe("App", () => {
 
     expect(confirm).toHaveBeenCalledWith("2026-05-01 の明細を削除しますか？");
     expect(within(table).getByText("初期仕入")).toBeInTheDocument();
-  });
-
-  it("prints the visible ledger table", async () => {
-    const print = vi.spyOn(window, "print").mockImplementation(() => undefined);
-    const user = userEvent.setup();
-
-    render(<App />);
-    await screen.findByRole("table");
-    await user.click(screen.getByRole("button", { name: "表示中の表を印刷" }));
-
-    expect(print).toHaveBeenCalledOnce();
   });
 
   it("shows an alert when CSV export is used outside Tauri", async () => {

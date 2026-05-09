@@ -58,25 +58,6 @@
   border-bottom: 1px solid #e4e9ee;
 }
 
-@media print {
-  .panel {
-    display: block;
-    overflow: visible;
-    border: 0;
-    border-radius: 0;
-  }
-
-  .panelHeader {
-    padding: 0 0 10px;
-    border-bottom-color: #172026;
-  }
-
-  .noticeBar,
-  .inlineError {
-    display: none;
-  }
-}
-
 @media (max-width: 760px) {
   .panelHeader {
     align-items: stretch;
