@@ -1,6 +1,9 @@
 //! Tauri command handlers.
 
+use std::fs;
+
 use tauri::State;
+use tauri_plugin_dialog::DialogExt as _;
 
 use crate::{
     application::use_cases,
@@ -176,6 +179,32 @@ pub async fn delete_account_entry(
     let repository = SqliteAccountEntryRepository::new(database.pool());
 
     use_cases::account_entries::delete_account_entry(&repository, &id).await
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn export_ledger_csv(
+    app: tauri::AppHandle,
+    file_name: String,
+    contents: String,
+) -> Result<bool, String> {
+    let selected_path = app
+        .dialog()
+        .file()
+        .set_title("CSV を保存")
+        .set_file_name(file_name)
+        .add_filter("CSV", &["csv"])
+        .blocking_save_file();
+    let Some(selected_path) = selected_path else {
+        return Ok(false);
+    };
+    let path = selected_path
+        .into_path()
+        .map_err(|error| format!("保存先の取得に失敗しました: {error}"))?;
+
+    fs::write(&path, contents).map_err(|error| format!("CSV の保存に失敗しました: {error}"))?;
+
+    Ok(true)
 }
 
 #[cfg(test)]

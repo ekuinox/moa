@@ -1,4 +1,5 @@
 import type { AccountEntry, AccountEntryKind, Category } from "../../lib/api";
+import { commands } from "../../lib/api/bindings.generated";
 import { formatCurrency, formatDate, formatLedgerMonth } from "./formatters";
 
 export interface LedgerExportColumn {
@@ -103,20 +104,7 @@ export async function downloadLedgerCsv(scope: LedgerExportScope) {
     return;
   }
 
-  const [{ save }, { writeTextFile }] = await Promise.all([
-    import("@tauri-apps/plugin-dialog"),
-    import("@tauri-apps/plugin-fs"),
-  ]);
-  const path = await save({
-    defaultPath: scope.fileName,
-    filters: [{ name: "CSV", extensions: ["csv"] }],
-  });
-
-  if (!path) {
-    return;
-  }
-
-  await writeTextFile(path, serializeLedgerCsv(scope));
+  await commands.exportLedgerCsv(scope.fileName, serializeLedgerCsv(scope));
 }
 
 export function printLedger() {
