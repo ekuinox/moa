@@ -17,9 +17,16 @@
   border-bottom: 1px solid #e4e9ee;
 }
 
+.panelHeader > div:first-child {
+  min-width: 0;
+}
+
 .panelHeader h2 {
+  overflow: hidden;
   margin: 0;
   font-size: 1.12rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .headerActions {

@@ -61,9 +61,9 @@ describe("formatters", () => {
     expect(formatLedgerMonth("FY2026", 1)).toBe("2026年");
   });
 
-  it("月キーは年度開始月に関わらず YYYY/M 形式に整形する", () => {
-    expect(formatLedgerMonth("2026-05", 4)).toBe("2026/5");
-    expect(formatLedgerMonth("2027-02", 4)).toBe("2027/2");
+  it("月キーは年度開始月に関わらず YYYY/MM 形式に整形する", () => {
+    expect(formatLedgerMonth("2026-05", 4)).toBe("2026/05");
+    expect(formatLedgerMonth("2027-02", 4)).toBe("2027/02");
     expect(formatLedgerMonth("2026-11", 1)).toBe("2026/11");
   });
 

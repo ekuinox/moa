@@ -2,12 +2,14 @@ import { Download, Printer, X } from "lucide-react";
 import { useMemo } from "react";
 
 import { Button, Text } from "../../components";
+import type { Category } from "../../lib/api";
 
 import { formatLedgerMonth } from "./formatters";
 import styles from "./LedgerPanel.module.css";
 import { LedgerPrintDocument } from "./LedgerPrintDocument";
 import { LedgerTable } from "./LedgerTable";
 import { createLedgerExportScope, downloadLedgerCsv } from "./ledgerExport";
+import { UNCATEGORIZED_FILTER_KEY } from "./ledgerState";
 import type { useAccountEntryLedger } from "./useAccountEntryLedger";
 
 export interface LedgerPanelProps {
@@ -16,6 +18,15 @@ export interface LedgerPanelProps {
 
 /** ステータス表示と編集テーブルを含む、中央の台帳パネルを表示する。 */
 export function LedgerPanel({ ledger }: LedgerPanelProps) {
+  const periodLabel = formatLedgerMonth(ledger.selectedPeriod, ledger.fiscalYearStartMonth);
+  const heading = createLedgerHeading({
+    partnerLabel: ledger.selectedPartnerName ?? "",
+    title: ledger.title,
+    periodLabel,
+    categories: ledger.categories,
+    selectedCategoryFilter: ledger.selectedCategoryFilter,
+  });
+
   // 画面に表示している行・列の状態を CSV と印刷用に固定し、各出力処理へ渡す。
   const exportScope = useMemo(
     () =>
@@ -49,10 +60,7 @@ export function LedgerPanel({ ledger }: LedgerPanelProps) {
     <div className={styles.panel}>
       <div className={styles.panelHeader}>
         <div>
-          <Text tone="eyebrow">{ledger.selectedPartnerName}</Text>
-          <h2>
-            {ledger.title} ({formatLedgerMonth(ledger.selectedPeriod, ledger.fiscalYearStartMonth)})
-          </h2>
+          <h2>{heading}</h2>
         </div>
         <div className={styles.headerActions}>
           <Button
@@ -112,7 +120,53 @@ export function LedgerPanel({ ledger }: LedgerPanelProps) {
         onStartEditing={ledger.startEditing}
         onUpdateRow={ledger.updateRow}
       />
-      <LedgerPrintDocument report={exportScope} />
+      <LedgerPrintDocument heading={heading} report={exportScope} />
     </div>
   );
+}
+
+/** 通常画面と印刷で共通利用する、1 行形式の帳票見出しを組み立てる。 */
+function createLedgerHeading({
+  partnerLabel,
+  title,
+  periodLabel,
+  categories,
+  selectedCategoryFilter,
+}: {
+  readonly partnerLabel: string;
+  readonly title: string;
+  readonly periodLabel: string;
+  readonly categories: readonly Category[];
+  readonly selectedCategoryFilter: ReadonlySet<string> | null;
+}) {
+  const categoryLabel = createCategoryFilterLabel(categories, selectedCategoryFilter);
+  return [partnerLabel, `${title} (${periodLabel})`, categoryLabel].filter(Boolean).join(" ");
+}
+
+function createCategoryFilterLabel(
+  categories: readonly Category[],
+  selectedCategoryFilter: ReadonlySet<string> | null,
+) {
+  if (selectedCategoryFilter === null || selectedCategoryFilter.size === 0) {
+    return "";
+  }
+
+  const labels = categories
+    .filter((category) => selectedCategoryFilter.has(category.id))
+    .map((category) => category.name);
+
+  if (selectedCategoryFilter.has(UNCATEGORIZED_FILTER_KEY)) {
+    labels.push("(未分類)");
+  }
+
+  for (const selectedId of selectedCategoryFilter) {
+    const isKnown =
+      selectedId === UNCATEGORIZED_FILTER_KEY ||
+      categories.some((category) => category.id === selectedId);
+    if (!isKnown) {
+      labels.push("(削除済み)");
+    }
+  }
+
+  return labels.join("/");
 }

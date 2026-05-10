@@ -28,14 +28,14 @@ export function createMonthTabs(input: {
   ];
 }
 
-/** 期間キーを台帳タイトル用に整形する。FYxxxx は年度表記、YYYY-MM は月表記。 */
+/** 期間キーを台帳タイトル用に整形する。FYxxxx は年度表記、YYYY-MM は YYYY/MM 表記。 */
 export function formatLedgerMonth(value: string, fiscalYearStartMonth: number) {
   const fiscalYear = parseFiscalYearKey(value);
   if (fiscalYear !== undefined) {
     return fiscalYearStartMonth === 1 ? `${fiscalYear}年` : `${fiscalYear}年度`;
   }
   const [year, month] = value.split("-");
-  return `${year}/${Number.parseInt(month ?? "", 10)}`;
+  return `${year}/${(month ?? "").padStart(2, "0")}`;
 }
 
 /** ISO 日付を、読み取り表示セルで使う M/D 形式へ整形する。 */

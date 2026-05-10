@@ -7,10 +7,12 @@ import type { LedgerExportColumn, LedgerExportScope } from "./ledgerExport";
 export interface LedgerPrintDocumentProps {
   /** CSV と同じ表示中台帳のスナップショット。印刷対象の列・行・見出しをここから組み立てる。 */
   readonly report: LedgerExportScope;
+  /** 画面ヘッダと揃えて紙面上部に出す帳票見出し。 */
+  readonly heading: string;
 }
 
 /** 通常画面とは別に、紙面へ出す台帳だけを描画する印刷専用ドキュメント。 */
-export function LedgerPrintDocument({ report }: LedgerPrintDocumentProps) {
+export function LedgerPrintDocument({ heading, report }: LedgerPrintDocumentProps) {
   // 印刷専用 DOM はアプリ本体の grid/overflow の影響を避けるため body 直下へ置く。
   if (typeof document === "undefined") {
     return null;
@@ -24,12 +26,7 @@ export function LedgerPrintDocument({ report }: LedgerPrintDocumentProps) {
       aria-hidden="true"
     >
       <header className={styles.header}>
-        <div>
-          <p className={styles.meta}>{report.partnerLabel}</p>
-          <h2>
-            {report.title} ({report.periodLabel})
-          </h2>
-        </div>
+        <h2>{heading}</h2>
         <p className={styles.brand}>moa</p>
       </header>
 
