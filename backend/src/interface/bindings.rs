@@ -9,6 +9,7 @@ pub fn builder() -> Builder<tauri::Wry> {
     Builder::<tauri::Wry>::new()
         .commands(collect_commands![
             super::commands::backend_health,
+            super::commands::get_debug_info,
             super::commands::list_partners,
             super::commands::create_partner,
             super::commands::update_partner,

@@ -6,6 +6,11 @@ export function createTauriApiClient(): ApiClient {
     async health() {
       return { ok: await commands.backendHealth() };
     },
+    debugInfo: {
+      get() {
+        return commands.getDebugInfo();
+      },
+    },
     partners: {
       list() {
         return commands.listPartners();

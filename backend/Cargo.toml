@@ -13,6 +13,7 @@ name = "moa_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
+chrono = { version = "0.4.42", default-features = false, features = ["clock", "std"] }
 tauri-build = { version = "2", features = [] }
 
 [dependencies]

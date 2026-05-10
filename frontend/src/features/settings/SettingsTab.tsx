@@ -1,5 +1,6 @@
 import { AppCard } from "../../components";
 import { CategoryChipEditor } from "../categories/CategoryChipEditor";
+import { DebugInfoCard } from "./DebugInfoCard";
 import { FiscalYearStartMonthCard } from "./FiscalYearStartMonthCard";
 import styles from "./SettingsTab.module.css";
 
@@ -15,6 +16,9 @@ export function SettingsTab() {
       </AppCard>
       <AppCard title="年度" description="事業年度の開始月を設定します。">
         <FiscalYearStartMonthCard />
+      </AppCard>
+      <AppCard title="デバッグ情報">
+        <DebugInfoCard />
       </AppCard>
     </div>
   );

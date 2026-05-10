@@ -3,14 +3,13 @@
 ## Start Here
 
 - Read `requirements.md` before making product or architecture changes.
-- Read `tasks.md` before choosing the next implementation step.
+- Check GitHub Issues / Pull Requests before choosing the next implementation step.
 - Use `CONTRIBUTING.md` for detailed development rules.
 
 ## Documentation
 
 - Update `requirements.md` when requirements, technical decisions, or database design change.
-- Update `tasks.md` when implementation progress changes.
-- Keep completed tasks checked with `- [x]`.
+- Update the related GitHub issue / pull request when implementation progress changes.
 - Split large design notes into `docs/` when the single requirements file becomes hard to review.
 
 ## Architecture

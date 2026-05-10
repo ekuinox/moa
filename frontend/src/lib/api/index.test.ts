@@ -10,6 +10,12 @@ vi.mock("./bindings.generated", () => ({
     createPartner: vi.fn(async (input) => ({ id: "tauri-partner", ...input })),
     deleteCategory: vi.fn(async () => undefined),
     deletePartner: vi.fn(async () => undefined),
+    getDebugInfo: vi.fn(async () => ({
+      appVersion: "0.1.0",
+      buildTimestamp: "2026-05-10T00:00:00Z",
+      commitHash: "abcdef0",
+      databasePath: "C:\\tmp\\moa.sqlite3",
+    })),
     getSettings: vi.fn(async () => ({ fiscalYearStartMonth: 4 })),
     listCategories: vi.fn(async () => []),
     listPartners: vi.fn(async () => []),
@@ -50,6 +56,12 @@ describe("createApiClient", () => {
     const client = createApiClient({ runtime: "mock" });
 
     await expect(client.health()).resolves.toEqual({ ok: true });
+    await expect(client.debugInfo.get()).resolves.toEqual({
+      appVersion: "0.1.0",
+      buildTimestamp: "mock",
+      commitHash: "mock",
+      databasePath: "mock",
+    });
     await expect(client.partners.list()).resolves.toHaveLength(2);
   });
 
@@ -57,6 +69,12 @@ describe("createApiClient", () => {
     const client = createApiClient({ runtime: "tauri" });
 
     await expect(client.health()).resolves.toEqual({ ok: true });
+    await expect(client.debugInfo.get()).resolves.toEqual({
+      appVersion: "0.1.0",
+      buildTimestamp: "2026-05-10T00:00:00Z",
+      commitHash: "abcdef0",
+      databasePath: "C:\\tmp\\moa.sqlite3",
+    });
     await expect(client.partners.create({ name: "取引先", kana: "とりひきさき" })).resolves.toEqual(
       {
         id: "tauri-partner",

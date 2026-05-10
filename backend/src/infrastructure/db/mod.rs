@@ -1,6 +1,11 @@
 //! SQLite connection and migration setup.
 
-use std::{env, error::Error, fs, path::PathBuf};
+use std::{
+    env,
+    error::Error,
+    fs,
+    path::{Path, PathBuf},
+};
 
 use sqlx::{
     SqlitePool,
@@ -15,15 +20,20 @@ pub type DbResult<T> = Result<T, Box<dyn Error>>;
 
 pub struct AppDatabase {
     pool: SqlitePool,
+    path: PathBuf,
 }
 
 impl AppDatabase {
-    pub fn new(pool: SqlitePool) -> Self {
-        Self { pool }
+    pub fn new(pool: SqlitePool, path: PathBuf) -> Self {
+        Self { pool, path }
     }
 
     pub fn pool(&self) -> &SqlitePool {
         &self.pool
+    }
+
+    pub fn path(&self) -> &Path {
+        &self.path
     }
 }
 
@@ -34,7 +44,7 @@ pub async fn initialize(app_handle: &AppHandle) -> DbResult<AppDatabase> {
     }
 
     let options = SqliteConnectOptions::new()
-        .filename(db_path)
+        .filename(&db_path)
         .create_if_missing(true)
         .foreign_keys(true);
 
@@ -45,7 +55,7 @@ pub async fn initialize(app_handle: &AppHandle) -> DbResult<AppDatabase> {
 
     MIGRATOR.run(&pool).await?;
 
-    Ok(AppDatabase::new(pool))
+    Ok(AppDatabase::new(pool, db_path))
 }
 
 fn database_path(app_handle: &AppHandle) -> DbResult<PathBuf> {
