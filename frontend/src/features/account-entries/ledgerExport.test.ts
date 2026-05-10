@@ -54,7 +54,7 @@ describe("ledgerExport", () => {
       "摘要",
       "税込金額",
     ]);
-    expect(scope.fileName).toBe("kaikake-すべての取引先-2026-5.csv");
+    expect(scope.fileName).toBe("kaikake-すべての取引先-2026-05.csv");
     expect(serializeLedgerCsv(scope)).toBe(
       [
         "日付,取引先,種別,摘要,税込金額",

@@ -13,11 +13,15 @@ describe("App", () => {
     render(<App />);
 
     expect(screen.getByRole("heading", { name: "買掛表" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "すべての取引先 買掛表 (2026/05)" }),
+    ).toBeInTheDocument();
 
     const table = await screen.findByRole("table");
 
     expect(within(table).getByText("初期仕入")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "表示中の表を CSV 出力" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "表示中の表を印刷" })).toBeInTheDocument();
   });
 
   it("renders the receivable ledger screen", async () => {
@@ -27,6 +31,9 @@ describe("App", () => {
     await user.click(screen.getByRole("button", { name: "売掛" }));
 
     expect(screen.getByRole("heading", { name: "売掛表" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "すべての取引先 売掛表 (2026/05)" }),
+    ).toBeInTheDocument();
 
     const table = await screen.findByRole("table");
 
@@ -143,6 +150,38 @@ describe("App", () => {
     await user.click(screen.getByRole("button", { name: "表示中の表を CSV 出力" }));
 
     expect(alert).toHaveBeenCalledWith("CSV 出力は Tauri アプリで起動した場合のみ利用できます。");
+  });
+
+  it("prints the visible ledger table through the print-only document", async () => {
+    const print = vi.spyOn(window, "print").mockImplementation(() => undefined);
+    const user = userEvent.setup();
+
+    render(<App />);
+
+    const printDocument = await screen.findByTestId("ledger-print-document");
+    expect(within(printDocument).getByText("すべての取引先 買掛表 (2026/05)")).toBeInTheDocument();
+    expect(within(printDocument).getByText("初期仕入")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "表示中の表を印刷" }));
+
+    expect(print).toHaveBeenCalledOnce();
+  });
+
+  it("adds selected categories to the ledger heading", async () => {
+    const user = userEvent.setup();
+
+    render(<App />);
+    await screen.findByRole("table");
+
+    await user.click(screen.getByRole("button", { name: "種別で絞り込む" }));
+    await user.click(screen.getByLabelText("材料費"));
+    await user.click(screen.getByLabelText("工賃"));
+
+    expect(
+      screen.getByRole("heading", {
+        name: /^すべての取引先 買掛表 \(2026\/05\) (材料費, 工賃|工賃, 材料費)$/,
+      }),
+    ).toBeInTheDocument();
   });
 
   it("shows row save action after editing a selected partner ledger row", async () => {
