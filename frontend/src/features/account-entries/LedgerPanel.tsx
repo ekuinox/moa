@@ -1,10 +1,11 @@
-import { Download, X } from "lucide-react";
+import { Download, Printer, X } from "lucide-react";
 import { useMemo } from "react";
 
 import { Button, Text } from "../../components";
 
 import { formatLedgerMonth } from "./formatters";
 import styles from "./LedgerPanel.module.css";
+import { LedgerPrintDocument } from "./LedgerPrintDocument";
 import { LedgerTable } from "./LedgerTable";
 import { createLedgerExportScope, downloadLedgerCsv } from "./ledgerExport";
 import type { useAccountEntryLedger } from "./useAccountEntryLedger";
@@ -15,7 +16,7 @@ export interface LedgerPanelProps {
 
 /** ステータス表示と編集テーブルを含む、中央の台帳パネルを表示する。 */
 export function LedgerPanel({ ledger }: LedgerPanelProps) {
-  // 画面に表示している行・列の状態を CSV 用に固定し、クリック時の保存処理へ渡す。
+  // 画面に表示している行・列の状態を CSV と印刷用に固定し、各出力処理へ渡す。
   const exportScope = useMemo(
     () =>
       createLedgerExportScope({
@@ -63,6 +64,15 @@ export function LedgerPanel({ ledger }: LedgerPanelProps) {
             <Download size={16} aria-hidden="true" />
             CSV
           </Button>
+          <Button
+            type="button"
+            size="small"
+            onClick={() => window.print()}
+            aria-label="表示中の表を印刷"
+          >
+            <Printer size={16} aria-hidden="true" />
+            印刷
+          </Button>
         </div>
       </div>
 
@@ -102,6 +112,7 @@ export function LedgerPanel({ ledger }: LedgerPanelProps) {
         onStartEditing={ledger.startEditing}
         onUpdateRow={ledger.updateRow}
       />
+      <LedgerPrintDocument report={exportScope} />
     </div>
   );
 }
