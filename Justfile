@@ -1,8 +1,7 @@
-set shell := ["powershell.exe", "-NoProfile", "-Command"]
+set windows-shell := ["powershell.exe", "-NoProfile", "-Command"]
 
-APP_DATA := env_var('APPDATA')
-DB_PATH := join(APP_DATA, 'dev.ekuinox.moa', 'moa.sqlite3')
-DB_URL := 'sqlite://' + replace(DB_PATH, '\', '/')
+export MOA_DATABASE_PATH := join(justfile_directory(), '.dev', 'moa.sqlite3')
+DB_URL := 'sqlite://' + replace(replace(MOA_DATABASE_PATH, '\', '/'), ' ', '%20')
 
 default:
     just --list

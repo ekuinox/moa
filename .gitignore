@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+.pnpm-store/
 
 # Frontend build output
 dist/
@@ -18,6 +19,7 @@ test-results/
 playwright-report/
 
 # Local environment
+.dev/
 .env
 .env.local
 *.local

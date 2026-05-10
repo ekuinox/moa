@@ -73,6 +73,8 @@ Windows で動作する、出納・買掛・売掛を管理できるデスクト
   - React
 - ユーザーは Rust / React を読める。
 - 他の技術のほうが要件に適している場合は検討する。
+- 主な配布対象は Windows とする。
+- 開発環境として macOS でも `just refresh`、`just dev`、`just db-drop`、`just db-seed` を実行できるようにする。
 
 ## 技術方針案
 
@@ -216,6 +218,9 @@ frontend/
 
 - Tauri として起動しなくても、Vite dev server だけで画面の動作確認をある程度できるようにする。
 - Tauri dev の SQLite には、開発時に既存データを削除して seed データを投入できるコマンドを用意する。
+- SQLite の保存先は `MOA_DATABASE_PATH` 環境変数で差し替えできるようにする。
+- `MOA_DATABASE_PATH` が未指定の場合は、Tauri のアプリデータディレクトリ配下に保存する。
+- `just dev`、`just db-drop`、`just db-seed` ではプロジェクト内 `.dev/moa.sqlite3` を開発用 SQLite として使う。
 - React からデータアクセスする処理は、Tauri command を直接呼ばず、アプリ内の API クライアント層を経由する。
 - API クライアント層は、本番時は Tauri command binding を呼ぶ。
 - Vite dev 単体起動時は、モックまたはインメモリ実装を使えるようにする。

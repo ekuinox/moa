@@ -31,6 +31,7 @@
   - [x] Storybook を導入する
   - [x] Playwright を導入する
   - [x] issue #30 の CI セットアップ失敗と `deny` 二重実行を改善する
+  - [x] macOS でも `just refresh` / `just dev` / `just db-drop` / `just db-seed` を実行できるようにする
 
 - [x] アーキテクチャ骨格を作る
   - [x] `backend/src/domain` を作る
@@ -44,6 +45,7 @@
 - [x] DB とマイグレーションを整備する
   - [x] `sqlx` を導入する
   - [x] SQLite 接続を実装する
+  - [x] SQLite の保存先を `MOA_DATABASE_PATH` で差し替えできるようにする
   - [x] `backend/migrations` を作る
   - [x] アプリ起動時にマイグレーションを実行する
   - [x] 初期テーブルを作る
