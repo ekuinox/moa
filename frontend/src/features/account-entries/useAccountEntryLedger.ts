@@ -153,6 +153,7 @@ export function useAccountEntryLedger(kind: AccountEntryKind) {
     visibleEntries,
     errorMessage,
     highlightedEntryId,
+    // CSV 出力側が買掛/売掛に応じた既定ファイル名を作れるよう、画面種別を公開する。
     kind,
     clearNotice: actions.clearNotice,
     deleteEntry: actions.deleteEntry,

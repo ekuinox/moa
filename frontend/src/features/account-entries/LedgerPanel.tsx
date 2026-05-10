@@ -15,6 +15,7 @@ export interface LedgerPanelProps {
 
 /** ステータス表示と編集テーブルを含む、中央の台帳パネルを表示する。 */
 export function LedgerPanel({ ledger }: LedgerPanelProps) {
+  // 画面に表示している行・列の状態を CSV 用に固定し、クリック時の保存処理へ渡す。
   const exportScope = useMemo(
     () =>
       createLedgerExportScope({

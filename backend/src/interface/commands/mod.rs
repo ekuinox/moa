@@ -181,6 +181,10 @@ pub async fn delete_account_entry(
     use_cases::account_entries::delete_account_entry(&repository, &id).await
 }
 
+/// CSV の保存先を Tauri のネイティブ保存ダイアログで選ばせ、選択されたパスへ内容を書き込む。
+///
+/// フロントエンドは CSV 文字列と既定ファイル名だけを渡し、OS ダイアログとファイル書き込みは
+/// Tauri command 側へ寄せる。ユーザーがキャンセルした場合は `Ok(false)` を返す。
 #[tauri::command]
 #[specta::specta]
 pub async fn export_ledger_csv(
