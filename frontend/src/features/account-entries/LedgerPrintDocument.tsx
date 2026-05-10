@@ -1,3 +1,5 @@
+import { createPortal } from "react-dom";
+
 import { formatCurrency } from "./formatters";
 import styles from "./LedgerPrintDocument.module.css";
 import type { LedgerExportColumn, LedgerExportScope } from "./ledgerExport";
@@ -9,7 +11,12 @@ export interface LedgerPrintDocumentProps {
 
 /** 通常画面とは別に、紙面へ出す台帳だけを描画する印刷専用ドキュメント。 */
 export function LedgerPrintDocument({ report }: LedgerPrintDocumentProps) {
-  return (
+  // 印刷専用 DOM はアプリ本体の grid/overflow の影響を避けるため body 直下へ置く。
+  if (typeof document === "undefined") {
+    return null;
+  }
+
+  return createPortal(
     <section
       className={styles.document}
       data-print-document
@@ -65,7 +72,8 @@ export function LedgerPrintDocument({ report }: LedgerPrintDocumentProps) {
           </tr>
         </tfoot>
       </table>
-    </section>
+    </section>,
+    document.body,
   );
 }
 

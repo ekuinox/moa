@@ -36,27 +36,23 @@ select {
 }
 
 @media print {
+  html,
   :root,
   body {
     background: #ffffff;
+    overflow: visible;
   }
 
   body {
     min-width: 0;
   }
 
-  body * {
-    visibility: hidden;
-  }
-
-  [data-print-document],
-  [data-print-document] * {
-    visibility: visible;
+  body > :not([data-print-document]) {
+    display: none;
   }
 
   [data-print-document] {
-    position: fixed;
-    inset: 0;
+    position: static;
     overflow: visible;
   }
 }
