@@ -29,30 +29,3 @@ textarea,
 select {
   font: inherit;
 }
-
-@page {
-  size: A4 landscape;
-  margin: 12mm;
-}
-
-@media print {
-  html,
-  :root,
-  body {
-    background: #ffffff;
-    overflow: visible;
-  }
-
-  body {
-    min-width: 0;
-  }
-
-  body > :not([data-print-document]) {
-    display: none;
-  }
-
-  [data-print-document] {
-    position: static;
-    overflow: visible;
-  }
-}

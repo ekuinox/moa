@@ -84,7 +84,32 @@
   white-space: nowrap;
 }
 
+@page {
+  size: A4 landscape;
+  margin: 12mm;
+}
+
 @media print {
+  :global(html),
+  :global(:root),
+  :global(body) {
+    background: #ffffff;
+    overflow: visible;
+  }
+
+  :global(body) {
+    min-width: 0;
+  }
+
+  :global(body > :not([data-print-document])) {
+    display: none;
+  }
+
+  :global([data-print-document]) {
+    position: static;
+    overflow: visible;
+  }
+
   .document {
     display: block;
     overflow: visible;
