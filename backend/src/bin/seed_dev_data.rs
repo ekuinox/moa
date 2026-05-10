@@ -65,40 +65,9 @@ async fn connect_dev_database() -> SeedResult<SqlitePool> {
 }
 
 fn database_path() -> SeedResult<PathBuf> {
-    if let Some(db_path) = env::var_os("MOA_DATABASE_PATH") {
-        return Ok(PathBuf::from(db_path));
-    }
-
-    Ok(app_data_dir()?.join("dev.ekuinox.moa").join("moa.sqlite3"))
-}
-
-fn app_data_dir() -> SeedResult<PathBuf> {
-    #[cfg(target_os = "windows")]
-    {
-        return env::var_os("APPDATA")
-            .map(PathBuf::from)
-            .ok_or_else(|| "APPDATA is not set".into());
-    }
-
-    #[cfg(target_os = "macos")]
-    {
-        return env::var_os("HOME")
-            .map(PathBuf::from)
-            .map(|home| home.join("Library").join("Application Support"))
-            .ok_or_else(|| "HOME is not set".into());
-    }
-
-    #[cfg(all(not(target_os = "windows"), not(target_os = "macos")))]
-    {
-        if let Some(xdg_data_home) = env::var_os("XDG_DATA_HOME") {
-            return Ok(PathBuf::from(xdg_data_home));
-        }
-
-        env::var_os("HOME")
-            .map(PathBuf::from)
-            .map(|home| home.join(".local").join("share"))
-            .ok_or_else(|| "HOME is not set".into())
-    }
+    env::var_os("MOA_DATABASE_PATH")
+        .map(PathBuf::from)
+        .ok_or_else(|| "MOA_DATABASE_PATH is not set".into())
 }
 
 /// 外部キーの参照順に合わせて既存データをすべて削除する。
