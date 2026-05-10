@@ -28,6 +28,7 @@ const baseLedger = {
   fiscalYearStartMonth: storyFiscalYearStartMonth,
   highlightedEntryId: undefined,
   isEntriesLoading: false,
+  kind: "payable",
   monthTabs: storyMonthTabs,
   noticeMessage: undefined,
   partners: storyPartners,

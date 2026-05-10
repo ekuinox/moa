@@ -10,6 +10,7 @@ pub fn run() {
     let specta_builder = interface::bindings::builder();
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .invoke_handler(specta_builder.invoke_handler())
         .setup(|app| {
             let database =

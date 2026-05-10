@@ -22,7 +22,8 @@ pub fn builder() -> Builder<tauri::Wry> {
             super::commands::list_account_entries,
             super::commands::create_account_entry,
             super::commands::update_account_entry,
-            super::commands::delete_account_entry
+            super::commands::delete_account_entry,
+            super::commands::export_ledger_csv
         ])
         .error_handling(ErrorHandlingMode::Throw)
 }

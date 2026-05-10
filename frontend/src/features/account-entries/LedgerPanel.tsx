@@ -1,10 +1,12 @@
-import { X } from "lucide-react";
+import { Download, X } from "lucide-react";
+import { useMemo } from "react";
 
 import { Button, Text } from "../../components";
 
 import { formatLedgerMonth } from "./formatters";
 import styles from "./LedgerPanel.module.css";
 import { LedgerTable } from "./LedgerTable";
+import { createLedgerExportScope, downloadLedgerCsv } from "./ledgerExport";
 import type { useAccountEntryLedger } from "./useAccountEntryLedger";
 
 export interface LedgerPanelProps {
@@ -13,6 +15,35 @@ export interface LedgerPanelProps {
 
 /** ステータス表示と編集テーブルを含む、中央の台帳パネルを表示する。 */
 export function LedgerPanel({ ledger }: LedgerPanelProps) {
+  // 画面に表示している行・列の状態を CSV 用に固定し、クリック時の保存処理へ渡す。
+  const exportScope = useMemo(
+    () =>
+      createLedgerExportScope({
+        canEdit: ledger.canEdit,
+        categories: ledger.categories,
+        fiscalYearStartMonth: ledger.fiscalYearStartMonth,
+        kind: ledger.kind,
+        partnerNames: ledger.partnerNames,
+        selectedPartnerName: ledger.selectedPartnerName,
+        selectedPeriod: ledger.selectedPeriod,
+        title: ledger.title,
+        totalAmount: ledger.totalAmount,
+        visibleEntries: ledger.visibleEntries,
+      }),
+    [
+      ledger.canEdit,
+      ledger.categories,
+      ledger.fiscalYearStartMonth,
+      ledger.kind,
+      ledger.partnerNames,
+      ledger.selectedPartnerName,
+      ledger.selectedPeriod,
+      ledger.title,
+      ledger.totalAmount,
+      ledger.visibleEntries,
+    ],
+  );
+
   return (
     <div className={styles.panel}>
       <div className={styles.panelHeader}>
@@ -22,12 +53,17 @@ export function LedgerPanel({ ledger }: LedgerPanelProps) {
             {ledger.title} ({formatLedgerMonth(ledger.selectedPeriod, ledger.fiscalYearStartMonth)})
           </h2>
         </div>
-        <Button
-          type="button"
-          onClick={() => ledger.showTodo("設定タブで編集する内容は未設計です。")}
-        >
-          設定
-        </Button>
+        <div className={styles.headerActions}>
+          <Button
+            type="button"
+            size="small"
+            onClick={() => downloadLedgerCsv(exportScope)}
+            aria-label="表示中の表を CSV 出力"
+          >
+            <Download size={16} aria-hidden="true" />
+            CSV
+          </Button>
+        </div>
       </div>
 
       {ledger.noticeMessage ? (

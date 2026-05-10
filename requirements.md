@@ -83,7 +83,7 @@ Windows で動作する、出納・買掛・売掛を管理できるデスクト
 - React 側で一覧・絞り込み・集計表示を作りやすい。
 - SQLite の単一 DB ファイルに業務データを集約しやすい。
 - CSV 出力は、表示中の表データをフロントエンドまたは Rust 側で CSV 化して保存する。
-- 印刷は、表示中の表を印刷用スタイルで `window.print()` する方針を第一候補にする。
+- 印刷は、フロントエンドの帳票プレビューと Rust 側の PDF 作成を組み合わせる方針を第一候補にする。
 - 画面は凝った独自デザインではなく、一般的な業務アプリとして分かりやすい見た目にする。
 
 ## 詳細技術選定案
@@ -180,6 +180,7 @@ frontend/
 
 - フロントエンドの lint / format は Biome を第一候補にする。
 - TypeScript の型チェックは `tsc --noEmit` で行う。
+- フロントエンドの TypeScript target / lib は `ES2025` に揃える。
 - Rust の format は rustfmt を使う。
 - Rust の lint は clippy を使う。
 - package script と mise task の両方から実行できるようにする。

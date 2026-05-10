@@ -1,6 +1,9 @@
 //! Tauri command handlers.
 
+use std::fs;
+
 use tauri::State;
+use tauri_plugin_dialog::DialogExt as _;
 
 use crate::{
     application::use_cases,
@@ -176,6 +179,36 @@ pub async fn delete_account_entry(
     let repository = SqliteAccountEntryRepository::new(database.pool());
 
     use_cases::account_entries::delete_account_entry(&repository, &id).await
+}
+
+/// CSV の保存先を Tauri のネイティブ保存ダイアログで選ばせ、選択されたパスへ内容を書き込む。
+///
+/// フロントエンドは CSV 文字列と既定ファイル名だけを渡し、OS ダイアログとファイル書き込みは
+/// Tauri command 側へ寄せる。ユーザーがキャンセルした場合は `Ok(false)` を返す。
+#[tauri::command]
+#[specta::specta]
+pub async fn export_ledger_csv(
+    app: tauri::AppHandle,
+    file_name: String,
+    contents: String,
+) -> Result<bool, String> {
+    let selected_path = app
+        .dialog()
+        .file()
+        .set_title("CSV を保存")
+        .set_file_name(file_name)
+        .add_filter("CSV", &["csv"])
+        .blocking_save_file();
+    let Some(selected_path) = selected_path else {
+        return Ok(false);
+    };
+    let path = selected_path
+        .into_path()
+        .map_err(|error| format!("保存先の取得に失敗しました: {error}"))?;
+
+    fs::write(&path, contents).map_err(|error| format!("CSV の保存に失敗しました: {error}"))?;
+
+    Ok(true)
 }
 
 #[cfg(test)]
