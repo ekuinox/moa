@@ -6,7 +6,7 @@ Windows で動作する、出納・買掛・売掛を管理できるデスクト
 
 ## 関連ドキュメント
 
-- 実装タスクは `tasks.md` に記録する。
+- 実装予定と進捗は GitHub Issues / Pull Requests で管理する。
 
 ## 優先度
 
