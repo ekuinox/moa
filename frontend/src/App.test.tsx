@@ -179,7 +179,7 @@ describe("App", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: /^すべての取引先 買掛表 \(2026\/05\) (材料費\/工賃|工賃\/材料費)$/,
+        name: /^すべての取引先 買掛表 \(2026\/05\) (材料費, 工賃|工賃, 材料費)$/,
       }),
     ).toBeInTheDocument();
   });

@@ -168,5 +168,5 @@ function createCategoryFilterLabel(
     }
   }
 
-  return labels.join("/");
+  return labels.join(", ");
 }
