@@ -45,14 +45,13 @@ fn parse_seed_dir_arg() -> SeedResult<PathBuf> {
     Ok(PathBuf::from(seed_dir))
 }
 
-/// Tauri dev と同じ app data 配下の SQLite に接続する。
+/// Tauri dev と同じ SQLite に接続する。
 async fn connect_dev_database() -> SeedResult<SqlitePool> {
-    let app_data = env::var_os("APPDATA").ok_or("APPDATA is not set")?;
-    let db_dir = std::path::PathBuf::from(app_data).join("dev.ekuinox.moa");
+    let db_path = database_path()?;
+    if let Some(parent) = db_path.parent() {
+        fs::create_dir_all(parent)?;
+    }
 
-    fs::create_dir_all(&db_dir)?;
-
-    let db_path = db_dir.join("moa.sqlite3");
     let options = SqliteConnectOptions::new()
         .filename(db_path)
         .create_if_missing(true)
@@ -63,6 +62,12 @@ async fn connect_dev_database() -> SeedResult<SqlitePool> {
         .await?;
 
     Ok(pool)
+}
+
+fn database_path() -> SeedResult<PathBuf> {
+    env::var_os("MOA_DATABASE_PATH")
+        .map(PathBuf::from)
+        .ok_or_else(|| "MOA_DATABASE_PATH is not set".into())
 }
 
 /// 外部キーの参照順に合わせて既存データをすべて削除する。

@@ -1,6 +1,6 @@
 //! SQLite connection and migration setup.
 
-use std::{error::Error, fs};
+use std::{env, error::Error, fs, path::PathBuf};
 
 use sqlx::{
     SqlitePool,
@@ -28,10 +28,11 @@ impl AppDatabase {
 }
 
 pub async fn initialize(app_handle: &AppHandle) -> DbResult<AppDatabase> {
-    let app_data_dir = app_handle.path().app_data_dir()?;
-    fs::create_dir_all(&app_data_dir)?;
+    let db_path = database_path(app_handle)?;
+    if let Some(parent) = db_path.parent() {
+        fs::create_dir_all(parent)?;
+    }
 
-    let db_path = app_data_dir.join("moa.sqlite3");
     let options = SqliteConnectOptions::new()
         .filename(db_path)
         .create_if_missing(true)
@@ -45,4 +46,12 @@ pub async fn initialize(app_handle: &AppHandle) -> DbResult<AppDatabase> {
     MIGRATOR.run(&pool).await?;
 
     Ok(AppDatabase::new(pool))
+}
+
+fn database_path(app_handle: &AppHandle) -> DbResult<PathBuf> {
+    if let Some(db_path) = env::var_os("MOA_DATABASE_PATH") {
+        return Ok(PathBuf::from(db_path));
+    }
+
+    Ok(app_handle.path().app_data_dir()?.join("moa.sqlite3"))
 }
