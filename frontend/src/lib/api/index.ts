@@ -6,6 +6,8 @@ import { createTauriApiClient } from "./tauri";
 export interface ApiClient {
   /** バックエンドと疎通できるか確認する。 */
   readonly health: () => Promise<HealthStatus>;
+  /** アプリのデバッグ情報を取得する。 */
+  readonly debugInfo: DebugInfoApiClient;
   /** 取引先マスタを操作する API。 */
   readonly partners: PartnerApiClient;
   /** 種別マスタを操作する API。 */
@@ -19,6 +21,24 @@ export interface ApiClient {
 export interface HealthStatus {
   /** 疎通できた場合は true。 */
   readonly ok: boolean;
+}
+
+/** アプリのデバッグ情報。 */
+export interface DebugInfo {
+  /** アプリのバージョン。 */
+  readonly appVersion: string;
+  /** ビルド時点の Git commit hash。 */
+  readonly commitHash: string;
+  /** ビルド日時。 */
+  readonly buildTimestamp: string;
+  /** 利用中の SQLite DB パス。 */
+  readonly databasePath: string;
+}
+
+/** デバッグ情報を取得する API。 */
+export interface DebugInfoApiClient {
+  /** デバッグ情報を取得する。 */
+  readonly get: () => Promise<DebugInfo>;
 }
 
 /** 取引先マスタに登録された取引先。 */

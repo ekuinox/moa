@@ -19,6 +19,7 @@ use crate::{
     interface::dto::{
         account_entry::{AccountEntryDto, CreateAccountEntryDto, UpdateAccountEntryDto},
         category::{CategoryDto, CreateCategoryDto, UpdateCategoryDto},
+        debug_info::DebugInfoDto,
         partner::{CreatePartnerDto, PartnerDto, UpdatePartnerDto},
         settings::{SettingsDto, UpdateSettingsDto},
     },
@@ -28,6 +29,21 @@ use crate::{
 #[specta::specta]
 pub fn backend_health() -> bool {
     true
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn get_debug_info(database: State<'_, AppDatabase>) -> DebugInfoDto {
+    DebugInfoDto {
+        app_version: env!("CARGO_PKG_VERSION").to_owned(),
+        commit_hash: option_env!("MOA_COMMIT_HASH")
+            .unwrap_or("unknown")
+            .to_owned(),
+        build_timestamp: option_env!("MOA_BUILD_TIMESTAMP")
+            .unwrap_or("unknown")
+            .to_owned(),
+        database_path: database.path().display().to_string(),
+    }
 }
 
 #[tauri::command]

@@ -1,0 +1,34 @@
+.list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(88px, max-content) minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.row dt {
+  color: #4d5d66;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.row dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: #172026;
+  font-family: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.muted {
+  margin: 0;
+  color: #5f6f7a;
+  font-size: 0.9rem;
+}

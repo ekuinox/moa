@@ -24,6 +24,16 @@ export function createMockApiClient(): ApiClient {
     async health() {
       return { ok: true };
     },
+    debugInfo: {
+      async get() {
+        return {
+          appVersion: "0.1.0",
+          commitHash: "mock",
+          buildTimestamp: "mock",
+          databasePath: "mock",
+        };
+      },
+    },
     partners,
     categories,
     settings,

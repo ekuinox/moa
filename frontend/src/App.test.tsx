@@ -50,10 +50,14 @@ describe("App", () => {
     expect(screen.getByRole("heading", { name: "設定" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "種別" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "年度" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "デバッグ情報" })).toBeInTheDocument();
 
     expect(await screen.findByRole("button", { name: "材料費を削除" })).toBeInTheDocument();
     expect(screen.getByRole("textbox", { name: "種別を追加" })).toBeInTheDocument();
     expect(screen.getByRole("spinbutton", { name: "事業年度の開始月" })).toHaveValue(4);
+    expect(await screen.findByText("バージョン")).toBeInTheDocument();
+    expect(screen.getByText("0.1.0")).toBeInTheDocument();
+    expect(screen.getByText("DB パス")).toBeInTheDocument();
   });
 
   it("opens and cancels the partner add modal without saving", async () => {
