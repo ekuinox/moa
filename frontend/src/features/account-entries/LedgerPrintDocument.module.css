@@ -23,12 +23,6 @@
   white-space: nowrap;
 }
 
-.brand {
-  margin: 0;
-  font-size: 8pt;
-  font-weight: 700;
-}
-
 .table {
   width: 100%;
   border-collapse: collapse;

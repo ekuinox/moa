@@ -27,7 +27,6 @@ export function LedgerPrintDocument({ heading, report }: LedgerPrintDocumentProp
     >
       <header className={styles.header}>
         <h2>{heading}</h2>
-        <p className={styles.brand}>moa</p>
       </header>
 
       <table className={styles.table}>
