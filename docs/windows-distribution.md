@@ -19,6 +19,30 @@ Microsoft の Smart App Control 向けコード署名ガイドでは、Smart App
 
 署名付き Windows 配布 workflow は `.github/workflows/release-windows.yml` で管理する。
 
+### 署名情報を用意する
+
+Microsoft Artifact Signing / Trusted Signing を使う場合は、Azure 側で以下を用意する。
+
+1. Azure で Trusted Signing account を作成する。
+2. Trusted Signing account に certificate profile を作成する。
+3. GitHub Actions から使う Entra ID app registration または service principal を作成する。
+4. その app registration に client secret を作成する。
+5. app registration に、対象 Trusted Signing account / certificate profile で署名できる権限を付与する。
+6. Signing account の endpoint、account name、certificate profile name を控える。
+
+各値は以下で確認する。
+
+| 値 | 確認元 |
+| --- | --- |
+| `AZURE_TENANT_ID` | Microsoft Entra ID の tenant ID |
+| `AZURE_CLIENT_ID` | app registration の application/client ID |
+| `AZURE_CLIENT_SECRET` | app registration で作成した client secret の値 |
+| `MOA_WINDOWS_SIGNING_ENDPOINT` | Trusted Signing account の endpoint |
+| `MOA_WINDOWS_SIGNING_ACCOUNT_NAME` | Trusted Signing account の名前 |
+| `MOA_WINDOWS_SIGNING_CERTIFICATE_PROFILE_NAME` | certificate profile の名前 |
+
+client secret は作成直後しか値を確認できないため、作成時に GitHub Secrets へ登録する。
+
 事前に以下を GitHub Secrets に登録する。
 
 | 名前 | 説明 |
@@ -31,6 +55,25 @@ Microsoft の Smart App Control 向けコード署名ガイドでは、Smart App
 | `MOA_WINDOWS_SIGNING_CERTIFICATE_PROFILE_NAME` | Certificate profile name |
 
 Trusted Signing を使う場合、Azure 側では対象 principal に certificate profile の署名権限を付与しておく。
+
+### ローカルで署名を試す場合
+
+ローカルで署名付き build を試す場合は、`trusted-signing-cli` をインストールし、GitHub Secrets と同じ値を環境変数に設定する。
+
+```powershell
+cargo install trusted-signing-cli
+
+$env:AZURE_TENANT_ID = "<tenant-id>"
+$env:AZURE_CLIENT_ID = "<client-id>"
+$env:AZURE_CLIENT_SECRET = "<client-secret>"
+$env:MOA_WINDOWS_SIGNING_ENDPOINT = "<signing-endpoint>"
+$env:MOA_WINDOWS_SIGNING_ACCOUNT_NAME = "<account-name>"
+$env:MOA_WINDOWS_SIGNING_CERTIFICATE_PROFILE_NAME = "<certificate-profile-name>"
+
+pnpm --dir frontend tauri build --config ../backend/tauri.windows-signed.conf.json --bundles nsis
+```
+
+環境変数が不足している場合、`backend/scripts/sign-windows.ps1` は不足している変数名を表示して失敗する。
 
 ## 手動実行
 
