@@ -74,6 +74,7 @@ Windows で動作する、出納・買掛・売掛を管理できるデスクト
 - ユーザーは Rust / React を読める。
 - 他の技術のほうが要件に適している場合は検討する。
 - 主な配布対象は Windows とする。
+- Windows 向け配布物は Smart App Control を無効化しない前提で扱い、ユーザー向け artifact は信頼された RSA コード署名証明書で署名する。
 - 開発環境として macOS でも `just refresh`、`just dev`、`just db-drop`、`just db-seed` を実行できるようにする。
 
 ## 技術方針案
@@ -87,6 +88,7 @@ Windows で動作する、出納・買掛・売掛を管理できるデスクト
 - CSV 出力は、表示中の表データをフロントエンドまたは Rust 側で CSV 化して保存する。
 - 印刷は、フロントエンドで印刷専用 DOM を用意し、`window.print()` で OS/WebView の印刷プレビューへ渡す方針を第一候補にする。
 - 画面は凝った独自デザインではなく、一般的な業務アプリとして分かりやすい見た目にする。
+- Windows 配布時は Tauri の Windows 署名設定を使い、署名済み実行ファイルとインストーラーを artifact として作成する。
 
 ## 詳細技術選定案
 
@@ -142,6 +144,14 @@ backend/src/
 ```
 
 - Tauri の Rust 側ディレクトリ名は `backend` を使う。
+
+### Windows 配布
+
+- Smart App Control 対応のため、Windows のユーザー向け配布物は信頼された CA の RSA コード署名証明書で署名する。
+- 署名方式は Microsoft Artifact Signing / Trusted Signing、または同等の信頼されたコード署名証明書を使う。
+- 自己署名証明書や ECC 証明書は、Smart App Control 対応の配布手段として採用しない。
+- 署名に必要な証明書、Azure 認証情報、署名プロファイル名は GitHub Secrets / Variables で管理し、リポジトリには保存しない。
+- 通常の開発ビルドと CI は未署名でも維持し、リリース用 workflow で署名済み Windows artifact を作成する。
 - Tauri の設定で標準の `src-tauri` ではなく `backend` を指定する。
 
 ### フロントエンド側の想定構成
@@ -416,3 +426,4 @@ frontend/
 - Rust 側は domain / application / infrastructure / interface の層に分ける。
 - application 層のユースケースは mock 注入でテストできるようにする。
 - Tauri の Rust 側ディレクトリ名は `backend` を使う。
+- Windows ユーザー向け配布物は Smart App Control を無効化しない前提で、信頼された RSA コード署名証明書により署名する。
