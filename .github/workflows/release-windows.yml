@@ -28,7 +28,7 @@ jobs:
           cache: true
 
       - name: Install frontend dependencies
-        run: pnpm.cmd --dir frontend install --frozen-lockfile
+        run: pnpm --dir frontend install --frozen-lockfile
 
       - name: Install Trusted Signing CLI
         run: cargo install trusted-signing-cli
@@ -41,7 +41,7 @@ jobs:
           MOA_WINDOWS_SIGNING_ENDPOINT: ${{ secrets.MOA_WINDOWS_SIGNING_ENDPOINT }}
           MOA_WINDOWS_SIGNING_ACCOUNT_NAME: ${{ secrets.MOA_WINDOWS_SIGNING_ACCOUNT_NAME }}
           MOA_WINDOWS_SIGNING_CERTIFICATE_PROFILE_NAME: ${{ secrets.MOA_WINDOWS_SIGNING_CERTIFICATE_PROFILE_NAME }}
-        run: pnpm.cmd --dir frontend tauri build --config ../backend/tauri.windows-signed.conf.json --bundles nsis
+        run: pnpm --dir frontend tauri build --config ../backend/tauri.windows-signed.conf.json --bundles nsis
 
       - name: Verify Authenticode signatures
         shell: pwsh

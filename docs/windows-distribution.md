@@ -41,14 +41,19 @@ GitHub Actions の `Windows Signed Release` workflow を `workflow_dispatch` で
 
 ## ローカル検証
 
-署名済みファイルは Windows 上で以下を確認する。
+署名済み workflow では、`Verify Authenticode signatures` step が `moa.exe` と NSIS installer の `Get-AuthenticodeSignature` 結果を確認する。
+ローカルで確認する場合も、Windows 上で同じコマンドを使う。
 
 ```powershell
 Get-AuthenticodeSignature .\path\to\moa.exe | Format-List
 Get-AuthenticodeSignature .\path\to\moa_*_x64-setup.exe | Format-List
 ```
 
-`Status` が `Valid` で、`SignerCertificate` が想定した発行元になっていることを確認する。
+以下を確認する。
+
+- `Status` が `Valid`
+- `SignerCertificate.Subject` が想定した発行元
+- `TimeStamperCertificate` が空ではない
 
 Windows SDK の `signtool.exe` が使える環境では以下も確認する。
 
