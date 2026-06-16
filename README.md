@@ -30,6 +30,27 @@ frontend/  React / TypeScript 側
 - `CONTRIBUTING.md`: 開発ルール、チェック、コーディング規約
 - GitHub Issues / Pull Requests: 実装予定と進捗
 
+## WSL (Ubuntu) での追加準備
+
+WSL2 (Ubuntu) 上で開発する場合は、下記「セットアップ」の前に Linux 側へ Tauri のシステム依存ライブラリを導入します。
+
+```bash
+sudo apt update
+sudo apt install -y \
+  libwebkit2gtk-4.1-dev build-essential curl wget file \
+  libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev pkg-config
+```
+
+> Ubuntu 22.04 など古い環境では `libwebkit2gtk-4.1-dev` の代わりに `libwebkit2gtk-4.0-dev` を使います。
+
+アプリ内の日本語が豆腐（□）になる場合は、日本語フォントを導入します。
+
+```bash
+sudo apt install -y fonts-noto-cjk fonts-noto-color-emoji
+```
+
+この後、続けて下記「セットアップ」（`mise install` 〜）を実施します。
+
 ## セットアップ
 
 mise を有効にして、必要なツールをインストールします。
